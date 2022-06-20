@@ -1,0 +1,222 @@
+<?php
+
+use App\Http\Controllers\Admin\EmployeeDashboardCmsController;
+use App\Http\Controllers\Admin\OpportunityController;
+use App\Http\Controllers\Admin\PopupSurveyController;
+use App\Http\Controllers\Admin\ProfileTypeController;
+use App\Http\Controllers\Admin\StepController;
+use App\Http\Controllers\Admin\TodoController;
+use App\Http\Controllers\Common\ChargebeeController;
+use App\Http\Controllers\Common\HomeController;
+use App\Http\Controllers\Common\ProfileController;
+use App\Http\Controllers\Common\RequestWorkshopController;
+use App\Http\Controllers\Employer\AnnouncementController;
+use App\Http\Controllers\Employer\EmployerController;
+use App\Http\Controllers\Common\MessageController;
+use App\Http\Controllers\Common\UserController;
+use App\Http\Controllers\Employer\ResourceController;
+use App\Http\Controllers\Employer\TeamController;
+use App\Http\Controllers\Employer\WelcomeNoteController;
+use App\Models\PopupSurveyQuestion;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::group([
+    'middleware' => ['cors']],function () {
+
+//    Route::post('/create-customer', [ChargebeeController::class, 'create_customer']);
+//    Route::get('/webhook-listen',[ChargebeeController::class,'webhook_listen']);
+
+    ###################################################################
+    /**************************Registration Routes********************/
+    ###################################################################
+
+    Route::post('/create-company', [HomeController::class, 'create_company']);
+    Route::post('/create-company-employee', [HomeController::class, 'create_company_employee']);
+    Route::get('/get-plans',[ChargebeeController::class,'get_plans']);
+    Route::get('/get-addons',[ChargebeeController::class,'get_addons']);
+    Route::post('/select-addon/{id}',[ChargebeeController::class,'select_addon']);
+    Route::post('/create-estimate',[ChargebeeController::class,'create_estimate']);
+    Route::post('/create-subscription', [ChargebeeController::class, 'create_subscription']);
+    Route::get('/update-payment-status/{link}', [ChargebeeController::class, 'update_payment_status']);
+
+    ###################################################################
+    /***************************Before Login Routes*******************/
+    ###################################################################
+
+    Route::post('/login', [HomeController::class, 'login']);
+    Route::post('/send-email', [HomeController::class, 'send_email']);
+    Route::post('/reset-password', [HomeController::class, 'reset_password']);
+    Route::post('/create-password', [HomeController::class, 'create_password']);
+
+
+    Route::get('/get-company-details/{link}', [EmployerController::class, 'get_company_details']);
+//    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
+    Route::get('/get-profile-type-list', [ProfileTypeController::class, 'get_profile_type_list']);
+
+
+});
+Route::group(['middleware' => ['auth:api', 'cors']], function () {
+
+    Route::post('/upload-logo', [EmployerController::class, 'upload_logo']);
+    Route::post('/ask-question', [EmployerController::class, 'ask_question']);
+    Route::post('/get-question-list', [EmployerController::class, 'get_question_list']);
+    Route::post('/get-companies-list', [EmployerController::class, 'get_company_list']);
+    Route::post('/update-hours', [EmployerController::class, 'update_hours']);
+
+    ###################################################################
+    /****************************Common Routes************************/
+    ###################################################################
+
+
+    Route::get('/logout', [HomeController::class, 'logout']);
+    Route::get('/get-company-list', [HomeController::class, 'get_company_list']);
+    Route::get('/get-auth-user', [ProfileController::class, 'get_auth_user']);
+    Route::post('/update-profile', [ProfileController::class, 'update_profile']);
+    Route::post('/upload-profile-image', [ProfileController::class, 'upload_profile_image']);
+    Route::post('/change-password', [ProfileController::class, 'change_password']);
+
+    ###################################################################
+    /**************************Employer Routes************************/
+    ###################################################################
+
+    //Announcement routes
+
+    Route::post('/add-announcement', [AnnouncementController::class, 'add_announcement']);
+    Route::get('/delete-announcement/{id}', [AnnouncementController::class, 'delete_announcement']);
+    Route::get('/get-announcement/{id}', [AnnouncementController::class, 'get_announcement']);
+    Route::post('/update-announcement', [AnnouncementController::class, 'update_announcement']);
+    Route::get('/get-announcements-list/{id}', [AnnouncementController::class, 'get_announcements_list']);
+    Route::post('/get-all-announcements-list/{id}', [AnnouncementController::class, 'get_all_announcements_list']);
+
+    //Resources routes
+
+    Route::post('/add-resource', [ResourceController::class, 'add_resource']);
+    Route::post('/get-resources-list', [ResourceController::class, 'get_resources_list']);
+    Route::get('/get-resource/{id}', [ResourceController::class, 'get_resource']);
+    Route::post('/update-resource', [ResourceController::class, 'update_resource']);
+    Route::get('/delete-resource/{id}', [ResourceController::class, 'delete_resource']);
+    Route::get('/download-file/{id}', [ResourceController::class, 'download_file']);
+    Route::get('/get-resources-list-dashboard', [ResourceController::class, 'get_resources_list_dashboard']);
+
+    //Team and Organization Management Routes
+
+    Route::post('/get-employees-list/{id}', [TeamController::class, 'get_employees_list']);
+    Route::get('/delete-employee/{id}', [TeamController::class, 'delete_employee']);
+    Route::get('/get-employee/{id}', [TeamController::class, 'get_employee']);
+    Route::post('/update-employee', [TeamController::class, 'update_employee']);
+    Route::post('/export-employees/{id}', [TeamController::class, 'export_employees']);
+
+    Route::get('/get-employee-registration-link', [TeamController::class, 'get_employee_registration_link']);
+    Route::post('/send-link-to-email', [TeamController::class, 'send_link_to_email']);
+    Route::post('/get-invitations-list/{id}', [TeamController::class, 'get_invitations_list']);
+
+    //Welcome Note Routes
+
+    Route::post('/add-welcome-note', [WelcomeNoteController::class, 'add_welcome_note']);
+    Route::get('/get-welcome-note', [WelcomeNoteController::class, 'get_welcome_note']);
+
+    //Membership routes
+
+    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
+
+    ###################################################################
+    /******************************Common Routes**********************/
+    ###################################################################
+
+    //Chat routes
+
+    Route::post('/send-group-message', [MessageController::class, 'send_group_message']);
+    Route::post('/get-group-message', [MessageController::class, 'get_group_message']);
+    Route::post('/get-one-to-one-message/{rId}', [MessageController::class, 'get_one_to_one_message']);
+    Route::post('/send-one-to-one-message', [MessageController::class, 'send_one_to_one_message']);
+    Route::post('/send-attachments', [MessageController::class, 'send_attachments']);
+    Route::post('/download-attachments', [MessageController::class, 'download_attachment']);
+
+    ###################################################################
+    /****************************Admin Routes*************************/
+    ###################################################################
+
+    //Steps Routes
+
+    Route::post('/add-step', [StepController::class, 'add_step']);
+    Route::post('/get-steps-list', [StepController::class, 'get_steps_list']);
+    Route::get('/get-step/{id}', [StepController::class, 'get_step']);
+    Route::post('/update-step', [StepController::class, 'update_step']);
+    Route::get('/delete-step/{id}', [StepController::class, 'delete_step']);
+    Route::post('/upload-toolkit', [StepController::class, 'upload_toolkit']);
+    Route::post('/delete-toolkit/{id}', [StepController::class, 'delete_toolkit']);
+    Route::get('/download-toolkit/{id}', [StepController::class, 'download_toolkit']);
+    Route::post('/upload-guide-book', [StepController::class, 'upload_guide_book']);
+
+    //opportunity routes
+
+    Route::post('/add-opportunity', [OpportunityController::class, 'add_opportunity']);
+    Route::post('/update-opportunity', [OpportunityController::class, 'update_opportunity']);
+    Route::get('/get-opportunity/{id}', [OpportunityController::class, 'get_opportunity']);
+    Route::get('/get-opportunity-list', [OpportunityController::class, 'get_opportunity_list']);
+    Route::get('/delete-opportunity/{id}', [OpportunityController::class, 'delete_opportunity']);
+    Route::get('/get-opportunity-list-dashboard', [OpportunityController::class, 'get_opportunity_list_dashboard']);
+
+    //todo routes
+
+    Route::post('/add-todo', [TodoController::class, 'add_todo']);
+    Route::post('/update-todo', [TodoController::class, 'update_todo']);
+    Route::get('/get-todo/{id}', [TodoController::class, 'get_todo']);
+    Route::post('/get-todo-list', [TodoController::class, 'get_todo_list']);
+    Route::get('/delete-todo/{id}', [TodoController::class, 'delete_todo']);
+    Route::get('/complete-todo/{id}', [TodoController::class, 'complete_todo']);
+    Route::get('/get-todo-list-dashboard', [TodoController::class, 'get_todo_list_dashboard']);
+
+    //request workshop routes
+
+    Route::post('/request-workshop', [RequestWorkshopController::class, 'request_workshop']);
+    Route::post('/get-workshop-list', [RequestWorkshopController::class, 'get_workshop_list']);
+    Route::get('/get-workshop-list-dashboard', [RequestWorkshopController::class, 'get_workshop_list_dashboard']);
+
+    //Profile type routes
+
+    Route::post('/add-profile-type', [ProfileTypeController::class, 'add_profile_type']);
+    Route::post('/update-profile-type', [ProfileTypeController::class, 'update_profile_type']);
+    Route::get('/delete-profile-type/{id}', [ProfileTypeController::class, 'delete_profile_type']);
+    Route::get('/download-profile-type-file/{id}', [ProfileTypeController::class, 'download_profile_type_file']);
+    Route::get('/get-profile-type/{id}', [ProfileTypeController::class, 'get_profile_type']);
+
+    //Popup surveys routes
+
+    Route::post('/add-popup-survey', [PopupSurveyController::class, 'add_popup_survey_question']);
+    Route::post('/update-popup-survey', [PopupSurveyController::class, 'update_popup_survey_question']);
+    Route::get('/delete-popup-survey/{id}', [PopupSurveyController::class, 'delete_popup_survey_question']);
+    Route::get('/get-popup-survey/{id}', [PopupSurveyController::class, 'get_popup_survey_question']);
+    Route::get('/get-popup-survey-answer-list', [PopupSurveyController::class, 'get_popup_survey_answer_list']);
+    Route::post('/get-popup-survey-list', [PopupSurveyController::class, 'get_popup_survey_question_list']);
+    Route::get('/get-survey-questions-dashboard', [PopupSurveyController::class, 'get_survey_questions_dashboard']);
+    Route::post('/submit-popup-survey', [PopupSurveyController::class, 'submit_popup_survey']);
+
+    //Employee Dashboard CMS routes
+
+    Route::post('/add-update-section1', [EmployeeDashboardCmsController::class, 'add_update_section1']);
+    Route::post('/add-update-section2', [EmployeeDashboardCmsController::class, 'add_update_section2']);
+    Route::post('/add-update-section3', [EmployeeDashboardCmsController::class, 'add_update_section3']);
+
+    Route::get('/get-section1/{id}', [EmployeeDashboardCmsController::class, 'get_section1']);
+    Route::get('/get-section2/{id}', [EmployeeDashboardCmsController::class, 'get_section2']);
+    Route::get('/get-section3/{id}', [EmployeeDashboardCmsController::class, 'get_section3']);
+
+    Route::get('/delete-section3-image/{id}', [EmployeeDashboardCmsController::class, 'delete_section3_image']);
+
+    Route::get('/send-email', [EmployeeDashboardCmsController::class, 'send_email']);
+
+});
