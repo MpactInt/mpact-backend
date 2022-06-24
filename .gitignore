@@ -1,6 +1,13 @@
 /node_modules
 /public/hot
 /public/storage
+/public/chat-attachments
+/public/company-resources
+/public/profile-images
+/public/profile-types
+/public/steps
+/public/uploads
+/public/welcome-notes
 /storage/*.key
 /vendor
 .env

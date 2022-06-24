@@ -68,12 +68,12 @@ class PopupSurveyController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function get_popup_survey_answer_list()
+    public function get_popup_survey_answer_list($id)
     {
-        $ps = PopupSurveyQuestion::select('popup_survey_answers.*', 'popup_survey_questions.question', 'company_employees.first_name', 'company_employees.last_name', 'companies.company_name')
-            ->join('popup_survey_answers', 'popup_survey_answers.question_id', 'popup_survey_questions.id')
+        $ps = PopupSurveyAnswer::select('popup_survey_answers.*', 'company_employees.first_name', 'company_employees.last_name', 'companies.company_name')
             ->join('company_employees', 'popup_survey_answers.company_employee_id', 'company_employees.id')
             ->join('companies', 'company_employees.company_id', 'companies.id')
+            ->where('popup_survey_answers.question_id',$id)
             ->paginate(10);
         return response(["status" => "success", "res" => $ps], 200);
     }

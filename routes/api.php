@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CheckInSurveyController;
 use App\Http\Controllers\Admin\EmployeeDashboardCmsController;
 use App\Http\Controllers\Admin\OpportunityController;
 use App\Http\Controllers\Admin\PopupSurveyController;
@@ -13,10 +14,10 @@ use App\Http\Controllers\Common\RequestWorkshopController;
 use App\Http\Controllers\Employer\AnnouncementController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Common\MessageController;
-use App\Http\Controllers\Common\UserController;
 use App\Http\Controllers\Employer\ResourceController;
 use App\Http\Controllers\Employer\TeamController;
 use App\Http\Controllers\Employer\WelcomeNoteController;
+use App\Http\Controllers\WorkshopController;
 use App\Models\PopupSurveyQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +67,8 @@ Route::group([
 //    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
     Route::get('/get-profile-type-list', [ProfileTypeController::class, 'get_profile_type_list']);
 
+    Route::get('/get-check-in-survey-questions/{id}', [CheckInSurveyController::class, 'get_check_in_survey_questions']);
+    Route::post('/submit-check-in-survey/{id}', [CheckInSurveyController::class, 'submit_check_in_survey']);
 
 });
 Route::group(['middleware' => ['auth:api', 'cors']], function () {
@@ -91,6 +94,12 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     ###################################################################
     /**************************Employer Routes************************/
     ###################################################################
+
+    //company feedback routes
+
+    Route::post('/submit-company-feedback', [EmployerController::class, 'submit_company_feedback']);
+    Route::get('/get-company-feedback-list', [EmployerController::class, 'get_company_feedback_list']);
+
 
     //Announcement routes
 
@@ -200,10 +209,21 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/update-popup-survey', [PopupSurveyController::class, 'update_popup_survey_question']);
     Route::get('/delete-popup-survey/{id}', [PopupSurveyController::class, 'delete_popup_survey_question']);
     Route::get('/get-popup-survey/{id}', [PopupSurveyController::class, 'get_popup_survey_question']);
-    Route::get('/get-popup-survey-answer-list', [PopupSurveyController::class, 'get_popup_survey_answer_list']);
+    Route::get('/get-popup-survey-answer-list/{id}', [PopupSurveyController::class, 'get_popup_survey_answer_list']);
     Route::post('/get-popup-survey-list', [PopupSurveyController::class, 'get_popup_survey_question_list']);
     Route::get('/get-survey-questions-dashboard', [PopupSurveyController::class, 'get_survey_questions_dashboard']);
     Route::post('/submit-popup-survey', [PopupSurveyController::class, 'submit_popup_survey']);
+
+
+    //CheckIn surveys routes
+
+    Route::post('/add-check-in-survey', [CheckInSurveyController::class, 'add_check_in_survey_question']);
+    Route::post('/update-check-in-survey', [CheckInSurveyController::class, 'update_check_in_survey_question']);
+    Route::get('/delete-check-in-survey/{id}', [CheckInSurveyController::class, 'delete_check_in_survey_question']);
+    Route::get('/get-check-in-survey/{id}', [CheckInSurveyController::class, 'get_check_in_survey_question']);
+    Route::get('/get-check-in-survey-answer-list', [CheckInSurveyController::class, 'get_check_in_survey_answer_list']);
+    Route::post('/get-check-in-survey-list', [CheckInSurveyController::class, 'get_check_in_survey_question_list']);
+    Route::get('/send-email', [CheckInSurveyController::class, 'send_email']);
 
     //Employee Dashboard CMS routes
 
@@ -217,6 +237,12 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
 
     Route::get('/delete-section3-image/{id}', [EmployeeDashboardCmsController::class, 'delete_section3_image']);
 
-    Route::get('/send-email', [EmployeeDashboardCmsController::class, 'send_email']);
+    //Workshops Routes
 
+    Route::post('/add-workshop', [WorkshopController::class, 'add_workshop']);
+    Route::post('/get-workshops-list', [WorkshopController::class, 'get_workshops_list']);
+    Route::get('/get-workshop/{id}', [WorkshopController::class, 'get_workshop']);
+    Route::post('/update-workshop', [WorkshopController::class, 'update_workshop']);
+    Route::get('/delete-workshop/{id}', [WorkshopController::class, 'delete_workshop']);
+    Route::get('/register-for-workshop/{id}', [WorkshopController::class, 'register_for_workshop']);
 });

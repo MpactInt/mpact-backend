@@ -201,19 +201,4 @@ class EmployeeDashboardCmsController extends Controller
         return response(["status" => "success", "res" => $img], 200);
     }
 
-    public function send_email()
-    {
-        $users = User::where('role', 'COMPANY')->get();
-
-        foreach ($users as $u) {
-            Mail::send([], [], function ($message) use ($u) {
-                $message->to($u->email, 'MPACT INT')
-                    ->subject('Check In Email')
-                    ->setBody('Check In Email');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-
-            });
-        }
-        return response(["status" => "success", "message" => "Email Sent Successfully"], 200);
-    }
 }
