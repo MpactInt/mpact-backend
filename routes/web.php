@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\ChargebeeController;
-use App\Http\Controllers\MessageController;
+
+use App\Http\Controllers\Common\ChargebeeController;
+use App\Http\Controllers\Common\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [ChargebeeController::class,'index']);
-
-Route::get('/create-customer', [\App\Http\Controllers\PaymentController::class, 'create_customer']);
-Route::get('/create-product-family', [\App\Http\Controllers\PaymentController::class, 'create_product_family']);
-Route::get('/create-plan', [\App\Http\Controllers\PaymentController::class, 'create_plan']);
-Route::get('/create-plan-price', [\App\Http\Controllers\PaymentController::class, 'create_item_price']);
-Route::get('/create-subscription', [\App\Http\Controllers\PaymentController::class, 'create_subscription']);
+//
+//Route::get('/create-customer', [\App\Http\Controllers\PaymentController::class, 'create_customer']);
+//Route::get('/create-product-family', [\App\Http\Controllers\PaymentController::class, 'create_product_family']);
+//Route::get('/create-plan', [\App\Http\Controllers\PaymentController::class, 'create_plan']);
+//Route::get('/create-plan-price', [\App\Http\Controllers\PaymentController::class, 'create_item_price']);
+//Route::get('/create-subscription', [\App\Http\Controllers\PaymentController::class, 'create_subscription']);
 
 
 

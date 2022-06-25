@@ -121,10 +121,19 @@ class WorkshopController extends Controller
      */
     public function get_workshop($id)
     {
+        $registered="";
         $user = Auth::guard('api')->user();
-        $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
-        $workshops = Workshop::find($id);
-        $registered = WorkshopRegistration::where(['workshop_id'=>$id,'company_employee_id'=>$companyEmp->id])->first();
+        if($user->role == "ADMIN"){
+            $workshops = Workshop::find($id);
+            $workshops->users = WorkshopRegistration::select('workshop_registration.*','company_employees.first_name','company_employees.last_name','companies.company_name')
+                                ->join('company_employees','company_employees.id','workshop_registration.company_Employee_id')
+                                ->join('companies','company_employees.company_id','companies.id')
+                                ->where('workshop_id',$id)->get();
+        }else {
+            $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
+            $workshops = Workshop::find($id);
+            $registered = WorkshopRegistration::where(['workshop_id'=>$id,'company_employee_id'=>$companyEmp->id])->first();
+        }
         $path = url('/public/workshops/');
         return response(["status" => "success", 'res' => $workshops, 'path' => $path, 'registered'=>$registered], 200);
     }
