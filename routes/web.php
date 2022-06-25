@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ChargebeeController::class,'index']);
+//Route::get('/', [ChargebeeController::class,'index']);
 //
 //Route::get('/create-customer', [\App\Http\Controllers\PaymentController::class, 'create_customer']);
 //Route::get('/create-product-family', [\App\Http\Controllers\PaymentController::class, 'create_product_family']);
@@ -26,6 +26,6 @@ Route::get('/', [ChargebeeController::class,'index']);
 
 
 
-Route::get('/webhook-listen', [ChargebeeController::class, 'webhook_listen']);
-Route::get('download', [MessageController::class, 'download']);
+//Route::get('/webhook-listen', [ChargebeeController::class, 'webhook_listen']);
+//Route::get('download', [MessageController::class, 'download']);
 
