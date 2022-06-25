@@ -90,6 +90,7 @@ class HomeController extends Controller
             $emp->first_name = "Company";
             $emp->last_name = "Admin";
             $emp->role = "COMPANY_ADMIN";
+            $emp->profile_type_id = 1;
             $emp->save();
 
             $link1 = env('FRONT_URL') . '/registration/' . $link;
