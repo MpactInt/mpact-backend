@@ -14,7 +14,7 @@ class AddProfileTypeIdToCompanyEmployeesTable extends Migration
     public function up()
     {
         Schema::table('company_employees', function (Blueprint $table) {
-            $table->integer("profile_type_id");
+            $table->integer("profile_type_id")->nullable();
         });
     }
 

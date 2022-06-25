@@ -106,7 +106,7 @@ class ChargebeeController extends Controller
                     "itemPriceId" => "$request->addon",
                     "quantity" => 1
                 )),
-                "redirectUrl" => 'http://localhost:8080/employer/membership-details'
+                "redirectUrl" => env('FRONT_URL').'/employer/membership-details'
             )
         );
         $hostedPage = $result->hostedPage();
@@ -148,7 +148,7 @@ class ChargebeeController extends Controller
                 "zip" => $request->zip,
                 "country" => $request->country
             ),
-            "redirectUrl" => 'http://localhost:8080/payment-success/' . $link
+            "redirectUrl" => env('FRONT_URL').'/payment-success/' . $link
         ));
         $hostedPage = $result->hostedPage();
         $reflection = new ReflectionClass($hostedPage);
