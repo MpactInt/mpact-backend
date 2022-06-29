@@ -54,8 +54,7 @@ class StepController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'overview'=>'required',
-            'description' => 'required',
-            'image'=>'required|image'
+            'description' => 'required'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -64,16 +63,23 @@ class StepController extends Controller
             $filename = '';
             $step = Step::find($request->id);
             if ($request->hasFile('image')) {
+                $validator = Validator::make($request->all(), [
+                    'image'=>'image'
+                ]);
+                if ($validator->fails()) {
+                    $error = $validator->getMessageBag()->first();
+                    return response()->json(["status" => "error", "message" => $error], 400);
+                }
                 $destinationPath = public_path() . '/steps';
                 unlink($destinationPath . '/' . $step->image);
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $uploadedFile->move($destinationPath, $filename);
+                $step->image = $filename;
             }
             $step->title = $request->title;
             $step->overview = $request->overview;
             $step->description = $request->description;
-            $step->image = $filename;
             $step->save();
             return response(["status" => "success", 'res' => $step], 200);
         }

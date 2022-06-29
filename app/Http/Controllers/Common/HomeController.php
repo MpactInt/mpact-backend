@@ -42,11 +42,14 @@ class HomeController extends Controller
             $hours = 8;
         }
 
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+
+
         $validator = Validator::make($request->all(), [
             'companyname' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|max:255|min:8',
-            'domain' => 'required|max:255|url|unique:companies,company_domain',
+            'domain' => 'required|max:255|regex:'.$regex.'|unique:companies,company_domain',
             'employees' => 'required|max:255',
             'plan' => 'required|max:255',
 //            'addon' => 'required|max:255',
@@ -93,13 +96,13 @@ class HomeController extends Controller
             $emp->profile_type_id = 1;
             $emp->save();
 
-            $link1 = env('FRONT_URL') . '/registration/' . $link;
-            $data = ['link' => $link1, 'name' => $companyname];
-            Mail::send('registration-email', $data, function ($message) use ($email) {
-                $message->to($email, 'MPACT INT')
-                    ->subject('Employee registration link');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            });
+//            $link1 = env('FRONT_URL') . '/registration/' . $link;
+//            $data = ['link' => $link1, 'name' => $companyname];
+//            Mail::send('registration-email', $data, function ($message) use ($email) {
+//                $message->to($email, 'MPACT INT')
+//                    ->subject('Employee registration link');
+//                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+//            });
 
             return response()->json(['status' => 'success', 'res' => $cu], 200);
         }

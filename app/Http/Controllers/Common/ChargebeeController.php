@@ -129,7 +129,7 @@ class ChargebeeController extends Controller
         $result = HostedPage::checkoutNewForItems(array(
             "subscriptionItems" => array(array(
                 "itemPriceId" => "$request->plan",
-                "quantity" => 1,
+                "quantity" => $request->employees,
             ),
 //                array(
 //                    "itemPriceId" => "$request->addon",
@@ -168,18 +168,34 @@ class ChargebeeController extends Controller
         $c->payment_status = "COMPLETED";
         $c->save();
         $user = User::where('id', $c->user_id)->first();
-        Auth::login($user);
-        $accessToken = Auth::user()->createToken('authToken')->accessToken;
-        $c = '';
-        if ($user->role == "COMPANY") {
-            $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role')->join('company_employees', 'companies.id', 'company_employees.company_id')->where("company_employees.user_id", $user->id)->first();
-            if ($c) {
-                $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
+        $user1 = Auth::user();
+        if(!$user1) {
+            Auth::login($user);
+            $accessToken = Auth::user()->createToken('authToken')->accessToken;
+            $c = '';
+            if ($user->role == "COMPANY") {
+                $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role')->join('company_employees', 'companies.id', 'company_employees.company_id')->where("company_employees.user_id", $user->id)->first();
+                if ($c) {
+                    $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
+                }
             }
+            $user->last_login = DB::raw('CURRENT_TIMESTAMP');
+            $user->save();
+
+            $link1 = env('FRONT_URL') . '/registration/' . $link;
+            $data = ['link' => $link1, 'name' => $c->company_name];
+
+            Mail::send('registration-email', $data, function ($message) use ($user, $c) {
+                $message->to($user->email, $c->company_name)
+                    ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            });
+
+            return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
+        }else{
+            return response(['user' => '', 'company' => '', 'access_token' => '']);
+
         }
-        $user->last_login = DB::raw('CURRENT_TIMESTAMP');
-        $user->save();
-        return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
     }
 
     public function create_estimate(Request $request)
@@ -187,7 +203,7 @@ class ChargebeeController extends Controller
         $result = Estimate::createSubItemEstimate(array(
             "subscriptionItems" => array(array(
                 "itemPriceId" => $request->plan,
-                "quantity" => 1
+                "quantity" => $request->employees
             ),
 //                array(
 //                    "itemPriceId" => $request->addon,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -79,6 +80,52 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function update_profile_company(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'company_name' => 'required',
+            'password'=>'nullable|min:8',
+            'company_logo' => 'nullable|image'
+        ]);
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
+            $company_id = $request->id;
+            $company = Company::where('id', $company_id)->first();
+            $company_employee = CompanyEmployee::where('company_id', $company_id)->first();
+            if ($request->hasFile('company_logo')) {
+                $uploadedFile = $request->file('company_logo');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $destinationPath = public_path() . '/uploads';
+                if ($company_employee->profile_image != 'default.png') {
+                    unlink($destinationPath . '/' . $company->company_logo);
+                }
+                $uploadedFile->move($destinationPath, $filename);
+                $company->company_logo = $filename;
+            }
+            $company->company_name = $request->company_name;
+            $company->save();
+
+            $company_employee->first_name = $request->first_name;
+            $company_employee->last_name = $request->last_name;
+            $company_employee->save();
+
+            if($request->password) {
+                $user = User::where('id', $company->user_id)->first();
+                $user->password = Hash::make($request->password);
+                $user->save();
+            }
+            return response(["status" => "success", 'res' => $company_employee], 200);
+        }
+    }
+
+    /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     public function get_auth_user()
@@ -89,10 +136,10 @@ class ProfileController extends Controller
             ->where('company_employees.user_id', $user->id)
             ->first();
         if ($u) {
-            if($u->role == "COMPANY_EMP"){
+            if ($u->role == "COMPANY_EMP") {
                 $u = Company::select('companies.*', 'company_employees.*', 'company_employees.id as emp_id', 'profile_types.profile_type')
                     ->join('company_employees', 'companies.id', 'company_employees.company_id')
-                    ->join('profile_types','profile_types.id','company_employees.profile_type_id')
+                    ->join('profile_types', 'profile_types.id', 'company_employees.profile_type_id')
                     ->where('company_employees.user_id', $user->id)
                     ->first();
             }
@@ -101,7 +148,7 @@ class ProfileController extends Controller
         } else {
             $u = $user;
         }
-        return response(["status" => "success", "res" => $u, 'id'=>$user->id], 200);
+        return response(["status" => "success", "res" => $u, 'id' => $user->id], 200);
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompanyWelcomeNotesTable extends Migration
+class CreateCompanyEmployeeWelcomeNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateCompanyWelcomeNotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_welcome_notes', function (Blueprint $table) {
+        Schema::create('company_employee_welcome_notes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
             $table->string('title');
             $table->text('description');
             $table->string('image');
-            $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
+            $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -31,6 +31,6 @@ class CreateCompanyWelcomeNotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_welcome_notes');
+        Schema::dropIfExists('company_employee_welcome_notes');
     }
 }

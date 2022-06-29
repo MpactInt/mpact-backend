@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PopupSurveyController;
 use App\Http\Controllers\Admin\ProfileTypeController;
 use App\Http\Controllers\Admin\StepController;
 use App\Http\Controllers\Admin\TodoController;
+use App\Http\Controllers\Admin\ZoomMeetingController;
 use App\Http\Controllers\Common\ChargebeeController;
 use App\Http\Controllers\Common\HomeController;
 use App\Http\Controllers\Common\ProfileController;
@@ -88,6 +89,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-company-list', [HomeController::class, 'get_company_list']);
     Route::get('/get-auth-user', [ProfileController::class, 'get_auth_user']);
     Route::post('/update-profile', [ProfileController::class, 'update_profile']);
+    Route::post('/update-profile-company', [ProfileController::class, 'update_profile_company']);
     Route::post('/upload-profile-image', [ProfileController::class, 'upload_profile_image']);
     Route::post('/change-password', [ProfileController::class, 'change_password']);
 
@@ -135,7 +137,14 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     //Welcome Note Routes
 
     Route::post('/add-welcome-note', [WelcomeNoteController::class, 'add_welcome_note']);
+    Route::post('/add-welcome-note-company', [WelcomeNoteController::class, 'add_welcome_note_company']);
+    Route::post('/update-welcome-note-company', [WelcomeNoteController::class, 'update_welcome_note_company']);
+    Route::get('/delete-welcome-note/{id}', [WelcomeNoteController::class, 'delete_welcome_note']);
     Route::get('/get-welcome-note', [WelcomeNoteController::class, 'get_welcome_note']);
+    Route::get('/get-single-welcome-note/{id}', [WelcomeNoteController::class, 'get_single_welcome_note']);
+    Route::get('/get-single-welcome-note-company', [WelcomeNoteController::class, 'get_single_welcome_note_company']);
+    Route::get('/get-welcome-note-list', [WelcomeNoteController::class, 'get_welcome_note_list']);
+    Route::get('/get-welcome-note-company-list', [WelcomeNoteController::class, 'get_welcome_note_company_list']);
 
     //Membership routes
 
@@ -241,8 +250,20 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
 
     Route::post('/add-workshop', [WorkshopController::class, 'add_workshop']);
     Route::post('/get-workshops-list', [WorkshopController::class, 'get_workshops_list']);
+    Route::get('/get-workshops-list-for-select', [WorkshopController::class, 'get_workshops_list_for_select']);
     Route::get('/get-workshop/{id}', [WorkshopController::class, 'get_workshop']);
     Route::post('/update-workshop', [WorkshopController::class, 'update_workshop']);
     Route::get('/delete-workshop/{id}', [WorkshopController::class, 'delete_workshop']);
     Route::get('/register-for-workshop/{id}', [WorkshopController::class, 'register_for_workshop']);
+
+    //Zoom Meeting routes
+
+    Route::post('/add-meeting', [ZoomMeetingController::class, 'store']);
+    Route::get('/get-meeting-recording-list/{id}', [ZoomMeetingController::class, 'get_recordings']);
+    Route::get('/get-meeting/{id}', [ZoomMeetingController::class, 'show']);
+    Route::post('/get-meetings-list', [ZoomMeetingController::class, 'get_meetings_list']);
+    Route::post('/update-meeting', [ZoomMeetingController::class, 'update']);
+    Route::get('/delete-meeting/{id}', [ZoomMeetingController::class, 'destroy']);
+
 });
+

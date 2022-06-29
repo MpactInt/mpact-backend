@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequestWorkshopsTable extends Migration
+class CreateCompanyWelcomeNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,12 @@ class CreateRequestWorkshopsTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_workshops', function (Blueprint $table) {
+        Schema::create('company_welcome_notes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
-            $table->string('name');
-            $table->string('workshop_focus');
-            $table->string('desired_date');
-            $table->string('workshop_length');
-            $table->enum('workshop_type',['IN_PERSON','VIRTUAL']);
-            $table->text('audience')->nullable();
-            $table->text('requirements')->nullable();
-            $table->text('expectations')->nullable();
+            $table->unsignedBigInteger('welcome_note_id');
             $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('welcome_note_id')->references('id')->on('welcome_notes')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
@@ -36,6 +30,6 @@ class CreateRequestWorkshopsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_workshops');
+        Schema::dropIfExists('company_welcome_notes');
     }
 }

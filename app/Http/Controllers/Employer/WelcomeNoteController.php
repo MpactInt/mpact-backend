@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\CompanyEmployeeWelcomeNote;
 use App\Models\CompanyWelcomeNote;
+use App\Models\WelcomeNote;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -34,9 +36,9 @@ class WelcomeNoteController extends Controller
 
             $destinationPath = public_path() . '/welcome-notes';
 
-            $note = CompanyWelcomeNote::where('company_id', $company->id)->first();
+            $note = CompanyEmployeeWelcomeNote::where('company_id', $company->id)->first();
             if (!$note) {
-                $note = new CompanyWelcomeNote();
+                $note = new CompanyEmployeeWelcomeNote();
             } else {
                 unlink($destinationPath . '/' . $note->image);
             }
@@ -52,6 +54,96 @@ class WelcomeNoteController extends Controller
 
     /**
      * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function add_welcome_note_company(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'image' => 'required|image',
+            'company' => 'required'
+        ]);
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
+
+            $user = Auth::guard('api')->user();
+            $company = Company::where('user_id', $user->id)->first();
+            $uploadedFile = $request->file('image');
+            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+            $destinationPath = public_path() . '/welcome-notes';
+            $uploadedFile->move($destinationPath, $filename);
+
+            $note = new WelcomeNote();
+            $note->title = $request->title;
+            $note->description = $request->description;
+            $note->image = $filename;
+            $note->save();
+            $company = json_decode($request->company);
+            foreach ($company as $value) {
+                $nc = new CompanyWelcomeNote();
+                $nc->company_id = $value->id;
+                $nc->welcome_note_id = $note->id;
+                $nc->save();
+            }
+            return response(["status" => "success", 'res' => $note], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
+    public function update_welcome_note_company(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'company' => 'required'
+        ]);
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
+            $filename = '';
+            $wn = WelcomeNote::find($request->id);
+            if ($request->hasFile('image')) {
+                $validator = Validator::make($request->all(), [
+                    'image' => 'image'
+                ]);
+                if ($validator->fails()) {
+                    $error = $validator->getMessageBag()->first();
+                    return response()->json(["status" => "error", "message" => $error], 400);
+                }
+                $destinationPath = public_path() . '/welcome-notes';
+                unlink($destinationPath . '/' . $wn->image);
+                $uploadedFile = $request->file('image');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $uploadedFile->move($destinationPath, $filename);
+                $wn->image = $filename;
+            }
+            $wn->title = $request->title;
+            $wn->description = $request->description;
+            $wn->save();
+            if ($request->company) {
+                CompanyWelcomeNote::where('welcome_note_id', $request->id)->delete();
+                $company = json_decode($request->company);
+                foreach ($company as $value) {
+                    $nc = new CompanyWelcomeNote();
+                    $nc->company_id = $value->id;
+                    $nc->welcome_note_id = $request->id;
+                    $nc->save();
+                }
+            }
+            return response(["status" => "success", 'res' => $wn], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     public function get_welcome_note(Request $request)
@@ -59,9 +151,66 @@ class WelcomeNoteController extends Controller
         $user = Auth::guard('api')->user();
         $company = Company::where('user_id', $user->id)->first();
 
-        $note = CompanyWelcomeNote::where('company_id', $company->id)->first();
+        $note = CompanyEmployeeWelcomeNote::where('company_id', $company->id)->first();
 
         $note->image = url('/public/welcome-notes/') . '/' . $note->image;
         return response(["status" => "success", 'res' => $note], 200);
+    }
+     /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function get_single_welcome_note_company(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+        $company = Company::where('user_id', $user->id)->first();
+
+        $note = WelcomeNote::join('company_welcome_notes','welcome_notes.id','company_welcome_notes.welcome_note_id')
+            ->where('company_id', $company->id)->first();
+        if($note) {
+            $note->image = url('/public/welcome-notes/') . '/' . $note->image;
+        }
+        return response(["status" => "success", 'res' => $note, 'compa'=>$company], 200);
+    }
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function delete_welcome_note($id,Request $request)
+    {
+        $note = WelcomeNote::where('id', $id)->first();
+        $destinationPath = public_path() . '/welcome-notes';
+        unlink($destinationPath.'/'.$note->image);
+        $note->delete();
+        CompanyWelcomeNote::where('welcome_note_id',$id)->delete();
+        return response(["status" => "success", 'res' => $note], 200);
+    }
+
+    public function get_welcome_note_list(Request $request)
+    {
+        $note = WelcomeNote::with(['company' => function ($q) {
+            $q->join('companies', 'companies.id', 'company_welcome_notes.company_id')->pluck('companies.company_name');
+        }])->paginate(10);
+        $path = url('/public/welcome-notes/');
+        return response(["status" => "success", 'res' => $note, 'path' => $path], 200);
+    }
+
+    public function get_single_welcome_note($id, Request $request)
+    {
+        $note = WelcomeNote::where('id', $id)->first();
+        $note->company = CompanyWelcomeNote::select('companies.id', 'companies.company_name as name')
+            ->join('companies', 'companies.id', 'company_welcome_notes.company_id')
+            ->get();
+//        $path = url('/public/welcome-notes/');
+        return response(["status" => "success", 'res' => $note], 200);
+    }
+
+    public function get_welcome_note_company_list()
+    {
+        $companies = CompanyWelcomeNote::pluck('company_id');
+        $res = Company::select('id', 'company_name as name')
+            ->whereNotIn('id', $companies)
+            ->get();
+        return response(["status" => "success", "res" => $res], 200);
     }
 }

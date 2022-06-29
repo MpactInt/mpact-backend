@@ -88,9 +88,9 @@ class EmployerController extends Controller
      */
     public function get_question_list()
     {
-        $ql = CompanyQuestion::select('company_questions.*','companies.company_name','company_employees.first_name','company_employees.last_name')
-            ->join('company_employees','company_employees.id','company_questions.company_id')
-            ->join('companies','companies.id','company_employees.company_id')
+        $ql = CompanyQuestion::select('company_questions.*', 'companies.company_name', 'company_employees.first_name', 'company_employees.last_name')
+            ->join('company_employees', 'company_employees.id', 'company_questions.company_id')
+            ->join('companies', 'companies.id', 'company_employees.company_id')
             ->paginate(10);
         return response(["status" => "success", 'res' => $ql], 200);
     }
@@ -100,15 +100,20 @@ class EmployerController extends Controller
      */
     public function get_company_list()
     {
-        $ql = Company::paginate(10);
-        return response(["status" => "success", 'res' => $ql], 200);
+        $ql = Company::select('*', 'company_name as name', 'company_employees.first_name', 'company_employees.last_name')
+            ->join('company_employees', 'companies.id', 'company_employees.company_id')
+            ->where('company_employees.role','COMPANY_ADMIN')
+            ->paginate(10);
+        $path = url('/') . '/public/uploads/' ;
+        return response(["status" => "success", 'res' => $ql, 'path'=>$path], 200);
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function update_hours(Request $request){
+    public function update_hours(Request $request)
+    {
         $c = Company::find($request->companyId);
         $c->remaining_hours = $request->remainingHours;
         $c->save();
@@ -119,12 +124,13 @@ class EmployerController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function submit_company_feedback(Request $request){
+    public function submit_company_feedback(Request $request)
+    {
         $user = Auth::guard('api')->user();
         $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
-        if($request->anonymous){
+        if ($request->anonymous) {
             $anonymous = 1;
-        }else{
+        } else {
             $anonymous = 0;
         }
         $cf = new CompanyFeedback();
@@ -136,14 +142,15 @@ class EmployerController extends Controller
         return response(["status" => "success", 'res' => $cf], 200);
     }
 
-    public function get_company_feedback_list(){
+    public function get_company_feedback_list()
+    {
         $user = Auth::guard('api')->user();
         $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
 
-        $res = CompanyFeedback::select('company_feedbacks.*','company_employees.first_name','company_employees.last_name')
-                              ->join('company_employees','company_employees.id','company_feedbacks.company_employee_id')
-                              ->where('company_feedbacks.company_id',$companyEmp->company_id)
-                              ->paginate(10);
+        $res = CompanyFeedback::select('company_feedbacks.*', 'company_employees.first_name', 'company_employees.last_name')
+            ->join('company_employees', 'company_employees.id', 'company_feedbacks.company_employee_id')
+            ->where('company_feedbacks.company_id', $companyEmp->company_id)
+            ->paginate(10);
         return response(["status" => "success", 'res' => $res], 200);
 
     }

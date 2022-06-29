@@ -25,6 +25,7 @@ class WorkshopController extends Controller
             'total_hours' => 'required',
             'date' => 'required',
             'instructor' => 'required',
+            'meeting_type' => 'required',
             'additional_info' => 'required'
         ]);
         if ($validator->fails()) {
@@ -46,6 +47,7 @@ class WorkshopController extends Controller
             $workshop->date = $request->date;
             $workshop->instructor = $request->instructor;
             $workshop->additional_info = $request->additional_info;
+            $workshop->meeting_type = $request->meeting_type;
             $workshop->save();
             return response(["status" => "success", 'res' => $workshop], 200);
         }
@@ -60,10 +62,11 @@ class WorkshopController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'description' => 'required',
-            'image' => 'required',
+            'image' => 'nullable|image',
             'total_hours' => 'required',
             'date' => 'required',
             'instructor' => 'required',
+            'meeting_type' => 'required',
             'additional_info' => 'required'
         ]);
         if ($validator->fails()) {
@@ -78,14 +81,15 @@ class WorkshopController extends Controller
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $uploadedFile->move($destinationPath, $filename);
+                $workshop->image = $filename;
             }
             $workshop->title = $request->title;
             $workshop->description = $request->description;
-            $workshop->image = $filename;
             $workshop->total_hours = $request->total_hours;
             $workshop->date = $request->date;
             $workshop->instructor = $request->instructor;
             $workshop->additional_info = $request->additional_info;
+            $workshop->meeting_type = $request->meeting_type;
             $workshop->save();
             return response(["status" => "success", 'res' => $workshop], 200);
         }
@@ -121,21 +125,21 @@ class WorkshopController extends Controller
      */
     public function get_workshop($id)
     {
-        $registered="";
+        $registered = "";
         $user = Auth::guard('api')->user();
-        if($user->role == "ADMIN"){
+        if ($user->role == "ADMIN") {
             $workshops = Workshop::find($id);
-            $workshops->users = WorkshopRegistration::select('workshop_registration.*','company_employees.first_name','company_employees.last_name','companies.company_name')
-                                ->join('company_employees','company_employees.id','workshop_registration.company_Employee_id')
-                                ->join('companies','company_employees.company_id','companies.id')
-                                ->where('workshop_id',$id)->get();
-        }else {
+            $workshops->users = WorkshopRegistration::select('workshop_registration.*', 'company_employees.first_name', 'company_employees.last_name', 'companies.company_name')
+                ->join('company_employees', 'company_employees.id', 'workshop_registration.company_Employee_id')
+                ->join('companies', 'company_employees.company_id', 'companies.id')
+                ->where('workshop_id', $id)->get();
+        } else {
             $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
             $workshops = Workshop::find($id);
-            $registered = WorkshopRegistration::where(['workshop_id'=>$id,'company_employee_id'=>$companyEmp->id])->first();
+            $registered = WorkshopRegistration::where(['workshop_id' => $id, 'company_employee_id' => $companyEmp->id])->first();
         }
         $path = url('/public/workshops/');
-        return response(["status" => "success", 'res' => $workshops, 'path' => $path, 'registered'=>$registered], 200);
+        return response(["status" => "success", 'res' => $workshops, 'path' => $path, 'registered' => $registered], 200);
     }
 
     /**
@@ -150,7 +154,8 @@ class WorkshopController extends Controller
         $workshop->delete();
         return response(["status" => "success", 'res' => $workshop], 200);
     }
-  /**
+
+    /**
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
@@ -165,4 +170,9 @@ class WorkshopController extends Controller
         return response(["status" => "success", 'res' => $res], 200);
     }
 
+    public function get_workshops_list_for_select()
+    {
+        $res = Workshop::all();
+        return response(["status" => "success", 'res' => $res], 200);
+    }
 }
