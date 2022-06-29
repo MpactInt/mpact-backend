@@ -142,8 +142,10 @@ class HomeController extends Controller
                 if ($total_emp < $company->total_employees) {
                     $employee_email_domain = explode('@', $email);
                     $employee_email_domain = $employee_email_domain[1];
-                    $company_domain = explode('www.', $company->company_domain);
-                    $company_domain = $company_domain[1];
+//                    $company_domain = explode('www.', $company->company_domain);
+//                    $company_domain = $company_domain[1];
+                    $company_domain = preg_replace( "#^[^:/.]*[:/]+#i", "", preg_replace( "{/$}", "", urldecode( $company->company_domain ) ) );
+
                     if ($employee_email_domain == $company_domain) {
                         $u = new User();
                         $u->email = $email;
