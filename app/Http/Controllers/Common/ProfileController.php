@@ -143,8 +143,10 @@ class ProfileController extends Controller
                     ->where('company_employees.user_id', $user->id)
                     ->first();
             }
-            $u->company_logo = url('public/uploads/' . $u->company_logo);
-            $u->profile_image = url('public/profile-images/' . $u->profile_image);
+            if($u){
+                $u->company_logo = url('public/uploads/' . $u->company_logo);
+                $u->profile_image = url('public/profile-images/' . $u->profile_image);
+            }
         } else {
             $u = $user;
         }
