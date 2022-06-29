@@ -106,7 +106,7 @@ class ChargebeeController extends Controller
                     "itemPriceId" => "$request->addon",
                     "quantity" => 1
                 )),
-                "redirectUrl" => env('FRONT_URL').'/employer/membership-details'
+                "redirectUrl" => env('FRONT_URL') . '/employer/membership-details'
             )
         );
         $hostedPage = $result->hostedPage();
@@ -136,19 +136,24 @@ class ChargebeeController extends Controller
 //                    "quantity" => 1
 //                )
             ),
-            "billingAddress" => array(
-                "firstName" => $request->firstName,
-                "lastName" => $request->lastName,
-                "email" => $request->email,
-                "company" => $request->company,
-                "phone" => $request->phone,
-                "line1" => $request->address,
-                "city" => $request->city,
-                "state" => $request->state,
-                "zip" => $request->zip,
-                "country" => $request->country
+            "customer" => array(
+                "firstName" => $request->billingAddress['firstname'],
+                "lastName" => $request->billingAddress['lastname'],
+                "email"=>$request->billingAddress['email']
             ),
-            "redirectUrl" => env('FRONT_URL').'/payment-success/' . $link
+            "billingAddress" => array(
+                "firstName" => $request->billingAddress['firstname'],
+                "lastName" => $request->billingAddress['lastname'],
+                "email" => $request->billingAddress['email'],
+                "company" => $request->billingAddress['company'],
+                "phone" => $request->billingAddress['phone'],
+                "line1" => $request->billingAddress['address'],
+                "city" => $request->billingAddress['city'],
+                "state" => $request->billingAddress['state'],
+                "zip" => $request->billingAddress['zip'],
+                "country" => $request->billingAddress['country']
+            ),
+            "redirectUrl" => env('FRONT_URL') . '/payment-success/' . $link
         ));
         $hostedPage = $result->hostedPage();
         $reflection = new ReflectionClass($hostedPage);
@@ -169,7 +174,7 @@ class ChargebeeController extends Controller
         $c->save();
         $user = User::where('id', $c->user_id)->first();
         $user1 = Auth::user();
-        if(!$user1) {
+        if (!$user1) {
             Auth::login($user);
             $accessToken = Auth::user()->createToken('authToken')->accessToken;
             $c = '';
@@ -192,7 +197,7 @@ class ChargebeeController extends Controller
             });
 
             return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
-        }else{
+        } else {
             return response(['user' => '', 'company' => '', 'access_token' => '']);
 
         }

@@ -53,6 +53,7 @@ Route::group([
     Route::post('/create-estimate',[ChargebeeController::class,'create_estimate']);
     Route::post('/create-subscription', [ChargebeeController::class, 'create_subscription']);
     Route::get('/update-payment-status/{link}', [ChargebeeController::class, 'update_payment_status']);
+    Route::get('/get-countries', [HomeController::class, 'get_countries']);
 
     ###################################################################
     /***************************Before Login Routes*******************/

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
+use App\Models\Country;
 use App\Models\Invitation;
 use App\Models\User;
 use ChargeBee\ChargeBee\Models\Estimate;
@@ -324,6 +325,9 @@ class HomeController extends Controller
         $res = Company::select('*','company_name as name')->get();
         return response(["status" => "success", "res" => $res], 200);
     }
-
+    public function get_countries(){
+        $res = Country::all();
+        return response(["status" => "success", "res" => $res], 200);
+    }
 
 }
