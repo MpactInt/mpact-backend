@@ -125,6 +125,7 @@ class ChargebeeController extends Controller
 
     public function create_subscription(Request $request)
     {
+        $payOffline = $request->payOffline;
         $link = $request->link;
         $result = HostedPage::checkoutNewForItems(array(
             "subscriptionItems" => array(array(
@@ -139,7 +140,7 @@ class ChargebeeController extends Controller
             "customer" => array(
                 "firstName" => $request->billingAddress['firstname'],
                 "lastName" => $request->billingAddress['lastname'],
-                "email"=>$request->billingAddress['email']
+                "email" => $request->billingAddress['email'],
             ),
             "billingAddress" => array(
                 "firstName" => $request->billingAddress['firstname'],
@@ -153,7 +154,9 @@ class ChargebeeController extends Controller
                 "zip" => $request->billingAddress['zip'],
                 "country" => $request->billingAddress['country']
             ),
-            "redirectUrl" => env('FRONT_URL') . '/payment-success/' . $link
+            "redirectUrl" => env('FRONT_URL') . '/payment-success/' . $link,
+            "auto_collection" => $payOffline
+
         ));
         $hostedPage = $result->hostedPage();
         $reflection = new ReflectionClass($hostedPage);

@@ -17,7 +17,7 @@ class CreateCompanyQuestionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('company_id');
             $table->text('description');
-            $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('company_id')->references('id')->on('company_employees')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
