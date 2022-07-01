@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CompanyEmployee;
+use App\Models\CompanyOpportunity;
 use App\Models\Opportunity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +16,13 @@ class OpportunityController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     public function add_opportunity(Request $request){
+        $o = new Opportunity();
+        $o->content = $request->description;
+        $o->save();
         foreach ($request->company as $c) {
-            $ca = new Opportunity();
+            $ca = new CompanyOpportunity();
             $ca->company_id = $c['id'];
-            $ca->content = $request->description;
+            $ca->opportunity_id = $o->id;
             $ca->save();
         }
         return response(["status" => "success", "res" => $ca], 200);
@@ -29,10 +33,18 @@ class OpportunityController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     public function update_opportunity(Request $request){
-        $ca = Opportunity::find($request->id);
-        $ca->company_id = $request->company;
-        $ca->content = $request->description;
-        $ca->save();
+        $o = Opportunity::find($request->id);
+        $o->content = $request->description;
+        $o->save();
+        if($request->company){
+            CompanyOpportunity::where('opportunity_id',$request->id)->delete();
+            foreach ($request->company as $c) {
+                $ca = new CompanyOpportunity();
+                $ca->company_id = $c['id'];
+                $ca->opportunity_id = $o->id;
+                $ca->save();
+            }
+        }
         return response(["status" => "success", "res" => $ca], 200);
     }
 
@@ -41,7 +53,12 @@ class OpportunityController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
     public function get_opportunity($id){
-        $ca = Opportunity::select('id','company_id','content as description')->where('id',$id)->first();
+        $ca = Opportunity::select('id','content as description')
+            ->where('id',$id)->first();
+        $ca->company = CompanyOpportunity::join('companies','companies.id','company_opportunities.company_id')
+                        ->select('companies.id','companies.company_name as name')
+                        ->where('opportunity_id',$id)
+                        ->get();
         return response(["status" => "success", "res" => $ca], 200);
     }
 
@@ -53,9 +70,14 @@ class OpportunityController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
-            $ca = Opportunity::where("company_id", $company->company_id)->paginate(10);
+            $ca = Opportunity::select('opportunities.*')
+                ->join('company_opportunities', 'company_opportunities.opportunity_id', 'opportunities.id')
+                ->where("company_id", $company->company_id)
+                ->paginate(10);
         } else {
-            $ca = Opportunity::select('opportunities.*', 'companies.company_name')->join('companies', 'companies.id', 'opportunities.company_id')->paginate(10);
+            $ca = Opportunity::with(['company' => function ($q) {
+                $q->join('companies', 'companies.id', 'company_opportunities.company_id')->pluck('companies.company_name');
+            }])->paginate(10);
         }
         return response(["status" => "success", "res" => $ca], 200);
     }
@@ -66,6 +88,7 @@ class OpportunityController extends Controller
      */
     public function delete_opportunity($id){
         $ca = Opportunity::find($id)->delete();
+        CompanyOpportunity::where('company_id',$id)->delete();
         return response(["status" => "success", "res" => $ca], 200);
     }
 
@@ -77,7 +100,11 @@ class OpportunityController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
-            $ca = Opportunity::where("company_id", $company->company_id)->orderBy('id','desc')->first();
+            $ca = Opportunity::select('opportunities.*')
+                            ->join('company_opportunities','company_opportunities.opportunity_id','opportunities.id')
+                            ->where("company_id", $company->company_id)
+                            ->orderBy('id','desc')
+                            ->first();
         }
         return response(["status" => "success", "res" => $ca], 200);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CompanyEmployee;
+use App\Models\CompanyTodo;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,15 +17,18 @@ class TodoController extends Controller
      */
     public function add_todo(Request $request)
     {
+        $t = new Todo();
+        $t->title = $request->title;
+        $t->description = $request->description;
+        $t->save();
         foreach ($request->company as $c){
-            $ca = new Todo();
-            $ca->company_id = $c['id'];
-            $ca->title = $request->title;
-            $ca->description = $request->description;
-            $ca->save();
+            $ct = new CompanyTodo();
+            $ct->company_id = $c['id'];
+            $ct->todo_id = $t->id;
+            $ct->save();
         }
 
-        return response(["status" => "success", "res" => $ca], 200);
+        return response(["status" => "success", "res" => $t], 200);
     }
 
     /**
@@ -33,12 +37,20 @@ class TodoController extends Controller
      */
     public function update_todo(Request $request)
     {
-        $ca = Todo::find($request->id);
-        $ca->title = $request->title;
-        $ca->company_id = $request->company;
-        $ca->description = $request->description;
-        $ca->save();
-        return response(["status" => "success", "res" => $ca], 200);
+        $t = Todo::find($request->id);
+        $t->title = $request->title;
+        $t->description = $request->description;
+        $t->save();
+        if($request->company){
+            CompanyTodo::where("todo_id",$request->id)->delete();
+            foreach ($request->company as $c){
+                $ct = new CompanyTodo();
+                $ct->company_id = $c['id'];
+                $ct->todo_id = $t->id;
+                $ct->save();
+            }
+        }
+        return response(["status" => "success", "res" => $t], 200);
     }
 
     /**
@@ -47,7 +59,11 @@ class TodoController extends Controller
      */
     public function get_todo($id)
     {
-        $ca = Todo::select('id', 'company_id', 'title', 'description')->where('id', $id)->first();
+        $ca = Todo::select('id', 'title', 'description')->where('id', $id)->first();
+        $ca->company = CompanyTodo::join('companies','companies.id','company_todos.company_id')
+            ->select('companies.id','companies.company_name as name')
+            ->where('todo_id',$id)
+            ->get();
         return response(["status" => "success", "res" => $ca], 200);
     }
 
@@ -62,10 +78,13 @@ class TodoController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
-            $ca = Todo::where("company_id", $company->company_id);
+            $ca = Todo::select('todos.*')
+                ->join('company_todos','company_todos.todo_id','todos.id')
+                ->where("company_id", $company->company_id);
         } else {
-            $ca = Todo::select('todos.*', 'companies.company_name')
-                ->join('companies', 'companies.id', 'todos.company_id');
+            $ca = Todo::with(['company' => function ($q) {
+                $q->join('companies', 'companies.id', 'company_todos.company_id')->pluck('companies.company_name');
+            }]);
         }
         if ($keyword) {
             $ca = $ca->where('title', 'like', "%$keyword%")
@@ -85,6 +104,7 @@ class TodoController extends Controller
     public function delete_todo($id)
     {
         $ca = Todo::find($id)->delete();
+        CompanyTodo::where('todo_id',$id)->delete();
         return response(["status" => "success", "res" => $ca], 200);
     }
 
@@ -105,7 +125,11 @@ class TodoController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
-            $ca = Todo::where("company_id", $company->company_id)->orderBy('id', 'desc')->get();
+            $ca = Todo::select('todos.*')
+                        ->join('company_todos','company_todos.todo_id','todos.id')
+                        ->where("company_id", $company->company_id)
+                        ->orderBy('id', 'desc')
+                        ->get();
         }
         return response(["status" => "success", "res" => $ca], 200);
     }

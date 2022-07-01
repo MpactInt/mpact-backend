@@ -15,11 +15,9 @@ class CreateTodosTable extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id');
             $table->string('title');
             $table->text('description');
             $table->enum('status',['NEW','COMPLETED'])->default('NEW');
-            $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

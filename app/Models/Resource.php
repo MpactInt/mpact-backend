@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Todo extends Model
+class Resource extends Model
 {
     public function company(){
-        return $this->hasMany(CompanyTodo::class,'todo_id','id');
+        return $this->hasMany(CompanyResource::class,'resource_id','id');
     }
 }

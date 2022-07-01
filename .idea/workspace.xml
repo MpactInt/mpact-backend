@@ -4,10 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97406022-315f-40e1-965b-1115fb943c0b" name="Changes" comment="admin and employer fixes">
-      <change afterPath="$PROJECT_DIR$/app/Models/Country.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Common/ChargebeeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Common/ChargebeeController.php" afterDir="false" />
+    <list default="true" id="97406022-315f-40e1-965b-1115fb943c0b" name="Changes" comment="company logo issue employee profile">
+      <change afterPath="$PROJECT_DIR$/app/Models/CompanyOpportunity.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/CompanyTodo.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/CompanyWorkshop.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/Resource.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_055743_create_company_workshops_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_101741_create_company_opportunities_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_110148_create_resources_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_110224_create_company_resources_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_121529_create_company_todos_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_01_063622_add_status_to_request_workshops_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/OpportunityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/OpportunityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/TodoController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/TodoController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Common/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Common/HomeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Common/RequestWorkshopController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Common/RequestWorkshopController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Employer/ResourceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Employer/ResourceController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/WorkshopController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/WorkshopController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Opportunity.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Opportunity.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Todo.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Todo.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Workshop.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Workshop.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_01_092406_create_company_resources_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_01_092406_create_company_resources_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_04_123038_create_opportunities_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_101715_create_opportunities_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_06_081433_create_todos_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_121503_create_todos_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_21_073404_create_workshops_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_21_073404_create_workshops_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/workshops/1656423354_team-mgmt-ref.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -325,6 +347,11 @@
       <workItem from="1656411547929" duration="7178000" />
       <workItem from="1656476541223" duration="8910000" />
       <workItem from="1656500962051" duration="5511000" />
+      <workItem from="1656508497224" duration="1940000" />
+      <workItem from="1656562512340" duration="6893000" />
+      <workItem from="1656579615768" duration="6394000" />
+      <workItem from="1656590172732" duration="2800000" />
+      <workItem from="1656649650395" duration="10289000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1655717777215</created>
@@ -382,7 +409,21 @@
       <option name="project" value="LOCAL" />
       <updated>1656503725035</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="url issue">
+      <created>1656509335690</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1656509335690</updated>
+    </task>
+    <task id="LOCAL-00010" summary="company logo issue employee profile">
+      <created>1656510018451</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1656510018451</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -407,7 +448,9 @@
     <MESSAGE value="minor fixes" />
     <MESSAGE value="profile type issue at company creation" />
     <MESSAGE value="admin and employer fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="admin and employer fixes" />
+    <MESSAGE value="url issue" />
+    <MESSAGE value="company logo issue employee profile" />
+    <option name="LAST_COMMIT_MESSAGE" value="company logo issue employee profile" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

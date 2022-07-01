@@ -73,4 +73,40 @@ class RequestWorkshopController extends Controller
         $res = $res->limit(5)->get();
         return response(["status" => "success", "res" => $res], 200);
     }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function delete_request_workshop($id)
+    {
+        $workshop = RequestWorkshop::find($id);
+        $workshop->delete();
+        return response(["status" => "success", 'res' => $workshop], 200);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function accept_request_workshop($id)
+    {
+        $workshop = RequestWorkshop::find($id);
+        $workshop->status = 'ACCEPTED';
+        $workshop->save();
+        return response(["status" => "success", 'res' => $workshop], 200);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function reject_request_workshop($id)
+    {
+        $workshop = RequestWorkshop::find($id);
+        $workshop->status = 'REJECTED';
+        $workshop->save();
+        return response(["status" => "success", 'res' => $workshop], 200);
+    }
+
 }

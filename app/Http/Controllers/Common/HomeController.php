@@ -324,7 +324,7 @@ class HomeController extends Controller
      */
     public function get_company_list()
     {
-        $res = Company::select('*','company_name as name')->get();
+        $res = Company::select('id','company_name as name')->get();
         return response(["status" => "success", "res" => $res], 200);
     }
     public function get_countries(){

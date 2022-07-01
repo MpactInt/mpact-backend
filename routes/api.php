@@ -60,7 +60,7 @@ Route::group([
     ###################################################################
 
     Route::post('/login', [HomeController::class, 'login']);
-    Route::post('/send-email', [HomeController::class, 'send_email']);
+    Route::post('/forgot-password-send-email', [HomeController::class, 'send_email']);
     Route::post('/reset-password', [HomeController::class, 'reset_password']);
     Route::post('/create-password', [HomeController::class, 'create_password']);
 
@@ -203,7 +203,10 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
 
     Route::post('/request-workshop', [RequestWorkshopController::class, 'request_workshop']);
     Route::post('/get-workshop-list', [RequestWorkshopController::class, 'get_workshop_list']);
-    Route::get('/get-workshop-list-dashboard', [RequestWorkshopController::class, 'get_workshop_list_dashboard']);
+    Route::get('/get-request-workshop-list-dashboard', [RequestWorkshopController::class, 'get_workshop_list_dashboard']);
+    Route::get('/delete-request-workshop/{id}', [RequestWorkshopController::class, 'delete_request_workshop']);
+    Route::get('/accept-request-workshop/{id}', [RequestWorkshopController::class, 'accept_request_workshop']);
+    Route::get('/reject-request-workshop/{id}', [RequestWorkshopController::class, 'reject_request_workshop']);
 
     //Profile type routes
 
@@ -256,6 +259,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/update-workshop', [WorkshopController::class, 'update_workshop']);
     Route::get('/delete-workshop/{id}', [WorkshopController::class, 'delete_workshop']);
     Route::get('/register-for-workshop/{id}', [WorkshopController::class, 'register_for_workshop']);
+    Route::get('/get-workshop-list-dashboard', [WorkshopController::class, 'get_workshop_list_dashboard']);
 
     //Zoom Meeting routes
 

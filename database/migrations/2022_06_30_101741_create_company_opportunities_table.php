@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOpportunitiesTable extends Migration
+class CreateCompanyOpportunitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateOpportunitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('opportunities', function (Blueprint $table) {
+        Schema::create('company_opportunities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
-            $table->text('content');
+            $table->unsignedBigInteger('opportunity_id');
             $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('opportunity_id')->references('id')->on('opportunities')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateOpportunitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('opportunities');
+        Schema::dropIfExists('company_opportunities');
     }
 }
