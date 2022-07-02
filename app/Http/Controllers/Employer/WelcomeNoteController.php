@@ -153,8 +153,9 @@ class WelcomeNoteController extends Controller
         $company = CompanyEmployee::where('user_id', $user->id)->first();
 
         $note = CompanyEmployeeWelcomeNote::where('company_id', $company->company_id)->first();
-
-        $note->image = url('/public/welcome-notes/') . '/' . $note->image;
+        if($note){
+            $note->image = url('/public/welcome-notes/') . '/' . $note->image;
+        }
         return response(["status" => "success", 'res' => $note], 200);
     }
      /**
