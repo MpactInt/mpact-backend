@@ -235,6 +235,9 @@ class WorkshopController extends Controller
                 ->orderBy('id', 'desc')
                 ->limit(4)
                 ->get();
+            foreach($ca as $c){
+                $c->registered = WorkshopRegistration::where(['workshop_id' => $c->id, 'company_employee_id' => $company->id])->first();
+            }
         }
         return response(["status" => "success", "res" => $ca], 200);
     }
