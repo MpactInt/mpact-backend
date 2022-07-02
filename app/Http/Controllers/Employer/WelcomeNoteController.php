@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\CompanyEmployee;
 use App\Models\CompanyEmployeeWelcomeNote;
 use App\Models\CompanyWelcomeNote;
 use App\Models\WelcomeNote;
@@ -149,9 +150,9 @@ class WelcomeNoteController extends Controller
     public function get_welcome_note(Request $request)
     {
         $user = Auth::guard('api')->user();
-        $company = Company::where('user_id', $user->id)->first();
+        $company = CompanyEmployee::where('user_id', $user->id)->first();
 
-        $note = CompanyEmployeeWelcomeNote::where('company_id', $company->id)->first();
+        $note = CompanyEmployeeWelcomeNote::where('company_id', $company->company_id)->first();
 
         $note->image = url('/public/welcome-notes/') . '/' . $note->image;
         return response(["status" => "success", 'res' => $note], 200);

@@ -128,6 +128,9 @@ class ChargebeeController extends Controller
         $payOffline = $request->payOffline;
         $link = $request->link;
         $result = HostedPage::checkoutNewForItems(array(
+            "subscription" => array(
+                "auto_collection" => "on"
+            ),
             "subscriptionItems" => array(array(
                 "itemPriceId" => "$request->plan",
                 "quantity" => $request->employees,
@@ -155,8 +158,6 @@ class ChargebeeController extends Controller
                 "country" => $request->billingAddress['country']
             ),
             "redirectUrl" => env('FRONT_URL') . '/payment-success/' . $link,
-            "auto_collection" => $payOffline
-
         ));
         $hostedPage = $result->hostedPage();
         $reflection = new ReflectionClass($hostedPage);

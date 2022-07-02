@@ -54,12 +54,13 @@ class EmployeeDashboardCmsController extends Controller
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $ext = $uploadedFile->getClientOriginalExtension();
                 $uploadedFile->move($destinationPath, $filename);
+                $pt->image = $filename;
+
             }
 
             $pt->profile_type_id = $request->profileType;
             $pt->title = $request->title;
             $pt->description = $request->description;
-            $pt->image = $filename;
             $pt->save();
         }
 
@@ -108,14 +109,13 @@ class EmployeeDashboardCmsController extends Controller
                 'title' => 'required',
                 'description' => 'required',
                 'image' => 'required',
-                'image.*' => 'image|mimes:jpg,jpeg'
+                'image.*' => 'required|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt'
             ]);
         } else {
             $validator = Validator::make($request->all(), [
                 'profileType' => 'required',
                 'title' => 'required',
                 'description' => 'required',
-                'image' => 'required'
             ]);
         }
         if ($validator->fails()) {
@@ -150,7 +150,7 @@ class EmployeeDashboardCmsController extends Controller
                 $f->save();
             }
         }
-        return response(["status" => "success", "res" => $pt, "files" => $files], 200);
+        return response(["status" => "success", "res" => $pt], 200);
 
     }
 
@@ -201,4 +201,15 @@ class EmployeeDashboardCmsController extends Controller
         return response(["status" => "success", "res" => $img], 200);
     }
 
+    /**
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download_learning_tools($id)
+    {
+        $filename = EmployeeDashboardSetion3Image::find($id);
+        $filename = $filename->image;
+        $file = public_path() . '/profile-types/' . $filename;
+        return response()->download($file);
+    }
 }

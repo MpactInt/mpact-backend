@@ -249,6 +249,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-section3/{id}', [EmployeeDashboardCmsController::class, 'get_section3']);
 
     Route::get('/delete-section3-image/{id}', [EmployeeDashboardCmsController::class, 'delete_section3_image']);
+    Route::get('/download-learning-tools/{id}', [EmployeeDashboardCmsController::class, 'download_learning_tools']);
 
     //Workshops Routes
 

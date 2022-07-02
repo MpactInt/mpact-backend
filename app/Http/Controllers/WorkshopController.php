@@ -170,7 +170,7 @@ class WorkshopController extends Controller
                 ->get();
         } else {
             $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
-            $workshops = Workshop::find($id);
+            $workshops = Workshop::with('meetings')->where("id",$id)->first();
             $workshops->users = WorkshopRegistration::select('workshop_registration.*', 'company_employees.first_name', 'company_employees.last_name', 'companies.company_name')
                 ->join('company_employees', 'company_employees.id', 'workshop_registration.company_Employee_id')
                 ->join('companies', 'company_employees.company_id', 'companies.id')
@@ -233,6 +233,7 @@ class WorkshopController extends Controller
                 ->join('company_workshops', 'company_workshops.workshop_id', 'workshops.id')
                 ->where("company_id", $company->company_id)
                 ->orderBy('id', 'desc')
+                ->limit(4)
                 ->get();
         }
         return response(["status" => "success", "res" => $ca], 200);

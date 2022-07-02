@@ -103,6 +103,10 @@ class ProfileTypeController extends Controller
         return response()->download($file);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function get_profile_type($id){
         $pt = ProfileType::find($id);
         return response(["status" => "success", "res" => $pt], 200);
