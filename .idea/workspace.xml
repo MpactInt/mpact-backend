@@ -4,32 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97406022-315f-40e1-965b-1115fb943c0b" name="Changes" comment="company logo issue employee profile">
-      <change afterPath="$PROJECT_DIR$/app/Models/CompanyOpportunity.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/CompanyTodo.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/CompanyWorkshop.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/Resource.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_055743_create_company_workshops_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_101741_create_company_opportunities_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_110148_create_resources_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_110224_create_company_resources_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_121529_create_company_todos_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_01_063622_add_status_to_request_workshops_table.php" afterDir="false" />
+    <list default="true" id="97406022-315f-40e1-965b-1115fb943c0b" name="Changes" comment="employee side fixes and design changes">
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/PostWorkshopSurveyController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/PostWorkshopSurveyAnswer.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/PostWorkshopSurveyQuestion.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_055520_create_post_workshop_survey_questions_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_055535_create_post_workshop_survey_answers_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_060010_add_cols_to_post_workshop_survey_questions_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_084812_add_workshop_id_to_post_workshop_survey_answers_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656570012_step-5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656592813_step-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656595830_step-0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656661221_step-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656661502_logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656661793_step-0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656662085_step-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/workshops/1656671631_hero.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/post-workshop-survey-email.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/OpportunityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/OpportunityController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/TodoController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/TodoController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Common/HomeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Common/HomeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Common/RequestWorkshopController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Common/RequestWorkshopController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Employer/ResourceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Employer/ResourceController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/WorkshopController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/WorkshopController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Opportunity.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Opportunity.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Todo.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Todo.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Workshop.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Workshop.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_01_092406_create_company_resources_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_01_092406_create_company_resources_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_04_123038_create_opportunities_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_101715_create_opportunities_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_06_081433_create_todos_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_30_121503_create_todos_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_21_073404_create_workshops_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_06_21_073404_create_workshops_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/workshops/1656423354_team-mgmt-ref.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ZoomMeetingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ZoomMeetingController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Traits/ZoomMeetingTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Traits/ZoomMeetingTrait.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -229,7 +223,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Models" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -243,8 +237,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/Models" />
       <recent name="$PROJECT_DIR$/resources/views" />
+      <recent name="$PROJECT_DIR$/app/Models" />
       <recent name="$PROJECT_DIR$/app/Http/Controllers/Admin" />
       <recent name="$PROJECT_DIR$/app/Http/Controllers/Employer" />
       <recent name="$PROJECT_DIR$/public/uploads" />
@@ -351,7 +345,18 @@
       <workItem from="1656562512340" duration="6893000" />
       <workItem from="1656579615768" duration="6394000" />
       <workItem from="1656590172732" duration="2800000" />
-      <workItem from="1656649650395" duration="10289000" />
+      <workItem from="1656649650395" duration="10941000" />
+      <workItem from="1656669118391" duration="629000" />
+      <workItem from="1656672111538" duration="2393000" />
+      <workItem from="1656676728406" duration="494000" />
+      <workItem from="1656681283166" duration="318000" />
+      <workItem from="1656681781996" duration="6000" />
+      <workItem from="1656738293808" duration="814000" />
+      <workItem from="1656744836461" duration="198000" />
+      <workItem from="1656745096415" duration="2199000" />
+      <workItem from="1656748414736" duration="1612000" />
+      <workItem from="1656757174834" duration="2205000" />
+      <workItem from="1656912992086" duration="7572000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1655717777215</created>
@@ -423,7 +428,42 @@
       <option name="project" value="LOCAL" />
       <updated>1656510018451</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="company admin and super admin fixes">
+      <created>1656663284175</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1656663284175</updated>
+    </task>
+    <task id="LOCAL-00012" summary="auto_collection,and questions table foreign key changes">
+      <created>1656674512277</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1656674512277</updated>
+    </task>
+    <task id="LOCAL-00013" summary="employee side fixes and design changes">
+      <created>1656757240969</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1656757240969</updated>
+    </task>
+    <task id="LOCAL-00014" summary="employee side fixes and design changes">
+      <created>1656757977827</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1656757977827</updated>
+    </task>
+    <task id="LOCAL-00015" summary="employee side fixes and design changes">
+      <created>1656759422960</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1656759422960</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,7 +490,10 @@
     <MESSAGE value="admin and employer fixes" />
     <MESSAGE value="url issue" />
     <MESSAGE value="company logo issue employee profile" />
-    <option name="LAST_COMMIT_MESSAGE" value="company logo issue employee profile" />
+    <MESSAGE value="company admin and super admin fixes" />
+    <MESSAGE value="auto_collection,and questions table foreign key changes" />
+    <MESSAGE value="employee side fixes and design changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="employee side fixes and design changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

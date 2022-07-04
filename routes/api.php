@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CheckInSurveyController;
 use App\Http\Controllers\Admin\EmployeeDashboardCmsController;
 use App\Http\Controllers\Admin\OpportunityController;
 use App\Http\Controllers\Admin\PopupSurveyController;
+use App\Http\Controllers\Admin\PostWorkshopSurveyController;
 use App\Http\Controllers\Admin\ProfileTypeController;
 use App\Http\Controllers\Admin\StepController;
 use App\Http\Controllers\Admin\TodoController;
@@ -71,6 +72,9 @@ Route::group([
 
     Route::get('/get-check-in-survey-questions/{id}', [CheckInSurveyController::class, 'get_check_in_survey_questions']);
     Route::post('/submit-check-in-survey/{id}', [CheckInSurveyController::class, 'submit_check_in_survey']);
+
+    Route::get('/get-post-workshop-survey-questions/{id}', [PostWorkshopSurveyController::class, 'get_post_workshop_survey_questions']);
+    Route::post('/submit-post-workshop-survey/{id}/{w_id}', [PostWorkshopSurveyController::class, 'submit_post_workshop_survey']);
 
 });
 Route::group(['middleware' => ['auth:api', 'cors']], function () {
@@ -238,6 +242,17 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/get-check-in-survey-list', [CheckInSurveyController::class, 'get_check_in_survey_question_list']);
     Route::get('/send-email', [CheckInSurveyController::class, 'send_email']);
 
+    //Post Workshop surveys routes
+
+    Route::post('/add-post-workshop-survey', [PostWorkshopSurveyController::class, 'add_post_workshop_survey_question']);
+    Route::post('/update-post-workshop-survey', [PostWorkshopSurveyController::class, 'update_post_workshop_survey_question']);
+    Route::get('/delete-post-workshop-survey/{id}', [PostWorkshopSurveyController::class, 'delete_post_workshop_survey_question']);
+    Route::get('/get-post-workshop-survey/{id}', [PostWorkshopSurveyController::class, 'get_post_workshop_survey_question']);
+    Route::get('/get-post-workshop-survey-answer-list', [PostWorkshopSurveyController::class, 'get_post_workshop_survey_answer_list']);
+    Route::post('/get-post-workshop-survey-list', [PostWorkshopSurveyController::class, 'get_post_workshop_survey_question_list']);
+    Route::get('/send-post-workshop-survey-email/{id}', [PostWorkshopSurveyController::class, 'send_email']);
+
+
     //Employee Dashboard CMS routes
 
     Route::post('/add-update-section1', [EmployeeDashboardCmsController::class, 'add_update_section1']);
@@ -268,8 +283,8 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-meeting-recording-list/{id}', [ZoomMeetingController::class, 'get_recordings']);
     Route::get('/get-meeting/{id}', [ZoomMeetingController::class, 'show']);
     Route::post('/get-meetings-list', [ZoomMeetingController::class, 'get_meetings_list']);
-    Route::post('/update-meeting', [ZoomMeetingController::class, 'update']);
     Route::get('/delete-meeting/{id}', [ZoomMeetingController::class, 'destroy']);
 
 });
 
+Route::post('/update-meeting/{id}', [ZoomMeetingController::class, 'update']);

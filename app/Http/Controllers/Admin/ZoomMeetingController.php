@@ -46,10 +46,12 @@ class ZoomMeetingController extends Controller
 //        return redirect()->route('meetings.index');
     }
 
-    public function update($meeting, Request $request)
+    public function update($meeting_id, Request $request)
     {
-        $res = $this->update($meeting->meeting_id, $request->all());
-
+        $res = $this->updateStatus($meeting_id, $request->all());
+        $zm = ZoomMeeting::where('meeting_id',$meeting_id)->first();
+        $zm->status = $request->action;
+        $zm->save();
         return response(['status'=>'success','res'=>$res]);
 //        return redirect()->route('meetings.index');
     }
