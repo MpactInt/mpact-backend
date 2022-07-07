@@ -139,4 +139,8 @@ class PopupSurveyController extends Controller
         return response(["status" => "success"], 200);
 
     }
+
+    public function get_chart_data(){
+        $res = PopupSurveyAnswer::all();
+    }
 }

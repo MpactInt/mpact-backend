@@ -108,8 +108,8 @@ class EmployeeDashboardCmsController extends Controller
                 'profileType' => 'required',
                 'title' => 'required',
                 'description' => 'required',
-                'image' => 'required',
-                'image.*' => 'required|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt'
+//                'image' => 'required',
+//                'image.*' => 'required|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt'
             ]);
         } else {
             $validator = Validator::make($request->all(), [
@@ -130,25 +130,25 @@ class EmployeeDashboardCmsController extends Controller
             } else {
                 $pt = new EmployeeDashboardSetion3();
             }
-            if ($request->hasFile('image')) {
-                $files = $request->file('image');
-                foreach ($files as $uploadedFile) {
-                    $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-                    $uploadedFile->move($destinationPath, $filename);
-                    $filenameArr[] = $filename;
-                }
-            }
+//            if ($request->hasFile('image')) {
+//                $files = $request->file('image');
+//                foreach ($files as $uploadedFile) {
+//                    $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+//                    $uploadedFile->move($destinationPath, $filename);
+//                    $filenameArr[] = $filename;
+//                }
+//            }
             $pt->profile_type_id = $request->profileType;
             $pt->title = $request->title;
             $pt->description = $request->description;
             $pt->save();
 
-            foreach ($filenameArr as $k) {
-                $f = new EmployeeDashboardSetion3Image();
-                $f->section3_id = $pt->id;
-                $f->image = $k;
-                $f->save();
-            }
+//            foreach ($filenameArr as $k) {
+//                $f = new EmployeeDashboardSetion3Image();
+//                $f->section3_id = $pt->id;
+//                $f->image = $k;
+//                $f->save();
+//            }
         }
         return response(["status" => "success", "res" => $pt], 200);
 
@@ -183,7 +183,7 @@ class EmployeeDashboardCmsController extends Controller
     public function get_section3($id)
     {
         $destinationPath = url('public/profile-types');
-        $res = EmployeeDashboardSetion3::with('images')->where('profile_type_id', $id)->first();
+        $res = EmployeeDashboardSetion3::where('profile_type_id', $id)->first();
         $res->path = $destinationPath;
         return response(["status" => "success", "res" => $res], 200);
     }

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\CheckInSurveyController;
 use App\Http\Controllers\Admin\EmployeeDashboardCmsController;
+use App\Http\Controllers\Admin\LearningPlanController;
+use App\Http\Controllers\Admin\LearningPlanFileController;
 use App\Http\Controllers\Admin\OpportunityController;
 use App\Http\Controllers\Admin\PopupSurveyController;
 use App\Http\Controllers\Admin\PostWorkshopSurveyController;
@@ -230,6 +232,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/get-popup-survey-list', [PopupSurveyController::class, 'get_popup_survey_question_list']);
     Route::get('/get-survey-questions-dashboard', [PopupSurveyController::class, 'get_survey_questions_dashboard']);
     Route::post('/submit-popup-survey', [PopupSurveyController::class, 'submit_popup_survey']);
+    Route::get('/get-chart-data',[PopupSurveyController::class,'get_chart_data']);
 
 
     //CheckIn surveys routes
@@ -284,6 +287,26 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-meeting/{id}', [ZoomMeetingController::class, 'show']);
     Route::post('/get-meetings-list', [ZoomMeetingController::class, 'get_meetings_list']);
     Route::get('/delete-meeting/{id}', [ZoomMeetingController::class, 'destroy']);
+
+
+    //learning plan routes
+
+    Route::post('/add-learning-plan', [LearningPlanController::class, 'add_learning_plan']);
+    Route::post('/update-learning-plan', [LearningPlanController::class, 'update_learning_plan']);
+    Route::get('/get-learning-plan/{id}', [LearningPlanController::class, 'get_learning_plan']);
+    Route::post('/get-learning-plan-list', [LearningPlanController::class, 'get_learning_plan_list']);
+    Route::get('/delete-learning-plan/{id}', [LearningPlanController::class, 'delete_learning_plan']);
+    Route::post('/get-learning-plan-list-dashboard', [LearningPlanController::class, 'get_learning_plan_list_dashboard']);
+
+
+    //learning plan files routes
+
+    Route::post('/add-learning-plan-file', [LearningPlanFileController::class, 'add_learning_plan_file']);
+    Route::post('/update-learning-plan-file', [LearningPlanFileController::class, 'update_learning_plan_file']);
+    Route::get('/delete-learning-plan-file/{id}', [LearningPlanFileController::class, 'delete_learning_plan_file']);
+    Route::get('/download-learning-plan-file/{id}', [LearningPlanFileController::class, 'download_learning_plan_file']);
+    Route::get('/get-learning-plan-files/{id}', [LearningPlanFileController::class, 'get_learning_plan_files']);
+
 
 });
 

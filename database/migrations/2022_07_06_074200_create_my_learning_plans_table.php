@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmployeeDashboardSection3ImagesTable extends Migration
+class CreateMyLearningPlansTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateEmployeeDashboardSection3ImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('employee_dashboard_section3_images', function (Blueprint $table) {
+        Schema::create('my_learning_plans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('section3_id');
+            $table->unsignedBigInteger('profile_type_id');
+            $table->string('title');
+            $table->text('description');
             $table->string('image');
+            $table->foreign('profile_type_id')->references('id')->on('profile_types')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
-            $table->foreign('section3_id')->references('id')->on('employee_dashboard_section3')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 
@@ -29,6 +31,6 @@ class CreateEmployeeDashboardSection3ImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employee_dashboard_section3_images');
+        Schema::dropIfExists('my_learning_plans');
     }
 }

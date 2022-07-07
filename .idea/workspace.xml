@@ -5,25 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97406022-315f-40e1-965b-1115fb943c0b" name="Changes" comment="employee side fixes and design changes">
-      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/PostWorkshopSurveyController.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/PostWorkshopSurveyAnswer.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/Models/PostWorkshopSurveyQuestion.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_055520_create_post_workshop_survey_questions_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_055535_create_post_workshop_survey_answers_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_060010_add_cols_to_post_workshop_survey_questions_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_04_084812_add_workshop_id_to_post_workshop_survey_answers_table.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656570012_step-5.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656592813_step-3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656595830_step-0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656661221_step-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656661502_logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656661793_step-0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656662085_step-1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/workshops/1656671631_hero.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/post-workshop-survey-email.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/LearningPlanController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/LearningPlanFileController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/MyLearningPlan.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/MyLearningPlanFile.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_06_074200_create_my_learning_plans_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2022_07_06_074319_create_my_learning_plan_files_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/ZoomMeetingController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/ZoomMeetingController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Traits/ZoomMeetingTrait.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Traits/ZoomMeetingTrait.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/EmployeeDashboardCmsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/EmployeeDashboardCmsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/PopupSurveyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/PopupSurveyController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/EmployeeDashboardSetion3.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/EmployeeDashboardSetion3.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2022_06_15_083613_create_employee_dashboard_section3_images_table.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -223,7 +215,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Models" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -237,8 +229,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/resources/views" />
       <recent name="$PROJECT_DIR$/app/Models" />
+      <recent name="$PROJECT_DIR$/resources/views" />
       <recent name="$PROJECT_DIR$/app/Http/Controllers/Admin" />
       <recent name="$PROJECT_DIR$/app/Http/Controllers/Employer" />
       <recent name="$PROJECT_DIR$/public/uploads" />
@@ -357,6 +349,21 @@
       <workItem from="1656748414736" duration="1612000" />
       <workItem from="1656757174834" duration="2205000" />
       <workItem from="1656912992086" duration="7572000" />
+      <workItem from="1657077716914" duration="603000" />
+      <workItem from="1657092792386" duration="2102000" />
+      <workItem from="1657101849876" duration="1795000" />
+      <workItem from="1657103674256" duration="642000" />
+      <workItem from="1657104694525" duration="140000" />
+      <workItem from="1657105248150" duration="822000" />
+      <workItem from="1657107852430" duration="977000" />
+      <workItem from="1657109190606" duration="305000" />
+      <workItem from="1657109925866" duration="148000" />
+      <workItem from="1657111483238" duration="493000" />
+      <workItem from="1657113065665" duration="788000" />
+      <workItem from="1657171544906" duration="1149000" />
+      <workItem from="1657173875489" duration="198000" />
+      <workItem from="1657175000844" duration="126000" />
+      <workItem from="1657188127357" duration="699000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1655717777215</created>
