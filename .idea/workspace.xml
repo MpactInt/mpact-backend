@@ -7,8 +7,6 @@
     <list default="true" id="97406022-315f-40e1-965b-1115fb943c0b" name="Changes" comment="Learning plan related changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Admin/PopupSurveyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Admin/PopupSurveyController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/PopupSurveyQuestion.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/PopupSurveyQuestion.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2022_07_06_074319_create_my_learning_plan_files_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2022_07_06_074319_create_my_learning_plan_files_table.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -361,6 +359,7 @@
       <workItem from="1657268862010" duration="17000" />
       <workItem from="1657272416527" duration="90000" />
       <workItem from="1657272755024" duration="49000" />
+      <workItem from="1657274084413" duration="1439000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <created>1655717777215</created>
