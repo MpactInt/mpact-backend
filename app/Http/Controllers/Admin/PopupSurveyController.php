@@ -124,6 +124,11 @@ class PopupSurveyController extends Controller
         return response(["status" => "success", "res" => $elements], 200);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+
     public function submit_popup_survey(Request $request)
     {
         $user = Auth::guard('api')->user();
@@ -137,10 +142,28 @@ class PopupSurveyController extends Controller
             $pp->save();
         }
         return response(["status" => "success"], 200);
-
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+
     public function get_chart_data(){
-        $res = PopupSurveyAnswer::all();
+        $res = PopupSurveyQuestion::with('answer')
+            ->orderby('id','desc')
+            ->first();
+        $total = PopupSurveyAnswer::where('question_id',$res->id)->count();
+        $option_1 = PopupSurveyAnswer::where(['question_id'=>$res->id,"answer"=>$res->option_1])->count();
+        $option_2 = PopupSurveyAnswer::where(['question_id'=>$res->id,"answer"=>$res->option_2])->count();
+        $option_3 = PopupSurveyAnswer::where(['question_id'=>$res->id,"answer"=>$res->option_3])->count();
+        $option_4 = PopupSurveyAnswer::where(['question_id'=>$res->id,"answer"=>$res->option_4])->count();
+        $option_1_per = ($option_1*100)/$total;
+        $option_2_per = ($option_2*100)/$total;
+        $option_3_per = ($option_3*100)/$total;
+        $option_4_per = ($option_4*100)/$total;
+
+        $per = ["per1"=>$option_1_per,"per2"=>$option_2_per,"per3"=>$option_3_per,"per4"=>$option_4_per];
+
+        return response(["status" => "success","res"=>$res,'per'=>$per], 200);
     }
 }
