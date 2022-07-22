@@ -161,7 +161,7 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'oldPassword' => 'required',
-            'newPassword' => 'required'
+            'newPassword' => 'required|max:255|min:8'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();

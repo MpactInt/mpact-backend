@@ -95,10 +95,13 @@ class AnnouncementController extends Controller
             $res = CompanyAnnouncement::where('company_id', $company_id);
         }
 
-        if ($keyword) {
-            $res = $res->where('title', 'like', "%$keyword%")
-                ->orWhere('description', 'like', "%$keyword%");
-        }
+         if ($keyword) {
+         $res = $res->where(function($query)use($keyword) {
+             return $query
+                    ->where('title', 'LIKE', "%$keyword%")
+                    ->orWhere('description','like',"%$keyword%");
+            });
+     }
         if ($sort_by) {
             $res = $res->orderby($sort_by, 'asc');
         }
@@ -111,5 +114,4 @@ class AnnouncementController extends Controller
 
         return response(["status" => "success", "res" => $res], 200);
     }
-
 }

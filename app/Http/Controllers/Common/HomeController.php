@@ -54,7 +54,7 @@ class HomeController extends Controller
             'employees' => 'required|max:255',
             'plan' => 'required|max:255',
 //            'addon' => 'required|max:255',
-            'logo' => 'required'
+            'logo' => 'required|image'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();

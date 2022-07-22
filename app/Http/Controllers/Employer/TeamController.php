@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
 
 class TeamController extends Controller
 {
@@ -35,20 +36,43 @@ class TeamController extends Controller
      */
     public function send_link_to_email(Request $request)
     {
-        $link = $request->link;
-        $email = $request->email;
-        $company = $request->company_name;
-        $data = ['link' => $link, 'company_name' => $company];
-        Mail::send('registration-email-employee', $data, function ($message) use ($email) {
-            $message->to($email, 'MPACT INT')
-                ->subject('Employee registration link');
-            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-        });
-        $i = new Invitation();
-        $i->company_id = $request->company_id;
-        $i->email = $email;
-        $i->save();
-        return response()->json(['status' => 'success'], 200);
+        $data = $request->all();
+       $validator = Validator::make($data, [
+                'email' => ['required', 'email', 'string'],
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
+            } else {
+                $link = $request->link;
+                $email = $request->email;
+                $employee_email_domain = explode('@', $email);
+                $employee_email_domain = $employee_email_domain[1];
+
+                $user = Auth::guard('api')->user();
+                 $employer = Company::where('user_id', $user->id)->first();
+
+
+                $company_domain = preg_replace( "#^[^:/.]*[:/]+#i", "", preg_replace( "{/$}", "", urldecode( $employer->company_domain ) ) );
+
+                if ($employee_email_domain == $company_domain) {
+
+                $company = $request->company_name;
+                $data = ['link' => $link, 'company_name' => $company];
+                Mail::send('registration-email-employee', $data, function ($message) use ($email) {
+                    $message->to($email, 'MPACT INT')
+                        ->subject('Employee registration link');
+                    $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                });
+                $i = new Invitation();
+                $i->company_id = $request->company_id;
+                $i->email = $email;
+                $i->save();
+                        return response()->json(['status' => 'success'], 200);
+                }else{
+                       return response()->json(['status' => 'error', 'message' => 'Employee email is not valid, it does not belongs to company'], 400);
+
+                }
+        }
     }
 
     /**

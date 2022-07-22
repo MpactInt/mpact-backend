@@ -57,7 +57,7 @@ class ProfileTypeController extends Controller
     public function update_profile_type(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file' => 'required|mimes:pdf'
+            'file' => 'sometimes|mimes:pdf'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();

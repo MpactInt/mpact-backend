@@ -86,9 +86,12 @@ class TodoController extends Controller
                 $q->join('companies', 'companies.id', 'company_todos.company_id')->pluck('companies.company_name');
             }]);
         }
-        if ($keyword) {
-            $ca = $ca->where('title', 'like', "%$keyword%")
-                ->orWhere('description', 'like', "%$keyword%");
+         if ($keyword) {
+            $ca = $ca->where(function($query)use($keyword) {
+                return $query
+                       ->where('title', 'LIKE', "%$keyword%")
+                       ->orWhere('description','like',"%$keyword%");
+               });
         }
         if ($sortBy) {
             $ca = $ca->orderby($sortBy, "asc");

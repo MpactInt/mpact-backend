@@ -141,13 +141,13 @@ class ChargebeeController extends Controller
 //                )
             ),
             "customer" => array(
-                "firstName" => $request->billingAddress['firstname'],
-                "lastName" => $request->billingAddress['lastname'],
+                "firstName" => $request->billingAddress['firstName'],
+                "lastName" => $request->billingAddress['lastName'],
                 "email" => $request->billingAddress['email'],
             ),
             "billingAddress" => array(
-                "firstName" => $request->billingAddress['firstname'],
-                "lastName" => $request->billingAddress['lastname'],
+                "firstName" => $request->billingAddress['lastName'],
+                "lastName" => $request->billingAddress['lastName'],
                 "email" => $request->billingAddress['email'],
                 "company" => $request->billingAddress['company'],
                 "phone" => $request->billingAddress['phone'],

@@ -127,9 +127,16 @@ class ResourceController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
+        if($company->role == "COMPANY_EMP"){
+        $resources = Resource::select('resources.*')
+                        ->join('company_resources','company_resources.resource_id','resources.id')
+                        ->where("company_id", $company->company_id)
+                        ->where("visibility","PUBLIC");
+        }else{
             $resources = Resource::select('resources.*')
                 ->join('company_resources','company_resources.resource_id','resources.id')
                 ->where("company_id", $company->company_id);
+            }
         } else {
             $resources = Resource::with(['company' => function ($q) {
                 $q->join('companies', 'companies.id', 'company_resources.company_id')->pluck('companies.company_name');
@@ -137,7 +144,11 @@ class ResourceController extends Controller
         }
         $path = url('/public/company-resources/');
         if ($keyword) {
-            $resources = $resources->where('title', 'like', "%$keyword%");
+            $resources = $resources->where(function($query)use($keyword) {
+                return $query
+                       ->where('title', 'LIKE', "%$keyword%")
+                       ->orWhere('description','like',"%$keyword%");
+               });
         }
         if ($sort_by) {
             $resources = $resources->orderby($sort_by, "asc");
