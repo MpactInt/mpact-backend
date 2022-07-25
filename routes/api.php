@@ -51,6 +51,7 @@ Route::group([
     Route::post('/create-company', [HomeController::class, 'create_company']);
     Route::post('/create-company-employee', [HomeController::class, 'create_company_employee']);
     Route::get('/get-plans',[ChargebeeController::class,'get_plans']);
+    Route::get('/get-plans2',[ChargebeeController::class,'get_plans2']);
     Route::get('/get-addons',[ChargebeeController::class,'get_addons']);
     Route::post('/select-addon/{id}',[ChargebeeController::class,'select_addon']);
     Route::post('/create-estimate',[ChargebeeController::class,'create_estimate']);

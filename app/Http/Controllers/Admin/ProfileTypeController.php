@@ -56,26 +56,27 @@ class ProfileTypeController extends Controller
      */
     public function update_profile_type(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'file' => 'sometimes|mimes:pdf'
-        ]);
-        if ($validator->fails()) {
-            $error = $validator->getMessageBag()->first();
-            return response()->json(["status" => "error", "message" => $error], 400);
-        } else {
-            $pt = ProfileType::find($request->id);
-            if ($request->hasFile('file')) {
-                $destinationPath = public_path() . '/profile-types';
-//                unlink($destinationPath . '/' . $pt->file);
-                $uploadedFile = $request->file('file');
-                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-                $uploadedFile->move($destinationPath, $filename);
-            }
-            $pt->profile_type = $request->profileType;
+           $pt = ProfileType::find($request->id);
+           if ($request->hasFile('file')) {
+           $validator = Validator::make($request->all(), [
+               'file'=>'mimes:pdf'
+           ]);
+           if ($validator->fails()) {
+               $error = $validator->getMessageBag()->first();
+               return response()->json(["status" => "error", "message" => $error], 400);
+           }else{
+            $destinationPath = public_path() . '/profile-types';
+            unlink($destinationPath . '/' . $pt->file);
+            $uploadedFile = $request->file('file');
+            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+            $uploadedFile->move($destinationPath, $filename);
             $pt->file = $filename;
-            $pt->save();
             return response(["status" => "success", "res" => $pt], 200);
+            }
         }
+        $pt->profile_type = $request->profileType;
+        $pt->save();
+
     }
 
     /**

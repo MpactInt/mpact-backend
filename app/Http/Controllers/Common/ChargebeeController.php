@@ -57,19 +57,28 @@ class ChargebeeController extends Controller
             $property->setAccessible(true);
             $itemPrice[] = $property->getValue($entry->itemPrice());
         }
-//        $all = Item::all(array('status' => 'active', "type[is]" => "plan"));
-//        dd($all);
-//        foreach ($all as $entry) {
-//            $reflection = new ReflectionClass($entry->item());
-//            $property = $reflection->getProperty('_data');
-//            $property->setAccessible(true);
-//            $itemPrice[] = $property->getValue($entry->itemPrice());
-////            $item = $entry->item();
-//        }
-//        array_unshift($itemPrice, ['id' => '', 'name' => 'Select Plan']);
         return response()->json(['status' => 'success', 'res' => $itemPrice], 200);
     }
 
+
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function get_plans2()
+    {
+        $itemPrice = [];
+        $all = ItemPrice::all(array('status' => 'active', "itemType[is]" => "plan"));
+        foreach ($all as $entry) {
+            $reflection = new ReflectionClass($entry->itemPrice());
+            $property = $reflection->getProperty('_data');
+            $property->setAccessible(true);
+            $itemPrice[] = $property->getValue($entry->itemPrice());
+        }
+
+        return response()->json(['status' => 'success', 'res' => $itemPrice], 200);
+    }
     /**
      * @return \Illuminate\Http\JsonResponse
      */
@@ -127,6 +136,11 @@ class ChargebeeController extends Controller
     {
         $payOffline = $request->payOffline;
         $link = $request->link;
+        if(Auth::guard('api')->user()){
+            $link1 = env('FRONT_URL') . '/admin/payment-success/' . $link;
+        }else{
+            $link1 = env('FRONT_URL') . '/payment-success/' . $link;
+        }
         $result = HostedPage::checkoutNewForItems(array(
             "subscription" => array(
                 "auto_collection" => "on"
@@ -157,7 +171,7 @@ class ChargebeeController extends Controller
                 "zip" => $request->billingAddress['zip'],
                 "country" => $request->billingAddress['country']
             ),
-            "redirectUrl" => env('FRONT_URL') . '/payment-success/' . $link,
+            "redirectUrl" => $link1,
         ));
         $hostedPage = $result->hostedPage();
         $reflection = new ReflectionClass($hostedPage);
@@ -177,7 +191,7 @@ class ChargebeeController extends Controller
         $c->payment_status = "COMPLETED";
         $c->save();
         $user = User::where('id', $c->user_id)->first();
-        $user1 = Auth::user();
+        $user1 = Auth::guard('api')->user();
         if (!$user1) {
             Auth::login($user);
             $accessToken = Auth::user()->createToken('authToken')->accessToken;

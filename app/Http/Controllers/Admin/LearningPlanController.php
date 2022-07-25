@@ -8,6 +8,8 @@ use App\Models\MyLearningPlan;
 use App\Models\MyLearningPlanFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 
 class LearningPlanController extends Controller
 {
@@ -17,6 +19,13 @@ class LearningPlanController extends Controller
      */
     public function add_learning_plan(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+          'image' => 'required|image'
+            ]);
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
         $filename = '';
         if ($request->hasFile('image')) {
             $uploadedFile = $request->file('image');
@@ -33,6 +42,7 @@ class LearningPlanController extends Controller
         $t->save();
 
         return response(["status" => "success", "res" => $t], 200);
+        }
     }
 
     /**
@@ -44,14 +54,22 @@ class LearningPlanController extends Controller
         $t = MyLearningPlan::find($request->id);
         $filename = '';
         if ($request->hasFile('image')) {
-            $uploadedFile = $request->file('image');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-            $destinationPath = public_path() . '/learning-plan-files';
-            $uploadedFile->move($destinationPath, $filename);
-            if ($t->image) {
-                unlink($destinationPath . '/' . $t->image);
+         $validator = Validator::make($request->all(), [
+                  'image' => 'required|image'
+                    ]);
+            if ($validator->fails()) {
+                $error = $validator->getMessageBag()->first();
+                return response()->json(["status" => "error", "message" => $error], 400);
+            } else {
+                $uploadedFile = $request->file('image');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $destinationPath = public_path() . '/learning-plan-files';
+                $uploadedFile->move($destinationPath, $filename);
+                if ($t->image) {
+                    unlink($destinationPath . '/' . $t->image);
+                }
+                $t->image = $filename;
             }
-            $t->image = $filename;
         }
         $t->title = $request->title;
         $t->description = $request->description;
