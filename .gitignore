@@ -4,10 +4,12 @@
 /public/chat-attachments
 /public/company-resources
 /public/profile-images
-/public/profile-types
 /public/steps
 /public/uploads
+/public/workshops
+/public/learning-plan-files
 /public/welcome-notes
+/public/profile-types
 /storage/*.key
 /vendor
 .env
