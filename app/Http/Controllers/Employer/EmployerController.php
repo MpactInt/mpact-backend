@@ -114,7 +114,7 @@ class EmployerController extends Controller
      */
     public function update_hours(Request $request)
     {
-        $c = Company::where("user_id",$request->companyId)->first();
+        $c = Company::find($request->companyId);
         $c->remaining_hours = $request->remainingHours;
         $c->save();
         return response(["status" => "success", 'res' => $c], 200);
