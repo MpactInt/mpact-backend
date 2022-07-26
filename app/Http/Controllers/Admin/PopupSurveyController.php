@@ -157,11 +157,16 @@ class PopupSurveyController extends Controller
         $option_2 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_2])->count();
         $option_3 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_3])->count();
         $option_4 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_4])->count();
-        $option_1_per = round(($option_1 * 100) / $total);
-        $option_2_per = round(($option_2 * 100) / $total);
-        $option_3_per = round(($option_3 * 100) / $total);
-        $option_4_per = round(($option_4 * 100) / $total);
-
+        $option_1_per = 0;
+        $option_2_per = 0;
+        $option_3_per = 0;
+        $option_4_per = 0;
+        if($total){
+            $option_1_per = round(($option_1 * 100) / $total);
+            $option_2_per = round(($option_2 * 100) / $total);
+            $option_3_per = round(($option_3 * 100) / $total);
+            $option_4_per = round(($option_4 * 100) / $total);
+        }
         $per = ["per1" => $option_1_per, "per2" => $option_2_per, "per3" => $option_3_per, "per4" => $option_4_per];
 
         return response(["status" => "success", "res" => $res, 'per' => $per], 200);
