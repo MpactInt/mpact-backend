@@ -100,7 +100,7 @@ class EmployerController extends Controller
      */
     public function get_company_list()
     {
-        $ql = Company::select('*', 'company_name as name', 'company_employees.first_name', 'company_employees.last_name')
+        $ql = Company::select('companies.*', 'company_name as name', 'company_employees.first_name', 'company_employees.last_name')
             ->join('company_employees', 'companies.id', 'company_employees.company_id')
             ->where('company_employees.role','COMPANY_ADMIN')
             ->paginate(10);
