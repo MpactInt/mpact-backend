@@ -137,7 +137,7 @@ class ProfileController extends Controller
             ->first();
         if ($u) {
             if ($u->role == "COMPANY_EMP") {
-                $u = Company::select('companies.*', 'company_employees.*', 'company_employees.id as emp_id', 'profile_types.profile_type')
+                $u = Company::select('companies.*', 'company_employees.*', 'company_employees.id as emp_id', 'profile_types.profile_type','company_employees.profile_image')
                     ->join('company_employees', 'companies.id', 'company_employees.company_id')
                     ->join('profile_types', 'profile_types.id', 'company_employees.profile_type_id')
                     ->where('company_employees.user_id', $user->id)

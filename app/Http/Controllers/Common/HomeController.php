@@ -214,13 +214,15 @@ class HomeController extends Controller
             $accessToken = Auth::user()->createToken('authToken')->accessToken;
             $user = User::where('email', $request->email)->first();
             $c = null;
+            
             if ($user->role == "COMPANY") {
-                $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role','company_employees.profile_type_id')
+                $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role','company_employees.profile_type_id','company_employees.profile_image')
                     ->join('company_employees', 'companies.id', 'company_employees.company_id')
                     ->where("company_employees.user_id", $user->id)
                     ->first();
                 if ($c) {
                     $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
+                    $c->profile_image =  url('/') . '/public/profile-images/'.$c->profile_image;
                 }
             }
             $user->last_login = DB::raw('CURRENT_TIMESTAMP');
