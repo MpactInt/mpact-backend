@@ -202,6 +202,7 @@ class WelcomeNoteController extends Controller
         $note = WelcomeNote::where('id', $id)->first();
         $note->company = CompanyWelcomeNote::select('companies.id', 'companies.company_name as name')
             ->join('companies', 'companies.id', 'company_welcome_notes.company_id')
+            ->where('company_welcome_notes.welcome_note_id',$id)
             ->get();
 //        $path = url('/public/welcome-notes/');
         return response(["status" => "success", 'res' => $note], 200);
