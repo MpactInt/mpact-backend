@@ -83,7 +83,9 @@ class TeamController extends Controller
     public function get_employees_list($id, Request $request)
     {
         $user = Auth::guard('api')->user();
-        $auth_id = CompanyEmployee::where('user_id', $user->id)->first()->id;
+        $auth = CompanyEmployee::where('user_id', $user->id)->first();
+        $auth_id = $auth->id;
+        $id = $auth->company_id;
         $page = $request->page;
         $name = $request->name;
         $email = $request->email;
