@@ -35,11 +35,11 @@ class HomeController extends Controller
         $password = $request->password;
         $link = md5(uniqid());
         $hours = 0;
-        if($planType == 'Package-3-Premier'){
+        if ($planType == 'Package-3-Premier') {
             $hours = 96;
-        }elseif ($planType == 'Package-2-Enhanced'){
+        } elseif ($planType == 'Package-2-Enhanced') {
             $hours = 16;
-        }elseif ($planType == 'Package-1-Basic'){
+        } elseif ($planType == 'Package-1-Basic') {
             $hours = 8;
         }
 
@@ -50,10 +50,10 @@ class HomeController extends Controller
             'companyname' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|max:255|min:8',
-            'domain' => 'required|max:255|regex:'.$regex.'|unique:companies,company_domain',
+            'domain' => 'required|max:255|regex:' . $regex . '|unique:companies,company_domain',
             'employees' => 'required|max:255',
             'plan' => 'required|max:255',
-//            'addon' => 'required|max:255',
+            //            'addon' => 'required|max:255',
             'logo' => 'required|image'
         ]);
         if ($validator->fails()) {
@@ -97,13 +97,13 @@ class HomeController extends Controller
             $emp->profile_type_id = 1;
             $emp->save();
 
-//            $link1 = env('FRONT_URL') . '/registration/' . $link;
-//            $data = ['link' => $link1, 'name' => $companyname];
-//            Mail::send('registration-email', $data, function ($message) use ($email) {
-//                $message->to($email, 'MPACT INT')
-//                    ->subject('Employee registration link');
-//                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-//            });
+            //            $link1 = env('FRONT_URL') . '/registration/' . $link;
+            //            $data = ['link' => $link1, 'name' => $companyname];
+            //            Mail::send('registration-email', $data, function ($message) use ($email) {
+            //                $message->to($email, 'MPACT INT')
+            //                    ->subject('Employee registration link');
+            //                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            //            });
 
             return response()->json(['status' => 'success', 'res' => $cu], 200);
         }
@@ -129,8 +129,8 @@ class HomeController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-//            'password' => 'required|max:255|min:8',
-             'profileType'=>'required'
+            //            'password' => 'required|max:255|min:8',
+            'profileType' => 'required'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -142,9 +142,7 @@ class HomeController extends Controller
                 if ($total_emp < $company->total_employees) {
                     $employee_email_domain = explode('@', $email);
                     $employee_email_domain = $employee_email_domain[1];
-//                    $company_domain = explode('www.', $company->company_domain);
-//                    $company_domain = $company_domain[1];
-                    $company_domain = preg_replace( "#^[^:/.]*[:/]+#i", "", preg_replace( "{/$}", "", urldecode( $company->company_domain ) ) );
+                    $company_domain = $this->remove_http($company->company_domain);
 
                     if ($employee_email_domain == $company_domain) {
                         $u = new User();
@@ -168,8 +166,7 @@ class HomeController extends Controller
                             DB::table('password_resets')->insert(['email' => $email, 'token' => $link]);
                             $data = array('link' => $link1, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
                             Mail::send('forgot-pass-email', $data, function ($message) use ($u) {
-                                $message->to($u->email, 'MPACT INT')->subject
-                                ('Create Password Email');
+                                $message->to($u->email, 'MPACT INT')->subject('Create Password Email');
                                 $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                             });
                         }
@@ -178,7 +175,7 @@ class HomeController extends Controller
 
                         return response()->json(['status' => 'success', 'res' => $emp], 200);
                     } else {
-                        return response()->json(['status' => 'error', 'message' => 'Employee email is not valid, it does not belongs to company'], 400);
+                        return response()->json(['status' => 'error', 'message' => 'Employee email is not valid, it does not belongs to company', 'domain' => $company_domain], 400);
                     }
                 } else {
                     return response()->json(['status' => 'error', 'message' => 'You can not register, because total number of employees registration limit is exceeded'], 400);
@@ -187,6 +184,19 @@ class HomeController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Registration link is not valid'], 400);
             }
         }
+    }
+
+    public function remove_http($url)
+    {
+        $url = preg_replace( "#^[^:/.]*[:/]+#i", "", preg_replace( "{/$}", "", urldecode( $url ) ) );
+
+        $disallowed = array('www.');
+        foreach ($disallowed as $d) {
+            if (strpos($url, $d) === 0) {
+                return str_replace($d, '', $url);
+            }
+        }
+        return $url;
     }
 
     /**
@@ -214,22 +224,21 @@ class HomeController extends Controller
             $accessToken = Auth::user()->createToken('authToken')->accessToken;
             $user = User::where('email', $request->email)->first();
             $c = null;
-            
+
             if ($user->role == "COMPANY") {
-                $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role','company_employees.profile_type_id','company_employees.profile_image')
+                $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role', 'company_employees.profile_type_id', 'company_employees.profile_image')
                     ->join('company_employees', 'companies.id', 'company_employees.company_id')
                     ->where("company_employees.user_id", $user->id)
                     ->first();
                 if ($c) {
                     $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
-                    $c->profile_image =  url('/') . '/public/profile-images/'.$c->profile_image;
+                    $c->profile_image =  url('/') . '/public/profile-images/' . $c->profile_image;
                 }
             }
             $user->last_login = DB::raw('CURRENT_TIMESTAMP');
             $user->save();
 
             return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
-
         }
     }
 
@@ -242,7 +251,6 @@ class HomeController extends Controller
         $user = Auth::user()->token();
         $user->revoke();
         return response(["status" => "success", "message" => "User logout successfully"], 200);
-
     }
 
     /**
@@ -261,8 +269,7 @@ class HomeController extends Controller
             DB::table('password_resets')->insert(['email' => $email, 'token' => $link, 'expiry' => strtotime("+10 minutes")]);
             $data = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
             Mail::send('forgot-pass-email', $data, function ($message) use ($user) {
-                $message->to($user->email, 'MPACT INT')->subject
-                ('Reset Password Email');
+                $message->to($user->email, 'MPACT INT')->subject('Reset Password Email');
                 $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
             });
             return response(["status" => "success", "message" => "Email Sent Successfully"], 200);
@@ -326,12 +333,12 @@ class HomeController extends Controller
      */
     public function get_company_list()
     {
-        $res = Company::select('id','company_name as name')->get();
+        $res = Company::select('id', 'company_name as name')->get();
         return response(["status" => "success", "res" => $res], 200);
     }
-    public function get_countries(){
+    public function get_countries()
+    {
         $res = Country::all();
         return response(["status" => "success", "res" => $res], 200);
     }
-
 }
