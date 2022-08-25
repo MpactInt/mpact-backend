@@ -66,7 +66,11 @@ class HomeController extends Controller
 
             $destinationPath = public_path() . '/uploads';
             $uploadedFile->move($destinationPath, $filename);
-
+            
+            $parsed = parse_url($domain);
+            if (empty($parsed['scheme'])) {
+                $domain = 'http://' . ltrim($domain, '/');
+            }
             $u = new User();
             $u->email = $email;
             $u->password = Hash::make($password);
@@ -188,7 +192,7 @@ class HomeController extends Controller
 
     public function remove_http($url)
     {
-        $url = preg_replace( "#^[^:/.]*[:/]+#i", "", preg_replace( "{/$}", "", urldecode( $url ) ) );
+        $url = preg_replace("#^[^:/.]*[:/]+#i", "", preg_replace("{/$}", "", urldecode($url)));
 
         $disallowed = array('www.');
         foreach ($disallowed as $d) {

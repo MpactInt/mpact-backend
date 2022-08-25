@@ -86,7 +86,6 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/ask-question', [EmployerController::class, 'ask_question']);
     Route::post('/get-question-list', [EmployerController::class, 'get_question_list']);
     Route::post('/get-companies-list', [EmployerController::class, 'get_company_list']);
-    Route::post('/update-hours', [EmployerController::class, 'update_hours']);
 
     ###################################################################
     /****************************Common Routes************************/

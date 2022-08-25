@@ -20,19 +20,28 @@ class ProfileController extends Controller
 
     public function update_profile(Request $request)
     {
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'company_name' => 'required|max:255',
+            'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain',
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
         } else {
+            $url = $request->company_domain;
+            $parsed = parse_url($url);
+            if (empty($parsed['scheme'])) {
+                $url = 'http://' . ltrim($url, '/');
+            }
             $user = Auth::guard('api')->user();
             $c = Company::where('user_id', $user->id)->first();
             if ($c) {
                 $c->company_name = $request->company_name;
+                $c->company_domain = $url;
                 $c->save();
             }
             $e = CompanyEmployee::where('user_id', $user->id)->first();
@@ -89,8 +98,9 @@ class ProfileController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'company_name' => 'required',
-            'password'=>'nullable|min:8',
-            'company_logo' => 'nullable|image'
+            'password' => 'nullable|min:8',
+            'company_logo' => 'nullable|image',
+            'remaining_hours' => 'required'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -110,13 +120,14 @@ class ProfileController extends Controller
                 $company->company_logo = $filename;
             }
             $company->company_name = $request->company_name;
+            $company->remaining_hours = $request->remaining_hours;
             $company->save();
 
             $company_employee->first_name = $request->first_name;
             $company_employee->last_name = $request->last_name;
             $company_employee->save();
 
-            if($request->password) {
+            if ($request->password) {
                 $user = User::where('id', $company->user_id)->first();
                 $user->password = Hash::make($request->password);
                 $user->save();
@@ -137,13 +148,13 @@ class ProfileController extends Controller
             ->first();
         if ($u) {
             if ($u->role == "COMPANY_EMP") {
-                $u = Company::select('companies.*', 'company_employees.*', 'company_employees.id as emp_id', 'profile_types.profile_type','company_employees.profile_image')
+                $u = Company::select('companies.*', 'company_employees.*', 'company_employees.id as emp_id', 'profile_types.profile_type', 'company_employees.profile_image')
                     ->join('company_employees', 'companies.id', 'company_employees.company_id')
                     ->join('profile_types', 'profile_types.id', 'company_employees.profile_type_id')
                     ->where('company_employees.user_id', $user->id)
                     ->first();
             }
-            if($u){
+            if ($u) {
                 $u->company_logo = url('public/uploads/' . $u->company_logo);
                 $u->profile_image = url('public/profile-images/' . $u->profile_image);
             }
@@ -179,5 +190,4 @@ class ProfileController extends Controller
             }
         }
     }
-
 }

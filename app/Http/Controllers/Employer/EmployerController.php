@@ -112,18 +112,6 @@ class EmployerController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function update_hours(Request $request)
-    {
-        $c = Company::find($request->companyId);
-        $c->remaining_hours = $request->remainingHours;
-        $c->save();
-        return response(["status" => "success", 'res' => $c], 200);
-    }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
-     */
     public function submit_company_feedback(Request $request)
     {
         $user = Auth::guard('api')->user();
