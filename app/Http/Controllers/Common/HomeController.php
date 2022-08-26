@@ -66,7 +66,7 @@ class HomeController extends Controller
 
             $destinationPath = public_path() . '/uploads';
             $uploadedFile->move($destinationPath, $filename);
-            
+
             $parsed = parse_url($domain);
             if (empty($parsed['scheme'])) {
                 $domain = 'http://' . ltrim($domain, '/');
@@ -220,9 +220,17 @@ class HomeController extends Controller
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
         } else {
-
             if (!Auth::attempt($data)) {
-                return response()->json(['status' => 'error', 'message' => 'Invalid Credentials'], 400);
+                $u = User::withTrashed()->where('email',$request->email)->first();
+                if ($u) {
+                    if ($u->deleted_at) {
+                        return response()->json(['status' => 'error', 'message' => 'Your account is inactive, please contact to support'], 400);
+                    } else {
+                        return response()->json(['status' => 'error', 'message' => 'Invalid Credentials'], 400);
+                    }
+                } else {
+                    return response()->json(['status' => 'error', 'message' => 'Invalid Credentials'], 400);
+                }
             }
 
             $accessToken = Auth::user()->createToken('authToken')->accessToken;

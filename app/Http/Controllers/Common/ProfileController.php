@@ -190,4 +190,15 @@ class ProfileController extends Controller
             }
         }
     }
+
+    public function active_inactive_company($id,$status){
+        $c = Company::find($id);
+        if($status){
+            $u = User::withTrashed()->find($c->user_id)->restore();
+        }else{
+            $u = User::find($c->user_id)->delete();
+        }
+        return response(["status" => "success", 'res' => $u], 200);
+
+    }
 }
