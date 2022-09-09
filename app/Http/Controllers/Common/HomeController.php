@@ -54,18 +54,18 @@ class HomeController extends Controller
             'employees' => 'required|max:255',
             'plan' => 'required|max:255',
             //            'addon' => 'required|max:255',
-            'logo' => 'required|image'
+            // 'logo' => 'required|image'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
         } else {
 
-            $uploadedFile = $request->file('logo');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+            // $uploadedFile = $request->file('logo');
+            // $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
-            $destinationPath = public_path() . '/uploads';
-            $uploadedFile->move($destinationPath, $filename);
+            // $destinationPath = public_path() . '/uploads';
+            // $uploadedFile->move($destinationPath, $filename);
 
             $parsed = parse_url($domain);
             if (empty($parsed['scheme'])) {
@@ -89,7 +89,7 @@ class HomeController extends Controller
             $cu->remaining_hours = $hours;
             $cu->total_employees = $total_employees;
             $cu->employee_registration_link = $link;
-            $cu->company_logo = $filename;
+            $cu->company_logo = 'default.png';
             $cu->save();
 
             $emp = new CompanyEmployee();

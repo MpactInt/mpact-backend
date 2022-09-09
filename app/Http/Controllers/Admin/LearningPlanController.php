@@ -73,6 +73,7 @@ class LearningPlanController extends Controller
         }
         $t->title = $request->title;
         $t->description = $request->description;
+        $t->profile_type_id = $request->profile_type;
         $t->save();
         return response(["status" => "success", "res" => $t], 200);
     }
