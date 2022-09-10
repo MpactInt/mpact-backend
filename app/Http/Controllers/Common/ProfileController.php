@@ -22,8 +22,6 @@ class ProfileController extends Controller
     {
         $user = Auth::guard('api')->user();
         $c = Company::where('user_id', $user->id)->first();
-        return response(["status" => "success", 'res' => $c, 'user'=>$user], 200);
-
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|max:255',
