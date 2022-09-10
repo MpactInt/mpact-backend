@@ -237,6 +237,7 @@ class WorkshopController extends Controller
                 ->get();
             foreach($ca as $c){
                 $c->registered = WorkshopRegistration::where(['workshop_id' => $c->id, 'company_employee_id' => $company->id])->first();
+                $c->image =   $path = url('/public/workshops/').$c->image;
             }
         }
         return response(["status" => "success", "res" => $ca], 200);
