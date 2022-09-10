@@ -21,12 +21,13 @@ class ProfileController extends Controller
     public function update_profile(Request $request)
     {
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-
+        $user = Auth::guard('api')->user();
+        $c = Company::where('user_id', $user->id)->first();
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
             'company_name' => 'required|max:255',
-            'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain',
+            'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain,'. $c->id,
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -37,8 +38,7 @@ class ProfileController extends Controller
             if (empty($parsed['scheme'])) {
                 $url = 'http://' . ltrim($url, '/');
             }
-            $user = Auth::guard('api')->user();
-            $c = Company::where('user_id', $user->id)->first();
+         
             if ($c) {
                 $c->company_name = $request->company_name;
                 $c->company_domain = $url;
