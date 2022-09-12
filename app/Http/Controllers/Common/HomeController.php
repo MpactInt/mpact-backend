@@ -222,15 +222,15 @@ class HomeController extends Controller
         } else {
             if (!Auth::attempt($data)) {
                 // $u = User::withTrashed()->where('email',$request->email)->first();
-                $u = User::join('company_employees','users.id','company_employees.user_id')->where('email',$request->email)->first();
+                $u = User::join('company_employees','users.id','company_employees.user_id')->withTrashed()->where('email',$request->email)->first();
                 if ($u) {
                     if ($u->deleted_at) {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                     } else {
-                        return response()->json(['status' => 'error', 'message' => 'Invalid Credentials'], 400);
+                        return response()->json(['status' => 'error', 'message' => 'Invalid Credentials','user'=>$u], 400);
                     }
                 } else {
-                    return response()->json(['status' => 'error', 'message' => 'Invalid Credentials'], 400);
+                    return response()->json(['status' => 'error', 'message' => 'Invalid Credentials','user'=>$u], 400);
                 }
             }
 
