@@ -217,12 +217,12 @@ class HomeController extends Controller
             'email' => ['required', 'email', 'string'],
             'password' => ['required', 'string']
         ]);
+        $u = User::join('company_employees','users.id','company_employees.user_id')->withTrashed()->where('email',$request->email)->first();
+        $c = User::join('companies','users.id','companies.user_id')->withTrashed()->where('companies.id',$u->company_id)->first();
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
         } else {
             if (!Auth::attempt($data)) {
-                $u = User::join('company_employees','users.id','company_employees.user_id')->withTrashed()->where('email',$request->email)->first();
-                $c = User::join('companies','users.id','companies.user_id')->withTrashed()->where('companies.id',$u->company_id)->first();
                 if ($u) {
                     if ($u->role=="COMPANY_ADMIN" && $u->deleted_at) {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
@@ -234,26 +234,30 @@ class HomeController extends Controller
                 } else {
                     return response()->json(['status' => 'error', 'message' => 'Invalid Credentials','user'=>$u], 400);
                 }
-            }
+            }else{
+                if($u->role == "COMPANY_EMP" && $c->deleted_at){
+                    return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
+                } else {
+                    $accessToken = Auth::user()->createToken('authToken')->accessToken;
+                    $user = User::where('email', $request->email)->first();
+                    $c = null;
 
-            $accessToken = Auth::user()->createToken('authToken')->accessToken;
-            $user = User::where('email', $request->email)->first();
-            $c = null;
+                    if ($user->role == "COMPANY") {
+                        $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role', 'company_employees.profile_type_id', 'company_employees.profile_image')
+                            ->join('company_employees', 'companies.id', 'company_employees.company_id')
+                            ->where("company_employees.user_id", $user->id)
+                            ->first();
+                        if ($c) {
+                            $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
+                            $c->profile_image =  url('/') . '/public/profile-images/' . $c->profile_image;
+                        }
+                    }
+                    $user->last_login = DB::raw('CURRENT_TIMESTAMP');
+                    $user->save();
 
-            if ($user->role == "COMPANY") {
-                $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role', 'company_employees.profile_type_id', 'company_employees.profile_image')
-                    ->join('company_employees', 'companies.id', 'company_employees.company_id')
-                    ->where("company_employees.user_id", $user->id)
-                    ->first();
-                if ($c) {
-                    $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
-                    $c->profile_image =  url('/') . '/public/profile-images/' . $c->profile_image;
+                    return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
                 }
             }
-            $user->last_login = DB::raw('CURRENT_TIMESTAMP');
-            $user->save();
-
-            return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
         }
     }
 
