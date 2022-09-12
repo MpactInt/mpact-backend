@@ -100,7 +100,8 @@ class ProfileController extends Controller
             'company_name' => 'required',
             'password' => 'nullable|min:8',
             'company_logo' => 'nullable|image',
-            'remaining_hours' => 'required'
+            'remaining_hours' => 'required',
+            'total_hours' => 'required'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -121,6 +122,7 @@ class ProfileController extends Controller
             }
             $company->company_name = $request->company_name;
             $company->remaining_hours = $request->remaining_hours;
+            $company->total_hours = $request->total_hours;
             $company->save();
 
             $company_employee->first_name = $request->first_name;

@@ -100,11 +100,15 @@ class EmployerController extends Controller
      */
     public function get_company_list()
     {
+        $keyword = $request->keyword;
         $ql = User::withTrashed()->select('companies.*', 'company_name as name', 'company_employees.first_name', 'company_employees.last_name', 'users.deleted_at')
             ->join('companies', 'companies.user_id', 'users.id')
             ->join('company_employees', 'companies.id', 'company_employees.company_id')
-            ->where('company_employees.role', 'COMPANY_ADMIN')
-            ->paginate(10);
+            ->where('company_employees.role', 'COMPANY_ADMIN');
+        if($keyword){
+            $ql = $ql->where('company_name','like',"%$keyword%");
+        }
+            $ql = $ql->paginate(10);
         $path = url('/') . '/public/uploads/';
         return response(["status" => "success", 'res' => $ql, 'path' => $path], 200);
     }
