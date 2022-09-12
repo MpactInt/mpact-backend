@@ -221,10 +221,11 @@ class HomeController extends Controller
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
         } else {
             if (!Auth::attempt($data)) {
-                $u = User::withTrashed()->where('email',$request->email)->first();
+                // $u = User::withTrashed()->where('email',$request->email)->first();
+                $u = User::join('company_employees','users.id','company_employees.user_id')->where('email',$request->email)->first();
                 if ($u) {
                     if ($u->deleted_at) {
-                        return response()->json(['status' => 'error', 'message' => 'Your account is inactive, please contact to support'], 400);
+                        return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                     } else {
                         return response()->json(['status' => 'error', 'message' => 'Invalid Credentials'], 400);
                     }
