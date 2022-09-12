@@ -218,7 +218,9 @@ class HomeController extends Controller
             'password' => ['required', 'string']
         ]);
         $u = User::join('company_employees','users.id','company_employees.user_id')->withTrashed()->where('email',$request->email)->first();
-        $c = User::join('companies','users.id','companies.user_id')->withTrashed()->where('companies.id',$u->company_id)->first();
+        if($u){
+            $c = User::join('companies','users.id','companies.user_id')->withTrashed()->where('companies.id',$u->company_id)->first();
+        }
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
         } else {
