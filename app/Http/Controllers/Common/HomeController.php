@@ -237,7 +237,7 @@ class HomeController extends Controller
                     return response()->json(['status' => 'error', 'message' => 'Invalid Credentials','user'=>$u], 400);
                 }
             }else{
-                if($u->role == "COMPANY_EMP" && $c->deleted_at){
+                if($u && $u->role == "COMPANY_EMP" && $c->deleted_at){
                     return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                 } else {
                     $accessToken = Auth::user()->createToken('authToken')->accessToken;
