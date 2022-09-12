@@ -221,10 +221,13 @@ class HomeController extends Controller
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
         } else {
             if (!Auth::attempt($data)) {
-                // $u = User::withTrashed()->where('email',$request->email)->first();
+                
                 $u = User::join('company_employees','users.id','company_employees.user_id')->withTrashed()->where('email',$request->email)->first();
+                $c = User::join('companies','users.id','companies.user_id')->withTrashed()->where('comanaies.id',$u->company_id)->first();
                 if ($u) {
-                    if ($u->deleted_at) {
+                    if ($u->role=="COMPANY_ADMIN" && $u->deleted_at) {
+                        return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
+                    }elseif($u->rolw == "COMPANY_EMP" && $c->deleted_at){
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                     } else {
                         return response()->json(['status' => 'error', 'message' => 'Invalid Credentials','user'=>$u], 400);
