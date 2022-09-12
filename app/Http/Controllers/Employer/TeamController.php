@@ -49,13 +49,14 @@ class TeamController extends Controller
                 $employee_email_domain = $employee_email_domain[1];
 
                 $user = Auth::guard('api')->user();
-                 $employer = Company::where('user_id', $user->id)->first();
+                $employer = Company::where('user_id', $user->id)->first();
+
+                $company_domain = $this->remove_http($employer->company_domain);
 
 
-                $company_domain = preg_replace( "#^[^:/.]*[:/]+#i", "", preg_replace( "{/$}", "", urldecode( $employer->company_domain ) ) );
+                // $company_domain = preg_replace( "#^[^:/.]*[:/]+#i", "", preg_replace( "{/$}", "", urldecode( $employer->company_domain ) ) );
 
                 if ($employee_email_domain == $company_domain) {
-
                 $company = $request->company_name;
                 $data = ['link' => $link, 'company_name' => $company];
                 Mail::send('registration-email-employee', $data, function ($message) use ($email) {
@@ -69,10 +70,23 @@ class TeamController extends Controller
                 $i->save();
                         return response()->json(['status' => 'success'], 200);
                 }else{
-                       return response()->json(['status' => 'error', 'message' => 'Employee email is not valid, it does not belongs to company'], 400);
+                       return response()->json(['status' => 'error', 'message' => 'Employee email is not valid, it does not belongs to company','emp_do'=>$employee_email_domain,'comp_do'=>$company_domain], 400);
 
                 }
         }
+    }
+
+    public function remove_http($url)
+    {
+        $url = preg_replace("#^[^:/.]*[:/]+#i", "", preg_replace("{/$}", "", urldecode($url)));
+
+        $disallowed = array('www.');
+        foreach ($disallowed as $d) {
+            if (strpos($url, $d) === 0) {
+                return str_replace($d, '', $url);
+            }
+        }
+        return $url;
     }
 
     /**
