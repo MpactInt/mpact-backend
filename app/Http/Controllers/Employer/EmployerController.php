@@ -98,7 +98,7 @@ class EmployerController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function get_company_list()
+    public function get_company_list(Request $request)
     {
         $keyword = $request->keyword;
         $ql = User::withTrashed()->select('companies.*', 'company_name as name', 'company_employees.first_name', 'company_employees.last_name', 'users.deleted_at')
