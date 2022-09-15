@@ -146,11 +146,11 @@ class WorkshopController extends Controller
         }
 
         $workshops = $workshops->paginate(10);
-
-        foreach($workshops->data as $w){
-            $w->registered = WorkshopRegistration::where(['workshop_id' => $w->id, 'company_employee_id' => $company->id])->first();
+        if($company){
+            foreach($workshops as $c){
+                $c->registered = WorkshopRegistration::where(['workshop_id' => $c->id, 'company_employee_id' => $company->id])->first();
+            }
         }
-
         $path = url('/public/workshops/');
         return response(["status" => "success", 'res' => $workshops, 'path' => $path], 200);
     }
