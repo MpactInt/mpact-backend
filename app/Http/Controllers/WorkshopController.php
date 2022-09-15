@@ -147,7 +147,7 @@ class WorkshopController extends Controller
 
         $workshops = $workshops->paginate(10);
 
-        foreach($workshops->res as $w){
+        foreach($workshops->data as $w){
             $w->registered = WorkshopRegistration::where(['workshop_id' => $w->id, 'company_employee_id' => $company->id])->first();
         }
 
