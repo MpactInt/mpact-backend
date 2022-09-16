@@ -23,12 +23,19 @@ class ProfileController extends Controller
         $user = Auth::guard('api')->user();
         $c = Company::where('user_id', $user->id)->first();
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|max:255',
-            'last_name' => 'required|max:255',
-            'company_name' => 'required|max:255',
-            'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain,'.$c->id, 
-        ]);
+        if($c){
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|max:255',
+                'last_name' => 'required|max:255',
+                'company_name' => 'required|max:255',
+                'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain,'.$c->id, 
+            ]);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|max:255',
+                'last_name' => 'required|max:255',
+            ]);
+        }
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
