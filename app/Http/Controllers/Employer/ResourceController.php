@@ -102,7 +102,7 @@ class ResourceController extends Controller
             $resource->visibility = $request->visibility;
             $resource->save();
             if ($request->company) {
-                CompanyResource::where('resource_id', $request->id)->delete();
+                CompanyResource::where('resource_id', $resource->id)->delete();
                 $company = json_decode($request->company);
                 foreach ($company as $value) {
                     $cw = new CompanyResource();
@@ -127,16 +127,16 @@ class ResourceController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
-        if($company->role == "COMPANY_EMP"){
-        $resources = Resource::select('resources.*')
-                        ->join('company_resources','company_resources.resource_id','resources.id')
-                        ->where("company_id", $company->company_id)
-                        ->where("visibility","PUBLIC");
-        }else{
+            if($company->role == "COMPANY_EMP"){
             $resources = Resource::select('resources.*')
-                ->join('company_resources','company_resources.resource_id','resources.id')
-                ->where("company_id", $company->company_id);
-            }
+                            ->join('company_resources','company_resources.resource_id','resources.id')
+                            ->where("company_id", $company->company_id)
+                            ->where("visibility","PUBLIC");
+            }else{
+                $resources = Resource::select('resources.*')
+                    ->join('company_resources','company_resources.resource_id','resources.id')
+                    ->where("company_id", $company->company_id);
+                }
         } else {
             $resources = Resource::with(['company' => function ($q) {
                 $q->join('companies', 'companies.id', 'company_resources.company_id')->pluck('companies.company_name');

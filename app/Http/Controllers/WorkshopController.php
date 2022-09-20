@@ -197,8 +197,6 @@ class WorkshopController extends Controller
         $destinationPath = public_path() . '/workshops';
         unlink($destinationPath . '/' . $workshop->image);
         $workshop->delete();
-        CompanyWorkshop::where('workshop_id', $id)->delete();
-
         return response(["status" => "success", 'res' => $workshop], 200);
     }
 
