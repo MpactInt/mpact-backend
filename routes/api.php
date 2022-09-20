@@ -162,7 +162,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     /******************************Common Routes**********************/
     ###################################################################
 
-    Route::get('/get-admin-notifications',NotificationController::class,'get_admin_notifications');
+    Route::get('/get-admin-notifications',[NotificationController::class,'get_admin_notifications']);
     
     //Chat routes
 
