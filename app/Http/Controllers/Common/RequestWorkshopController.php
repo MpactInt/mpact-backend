@@ -89,7 +89,6 @@ class RequestWorkshopController extends Controller
         $workshop = RequestWorkshop::find($id);
         $workshop->delete();
 
-        RequestWorkshop::where('workshop_id', $id)->delete();
         $an = new AdminNotification();
         $an->from_company_id = $company->id;
         $an->from_employee_id = $companyEmp->id;
