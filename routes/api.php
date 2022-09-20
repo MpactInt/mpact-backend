@@ -15,6 +15,7 @@ use App\Http\Controllers\Common\ChargebeeController;
 use App\Http\Controllers\Common\HomeController;
 use App\Http\Controllers\Common\ProfileController;
 use App\Http\Controllers\Common\RequestWorkshopController;
+use App\Http\Controllers\Common\NotificationController;
 use App\Http\Controllers\Employer\AnnouncementController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Common\MessageController;
@@ -163,6 +164,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     ###################################################################
 
     Route::get('/get-admin-notifications',[NotificationController::class,'get_admin_notifications']);
+    Route::get('/read-admin-notifications',[NotificationController::class,'read_admin_notifications']);
     
     //Chat routes
 

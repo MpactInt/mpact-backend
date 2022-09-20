@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
 use App\Models\RequestWorkshop;
 use App\Models\AdminNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Events\AdminNotificationEvent;
+use App\Events\AdminNotificationEvent;
 
 class RequestWorkshopController extends Controller
 {
@@ -92,12 +93,12 @@ class RequestWorkshopController extends Controller
         $an = new AdminNotification();
         $an->from_company_id = $company->id;
         $an->from_employee_id = $companyEmp->id;
-        $an->motification = $company->company_name." deleted requested workshop ".$workshop->name;
-        $an->link = "/admin/workshops";
+        $an->notification = $company->company_name." deleted requested workshop ".$workshop->name;
+        $an->link = "/admin/request-workshop";
         $an->save();
 
         $admin = User::where('role','ADMIN')->first();
-        event(new AdAdminNotificationEvent($an, $admin->id));
+        event(new AdminNotificationEvent($an, $admin->id));
 
         return response(["status" => "success", 'res' => $workshop], 200);
     }

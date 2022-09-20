@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\CompanyEmployee;
 use App\Models\CompanyWorkshop;
 use App\Models\Workshop;
+use App\Models\Company;
+use App\Models\User;
 use App\Models\WorkshopRegistration;
+use App\Models\AdminNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Events\AdminNotificationEvent;
 
 class WorkshopController extends Controller
 {
@@ -207,11 +211,25 @@ class WorkshopController extends Controller
     public function register_for_workshop($id)
     {
         $user = Auth::guard('api')->user();
+        $company = Company::where('user_id', $user->id)->first();
         $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
         $res = new WorkshopRegistration();
         $res->workshop_id = $id;
         $res->company_employee_id = $companyEmp->id;
         $res->Save();
+
+        $workshop = Workshop::find($id);
+
+        $an = new AdminNotification();
+        $an->from_company_id = $company->id;
+        $an->from_employee_id = $companyEmp->id;
+        $an->notification = $companyEmp->first_name." ".$companyEmp->last_name." registered for workshop ".$workshop->name;
+        $an->link = "/admin/view-workshop/".$id;
+        $an->save();
+
+        $admin = User::where('role','ADMIN')->first();
+        event(new AdminNotificationEvent($an, $admin->id));
+
         return response(["status" => "success", 'res' => $res], 200);
     }
 
