@@ -221,7 +221,7 @@ class WorkshopController extends Controller
         $workshop = Workshop::find($id);
 
         $an = new AdminNotification();
-        $an->from_company_id = $company->id;
+        $an->from_company_id = $companyEmp->company_id;
         $an->from_employee_id = $companyEmp->id;
         $an->notification = $companyEmp->first_name." ".$companyEmp->last_name." registered for workshop ".$workshop->name;
         $an->link = "/admin/view-workshop/".$id;
