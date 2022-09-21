@@ -82,7 +82,9 @@ class ProfileController extends Controller
             $destinationPath = public_path() . '/profile-images';
 
             if ($company_employee->profile_image != 'default.png') {
-                unlink($destinationPath . '/' . $company_employee->profile_image);
+                if(file_exists($destinationPath . '/' . $company_employee->profile_image)){
+                    unlink($destinationPath . '/' . $company_employee->profile_image);
+                }
             }
 
             $uploadedFile->move($destinationPath, $filename);

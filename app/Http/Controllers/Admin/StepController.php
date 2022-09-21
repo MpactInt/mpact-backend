@@ -71,7 +71,9 @@ class StepController extends Controller
                     return response()->json(["status" => "error", "message" => $error], 400);
                 }
                 $destinationPath = public_path() . '/steps';
-                unlink($destinationPath . '/' . $step->image);
+                if(file_exists($destinationPath . '/' . $step->image)){
+                    unlink($destinationPath . '/' . $step->image);
+                }
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $uploadedFile->move($destinationPath, $filename);

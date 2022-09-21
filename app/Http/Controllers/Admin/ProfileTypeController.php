@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProfileType;
+use App\Models\LearningPlanProfileType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,6 +51,17 @@ class ProfileTypeController extends Controller
 
     }
 
+    public function get_profile_type_list_multiselect(){
+        $pt = LearningPlanProfileType::pluck('profile_type_id');
+        $res = ProfileType::select('id', 'profile_type as name')->whereNotIn('id', $pt)->get();
+        return response(["status" => "success", "res" => $res], 200);
+    }
+
+    public function get_profile_type_list_multiselect_update(){
+        $res = ProfileType::select('id', 'profile_type as name')->get();
+        return response(["status" => "success", "res" => $res], 200);
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
@@ -66,7 +78,9 @@ class ProfileTypeController extends Controller
                return response()->json(["status" => "error", "message" => $error], 400);
            }else{
             $destinationPath = public_path() . '/profile-types';
-            unlink($destinationPath . '/' . $pt->file);
+            if(file_exists($destinationPath . '/' . $pt->file)){
+                unlink($destinationPath . '/' . $pt->file);
+            }
             $uploadedFile = $request->file('file');
             $filename = time() . '_' . $uploadedFile->getClientOriginalName();
             $uploadedFile->move($destinationPath, $filename);

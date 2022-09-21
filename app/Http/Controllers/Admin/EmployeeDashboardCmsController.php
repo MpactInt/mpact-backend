@@ -48,7 +48,9 @@ class EmployeeDashboardCmsController extends Controller
             }
             if ($request->hasFile('image')) {
                 if ($request->id) {
-                    unlink($destinationPath . '/' . $pt->image);
+                    if(file_exists($destinationPath . '/' . $pt->image)){
+                        unlink($destinationPath . '/' . $pt->image);
+                    }
                 }
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
@@ -162,7 +164,9 @@ class EmployeeDashboardCmsController extends Controller
     {
         $destinationPath = url('public/profile-types');
         $res = EmployeeDashboardSetion1::where('profile_type_id', $id)->first();
-        $res->image = $destinationPath . "/" . $res->image;
+        if($res){
+            $res->image = $destinationPath . "/" . $res->image;
+        }
         return response(["status" => "success", "res" => $res], 200);
     }
 
@@ -184,7 +188,9 @@ class EmployeeDashboardCmsController extends Controller
     {
         $destinationPath = url('public/profile-types');
         $res = EmployeeDashboardSetion3::where('profile_type_id', $id)->first();
-        $res->path = $destinationPath;
+        if($res){
+            $res->path = $destinationPath;
+        }
         return response(["status" => "success", "res" => $res], 200);
     }
 

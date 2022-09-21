@@ -54,9 +54,9 @@ class EmployerController extends Controller
             $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
             $destinationPath = public_path() . '/uploads';
-
-            unlink($destinationPath . '/' . $company->company_logo);
-
+            if(file_exists($destinationPath . '/' . $company->company_logo)){
+                unlink($destinationPath . '/' . $company->company_logo);
+            }
             $uploadedFile->move($destinationPath, $filename);
 
             $company->company_logo = $filename;

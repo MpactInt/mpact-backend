@@ -41,7 +41,9 @@ class WelcomeNoteController extends Controller
             if (!$note) {
                 $note = new CompanyEmployeeWelcomeNote();
             } else {
-                unlink($destinationPath . '/' . $note->image);
+                if(file_exists($destinationPath . '/' . $note->image)){
+                    unlink($destinationPath . '/' . $note->image);
+                }
             }
             $uploadedFile->move($destinationPath, $filename);
             $note->company_id = $company->id;
@@ -120,7 +122,9 @@ class WelcomeNoteController extends Controller
                     return response()->json(["status" => "error", "message" => $error], 400);
                 }
                 $destinationPath = public_path() . '/welcome-notes';
-                unlink($destinationPath . '/' . $wn->image);
+                if(file_exists($destinationPath . '/' . $wn->image)){
+                    unlink($destinationPath . '/' . $wn->image);
+                }
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $uploadedFile->move($destinationPath, $filename);

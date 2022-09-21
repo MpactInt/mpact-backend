@@ -73,6 +73,9 @@ Route::group([
     Route::get('/get-company-details/{link}', [EmployerController::class, 'get_company_details']);
 //    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
     Route::get('/get-profile-type-list', [ProfileTypeController::class, 'get_profile_type_list']);
+    Route::get('/get-profile-type-list-multiselect', [ProfileTypeController::class, 'get_profile_type_list_multiselect']);
+    Route::get('/get-profile-type-list-multiselect-update', [ProfileTypeController::class, 'get_profile_type_list_multiselect_update']);
+
 
     Route::get('/get-check-in-survey-questions/{id}', [CheckInSurveyController::class, 'get_check_in_survey_questions']);
     Route::post('/submit-check-in-survey/{id}', [CheckInSurveyController::class, 'submit_check_in_survey']);

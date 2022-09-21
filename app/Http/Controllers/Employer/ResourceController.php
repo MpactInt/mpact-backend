@@ -90,7 +90,9 @@ class ResourceController extends Controller
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $destinationPath = public_path() . '/company-resources';
                 if($resource->file) {
-                    unlink($destinationPath . '/' . $resource->file);
+                    if(file_exists($destinationPath . '/' . $resource->file)){
+                        unlink($destinationPath . '/' . $resource->file);
+                    }
                 }
                 $uploadedFile->move($destinationPath, $filename);
 

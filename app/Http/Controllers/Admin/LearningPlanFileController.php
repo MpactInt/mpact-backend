@@ -21,7 +21,7 @@ class LearningPlanFileController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'description' => 'required',
-            'image' => 'required|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt',
+            'image' => 'required|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -52,22 +52,34 @@ class LearningPlanFileController extends Controller
      */
     public function update_learning_plan_file(Request $request)
     {
-        $t = MyLearningPlanFile::find($request->id);
-        $filename = '';
-        if ($request->hasFile('image')) {
-            $uploadedFile = $request->file('image');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-            $destinationPath = public_path() . '/learning-plan-files';
-            $uploadedFile->move($destinationPath, $filename);
-            if ($t->image) {
-                unlink($destinationPath . '/' . $t->image);
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'image' => 'required|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
+        ]);
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
+            $t = MyLearningPlanFile::find($request->id);
+            $filename = '';
+            if ($request->hasFile('image')) {
+                $uploadedFile = $request->file('image');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $destinationPath = public_path() . '/learning-plan-files';
+                $uploadedFile->move($destinationPath, $filename);
+                if ($t->image) {
+                    if(file_exists($destinationPath . '/' . $t->image)){
+                        unlink($destinationPath . '/' . $t->image);
+                    }
+                }
+                $t->image = $filename;
             }
-            $t->image = $filename;
+            $t->title = $request->title;
+            $t->description = $request->description;
+            $t->save();
+            return response(["status" => "success", "res" => $t], 200);
         }
-        $t->title = $request->title;
-        $t->description = $request->description;
-        $t->save();
-        return response(["status" => "success", "res" => $t], 200);
     }
 
     /**

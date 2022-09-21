@@ -96,29 +96,34 @@ class PopupSurveyController extends Controller
     {
         $user = Auth::guard('api')->user();
         $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
-
+        $is_answered = "";
         $question = PopupSurveyQuestion::orderby('id','desc')->first();
-        $is_answered = PopupSurveyAnswer::where(['company_employee_id' => $companyEmp->id, 'question_id' => $question->id])->first();
         $elements = [];
+        if($question){
+            $is_answered = PopupSurveyAnswer::where(['company_employee_id' => $companyEmp->id, 'question_id' => $question->id])->first();
+
+
         if (!$is_answered) {
+            $q = $question->id ?? '';
             $obj = [
                 "elements" => [
                     [
                         "type" => "radiogroup",
-                        "title" => $question->question,
-                        "name" => "question_" . $question->id,
+                        "title" => $question->question ?? '',
+                        "name" => "question_" . $q,
                         "isRequired" => true,
                         "colCount" => 2,
                         "choices" => [
-                            $question->option_1,
-                            $question->option_2,
-                            $question->option_3,
-                            $question->option_4,
+                            $question->option_1 ?? '',
+                            $question->option_2 ?? '',
+                            $question->option_3 ?? '',
+                            $question->option_4 ?? '',
                         ]
                     ]
                 ]
             ];
             array_push($elements, $obj);
+        }
         }
         return response(["status" => "success", "res" => $elements], 200);
     }
@@ -152,23 +157,33 @@ class PopupSurveyController extends Controller
         $res = PopupSurveyQuestion::with('answer')
             ->orderby('id', 'desc')
             ->first();
-        $total = PopupSurveyAnswer::where('question_id', $res->id)->count();
-        $option_1 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_1])->count();
-        $option_2 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_2])->count();
-        $option_3 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_3])->count();
-        $option_4 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_4])->count();
-        $option_1_per = 0;
-        $option_2_per = 0;
-        $option_3_per = 0;
-        $option_4_per = 0;
-        if($total){
-            $option_1_per = round(($option_1 * 100) / $total);
-            $option_2_per = round(($option_2 * 100) / $total);
-            $option_3_per = round(($option_3 * 100) / $total);
-            $option_4_per = round(($option_4 * 100) / $total);
+            $total = 0;
+            $per =[];
+        if($res){
+            $total = PopupSurveyAnswer::where('question_id', $res->id)->count();
+        
+            $option_1 = 0;
+            $option_2 = 0;
+            $option_3 = 0;
+            $option_4 = 0;
+            if($total){
+                $option_1 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_1])->count();
+                $option_2 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_2])->count();
+                $option_3 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_3])->count();
+                $option_4 = PopupSurveyAnswer::where(['question_id' => $res->id, "answer" => $res->option_4])->count();
+            }
+            $option_1_per = 0;
+            $option_2_per = 0;
+            $option_3_per = 0;
+            $option_4_per = 0;
+            if($total){
+                $option_1_per = round(($option_1 * 100) / $total);
+                $option_2_per = round(($option_2 * 100) / $total);
+                $option_3_per = round(($option_3 * 100) / $total);
+                $option_4_per = round(($option_4 * 100) / $total);
+            }
+            $per = ["per1" => $option_1_per, "per2" => $option_2_per, "per3" => $option_3_per, "per4" => $option_4_per];
         }
-        $per = ["per1" => $option_1_per, "per2" => $option_2_per, "per3" => $option_3_per, "per4" => $option_4_per];
-
         return response(["status" => "success", "res" => $res, 'per' => $per], 200);
     }
 }

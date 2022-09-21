@@ -92,7 +92,9 @@ class WorkshopController extends Controller
             $workshop = Workshop::find($request->id);
             if ($request->hasFile('image')) {
                 $destinationPath = public_path() . '/workshops';
-                unlink($destinationPath . '/' . $workshop->image);
+                if(file_exists($destinationPath . '/' . $workshop->image)){
+                    unlink($destinationPath . '/' . $workshop->image);
+                }
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $uploadedFile->move($destinationPath, $filename);
