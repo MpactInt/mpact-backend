@@ -169,8 +169,17 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-admin-notifications',[NotificationController::class,'get_admin_notifications']);
     Route::get('/read-admin-notifications',[NotificationController::class,'read_admin_notifications']);
     
-    //Chat routes
+    //group chat routes
 
+    Route::post('/create-chat-group', [MessageController::class, 'create_chat_group']);
+    Route::post('/get-chat-groups', [MessageController::class, 'get_company_chat_groups']);
+    Route::get('/get-chat-group/{id}', [MessageController::class, 'get_company_chat_group']);
+    Route::post('/get-group-chat-message/{rId}', [MessageController::class, 'get_group_chat_message']);
+    Route::post('/send-group-chat-message', [MessageController::class, 'send_group_chat_message']);
+    
+    //Chat routes
+    Route::get('/read-one-to-message/{sender_id}', [MessageController::class, 'read_one_to_one_message']);
+    Route::post('/get-employees-list-chat/{id}', [MessageController::class, 'get_employees_list_chat']);
     Route::post('/send-group-message', [MessageController::class, 'send_group_message']);
     Route::post('/get-group-message', [MessageController::class, 'get_group_message']);
     Route::post('/get-one-to-one-message/{rId}', [MessageController::class, 'get_one_to_one_message']);
