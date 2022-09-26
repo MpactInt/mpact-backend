@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Events\MessageSent;
 use App\Events\GroupMessageSent;
 use App\Models\Company;
+use App\Models\GroupMessageRead;
 use App\Models\CompanyEmployee;
 use App\Models\GroupMessage;
 use App\Models\GroupChatMessage;
@@ -164,7 +165,7 @@ class MessageController extends Controller
                 foreach ($emps as $e) {
                     event(new MessageSent($gm, $e->user_id));
                 }
-            }elseif ($request->type == 'groupChat') {   
+            } elseif ($request->type == 'groupChat') {
 
                 $gm = new GroupChatMessage();
                 $gm->sender_id = $sender_id;
@@ -172,9 +173,23 @@ class MessageController extends Controller
                 $gm->content = $filename;
                 $gm->message_type = $message_type;
                 $gm->save();
-            
-                event(new GroupMessageSent($gm, $request->rId));
 
+                $groupId = $request->rId;
+
+                $group_rec = CompanyChatGroupEmployee::join('company_employees', 'company_employees.id', 'company_chat_group_employees.company_employee_id')
+                    ->where("chat_group_id", $groupId)
+                    ->where('company_employee_id', '!=', $sender_id)
+                    ->select('company_employee_id', 'company_employees.user_id')->get();
+
+                foreach ($group_rec as $gr) {
+                    $gmr = new GroupMessageRead();
+                    $gmr->rec_id = $gr->company_employee_id;
+                    $gmr->group_id = $groupId;
+                    $gmr->message_id = $gm->id;
+                    $gmr->save();
+
+                    event(new GroupMessageSent($gm, $gr->user_id));
+                }
             } else {
                 $rec_id = $request->rId;
                 $gm = new OneToOneMessage();
@@ -199,7 +214,7 @@ class MessageController extends Controller
         if ($request->type == 'group') {
             $filename = GroupMessage::find($request->id);
             $filename = $filename->content;
-        }elseif($request->type == 'groupChat'){
+        } elseif ($request->type == 'groupChat') {
             $filename = GroupChatMessage::find($request->id);
             $filename = $filename->content;
         } else {
@@ -221,67 +236,85 @@ class MessageController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function create_chat_group(Request $request){
+    public function create_chat_group(Request $request)
+    {
         $user = Auth::guard('api')->user();
         $company_employee_id = CompanyEmployee::where('user_id', $user->id)->first()->id;
         $company_id = Company::where('user_id', $user->id)->first()->id;
 
-        $name = CompanyChatGroup::where(['company_id'=>$company_id,'name'=>$request->name])->first();
+        $name = CompanyChatGroup::where(['company_id' => $company_id, 'name' => $request->name])->first();
 
-        if($name){
+        if ($name) {
             return response(["status" => "error", "message" => "Group name already Exist"], 400);
-        }else{
+        } else {
             $cg = new CompanyChatGroup();
             $cg->company_id = $company_id;
             $cg->company_employee_id = $company_employee_id;
             $cg->name = $request->name;
             $cg->save();
 
-            foreach($request->user as $u){
+            foreach ($request->user as $u) {
                 $cge = new CompanyChatGroupEmployee();
                 $cge->chat_group_id = $cg->id;
                 $cge->company_employee_id = $u;
                 $cge->save();
             }
+            $cge = new CompanyChatGroupEmployee();
+            $cge->chat_group_id = $cg->id;
+            $cge->company_employee_id = $company_employee_id;
+            $cge->save();
             return response(["status" => "success", "res" => $cg], 200);
         }
-
     }
 
-     /**
+    /**
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function get_company_chat_groups(Request $request){
+    public function get_company_chat_groups(Request $request)
+    {
         $user = Auth::guard('api')->user();
         $company_employee = CompanyEmployee::where('user_id', $user->id)->first();
         $company_employee_id = $company_employee->id;
-        if($company_employee->role == "COMPANY_ADMIN"){
+        if ($company_employee->role == "COMPANY_ADMIN") {
             $company_id = Company::where('user_id', $user->id)->first()->id;
-            $cg = CompanyChatGroup::where('company_id',$company_id);    
-            if($request->keyword){
-                $cg->where('name','like',"%$request->keyword%");
+            $cg = CompanyChatGroup::with(['new_message' => function ($q) use ($company_employee_id) {
+                $q->where(['seen' => 0, 'rec_id' => $company_employee_id]);
+            }])->where('company_id', $company_id);
+            if ($request->keyword) {
+                $cg->where('name', 'like', "%$request->keyword%");
             }
             $cg = $cg->paginate(10);
-        }else{
-            $cge = CompanyChatGroupEmployee::where("company_employee_id",$company_employee_id)->pluck('chat_group_id');
-            $cg = CompanyChatGroup::whereIn('id',$cge);    
-            if($request->keyword){
-                $cg->where('name','like',"%$request->keyword%");
+        } else {
+            $cge = CompanyChatGroupEmployee::where("company_employee_id", $company_employee_id)->pluck('chat_group_id');
+            $cg = CompanyChatGroup::with(['new_message' => function ($q) use ($company_employee_id) {
+                $q->where(['seen' => 0, 'rec_id' => $company_employee_id]);
+            }])->whereIn('id', $cge);
+            if ($request->keyword) {
+                $cg->where('name', 'like', "%$request->keyword%");
             }
             $cg = $cg->paginate(10);
         }
-       
+
         return response(["status" => "success", "res" => $cg], 200);
     }
 
-    public function get_company_chat_group($id){
-        $cg = CompanyChatGroup::find($id);
+    public function get_company_chat_group($id)
+    {
+        $user = Auth::guard('api')->user();
+        $emp = CompanyEmployee::where('user_id', $user->id)->first();
+        $cg = CompanyChatGroup::join('company_employees', 'company_employees.id', 'company_chat_groups.company_employee_id')
+            ->select('*', 'company_employees.id as group_admin_id', 'company_employees.first_name', 'company_employees.last_name')
+            ->find($id);
+        $cg->members = CompanyChatGroupEmployee::join('company_employees', 'company_chat_group_employees.company_employee_id', 'company_employees.id')
+            ->where('company_chat_group_employees.chat_group_id', $id)
+            ->where('company_chat_group_employees.company_employee_id', '!=', $emp->id)
+            ->select('company_employees.first_name', 'company_employees.last_name', 'company_employees.id')
+            ->get();
         return response(["status" => "success", "res" => $cg], 200);
-
     }
 
-     /**
+    /**
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
@@ -301,13 +334,27 @@ class MessageController extends Controller
         $gm->message_type = $message_type;
         $gm->save();
 
+        $group_rec = CompanyChatGroupEmployee::join('company_employees', 'company_employees.id', 'company_chat_group_employees.company_employee_id')
+            ->where("chat_group_id", $groupId)
+            ->where('company_employee_id', '!=', $sender_id)
+            ->select('company_employee_id', 'company_employees.user_id')->get();
+
+        foreach ($group_rec as $gr) {
+            $gmr = new GroupMessageRead();
+            $gmr->rec_id = $gr->company_employee_id;
+            $gmr->group_id = $groupId;
+            $gmr->message_id = $gm->id;
+            $gmr->save();
+
+            event(new GroupMessageSent($gm, $gr->user_id));
+        }
 
         // $new_msg = GroupChatMessage::select('group_chat_messages.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.profile_image')
         // ->join('company_employees', 'company_employees.id', 'group_chat_messages.sender_id')
         // ->where('group_chat_messages.id', $gm->id)
         // ->first();
 
-        event(new GroupMessageSent($gm, $request->rId));
+        // event(new GroupMessageSent($gm, $request->rId));
 
 
         return response(["status" => "success", "res" => $gm], 200);
@@ -323,23 +370,23 @@ class MessageController extends Controller
         $user = Auth::guard('api')->user();
         $sender_id = CompanyEmployee::where('user_id', $user->id)->first()->id;
         $res = GroupChatMessage::select('group_chat_messages.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.profile_image')
-                ->join('company_employees', 'company_employees.id', 'group_chat_messages.sender_id')
-                ->where('group_chat_messages.group_id', $rec_id)
-                ->limit($request->limit)
-                ->offset($request->offset)
-                ->orderby('id', 'desc')
-                ->get();
+            ->join('company_employees', 'company_employees.id', 'group_chat_messages.sender_id')
+            ->where('group_chat_messages.group_id', $rec_id)
+            ->limit($request->limit)
+            ->offset($request->offset)
+            ->orderby('id', 'desc')
+            ->get();
         $res = array_reverse($res->toArray());
 
         $total = GroupChatMessage::select('group_chat_messages.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.profile_image')
-                ->join('company_employees', 'company_employees.id', 'group_chat_messages.sender_id')
-                ->where('group_chat_messages.group_id', $rec_id)
-                ->count();
+            ->join('company_employees', 'company_employees.id', 'group_chat_messages.sender_id')
+            ->where('group_chat_messages.group_id', $rec_id)
+            ->count();
         $img_path = url('public/');
         return response(["status" => "success", "res" => $res, "path" => $img_path, "total" => $total], 200);
     }
 
-     /**
+    /**
      * @param $sender_id
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
@@ -348,22 +395,41 @@ class MessageController extends Controller
     public function read_one_to_one_message($sender_id)
     {
         $user = Auth::guard('api')->user();
-        $rec_id = CompanyEmployee::where('user_id',$user->id)->first()->id;
-        $res = OneToOneMessage::where(['sender_id'=>$sender_id,'rec_id'=>$rec_id,'seen'=>0])->get();
-        foreach($res as $r ){
+        $rec_id = CompanyEmployee::where('user_id', $user->id)->first()->id;
+        $res = OneToOneMessage::where(['sender_id' => $sender_id, 'rec_id' => $rec_id, 'seen' => 0])->get();
+        foreach ($res as $r) {
             $r->seen = 1;
             $r->save();
         }
         return response(["status" => "success"], 200);
     }
 
-       /**
+    /**
+     * @param $sender_id
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+
+    public function read_group_message($group_id)
+    {
+        $user = Auth::guard('api')->user();
+        $rec_id = CompanyEmployee::where('user_id', $user->id)->first()->id;
+        $res = GroupMessageRead::where(['group_id' => $group_id, 'rec_id' => $rec_id, 'seen' => 0])->get();
+        foreach ($res as $r) {
+            $r->seen = 1;
+            $r->save();
+        }
+        return response(["status" => "success"], 200);
+    }
+
+
+    /**
      * @param $id
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    
-     public function get_employees_list_chat($id, Request $request)
+
+    public function get_employees_list_chat($id, Request $request)
     {
         $user = Auth::guard('api')->user();
         $auth = CompanyEmployee::where('user_id', $user->id)->first();
@@ -373,11 +439,11 @@ class MessageController extends Controller
         $name = $request->name;
         $email = $request->email;
         $sort_by = $request->sortBy;
-        $res = CompanyEmployee::with(['new_message'=>function($q)use($auth_id){
-        $q = $q->where(['seen'=>0,'rec_id'=>$auth_id]);        
-        }])->select('users.last_login', 'users.email', 'company_employees.*','profile_types.profile_type')
+        $res = CompanyEmployee::with(['new_message' => function ($q) use ($auth_id) {
+            $q = $q->where(['seen' => 0, 'rec_id' => $auth_id]);
+        }])->select('users.last_login', 'users.email', 'company_employees.*', 'profile_types.profile_type')
             ->join('users', 'company_employees.user_id', 'users.id')
-            ->join('profile_types','profile_types.id','company_employees.profile_type_id')
+            ->join('profile_types', 'profile_types.id', 'company_employees.profile_type_id')
             ->where('company_id', $id)
             ->where('company_employees.id', '!=', $auth_id);
         if ($name) {
@@ -387,11 +453,9 @@ class MessageController extends Controller
             $res = $res->where('email', 'like', "%$email%");
         }
         // $res = $res->orderby('seen', 'desc');
-        
+
         $res = $res->paginate(10);
 
         return response(["status" => "success", "res" => $res], 200);
     }
-
-
 }

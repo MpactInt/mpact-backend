@@ -178,6 +178,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/send-group-chat-message', [MessageController::class, 'send_group_chat_message']);
     
     //Chat routes
+    Route::get('/read-group-message/{group_id}', [MessageController::class, 'read_group_message']);
     Route::get('/read-one-to-message/{sender_id}', [MessageController::class, 'read_one_to_one_message']);
     Route::post('/get-employees-list-chat/{id}', [MessageController::class, 'get_employees_list_chat']);
     Route::post('/send-group-message', [MessageController::class, 'send_group_message']);
