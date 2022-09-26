@@ -41,7 +41,7 @@ class MessageController extends Controller
         $gm->save();
         $emps = CompanyEmployee::where('company_id', $company_id)->get();
         foreach ($emps as $e) {
-            event(new MessageSent($gm, $e->user_id));
+            event(new MessageSent($gm, $e->user_id,$e->first_name,$e->last_name,$e->profile_image));
         }
         return response(["status" => "success", "res" => $gm], 200);
     }
@@ -91,11 +91,10 @@ class MessageController extends Controller
         $gm->message_type = $message_type;
         $gm->save();
 
-        $ce = CompanyEmployee::find($rec_id);
+        $e = CompanyEmployee::find($rec_id);
+        event(new MessageSent($gm, $e->user_id,$e->first_name,$e->last_name,$e->profile_image));
 
-        event(new MessageSent($gm, $ce->user_id));
-
-        return response(["status" => "success", "res" => $gm, 'rec_id' => $ce->user_id], 200);
+        return response(["status" => "success", "res" => $gm, 'rec_id' => $e->user_id], 200);
     }
 
     /**
@@ -163,7 +162,7 @@ class MessageController extends Controller
                 $gm->save();
                 $emps = CompanyEmployee::where('company_id', $company_id)->get();
                 foreach ($emps as $e) {
-                    event(new MessageSent($gm, $e->user_id));
+                    event(new MessageSent($gm, $e->user_id,$e->first_name,$e->last_name,$e->profile_image));
                 }
             } elseif ($request->type == 'groupChat') {
 
@@ -179,7 +178,7 @@ class MessageController extends Controller
                 $group_rec = CompanyChatGroupEmployee::join('company_employees', 'company_employees.id', 'company_chat_group_employees.company_employee_id')
                     ->where("chat_group_id", $groupId)
                     ->where('company_employee_id', '!=', $sender_id)
-                    ->select('company_employee_id', 'company_employees.user_id')->get();
+                    ->select('company_employee_id', 'company_employees.user_id','company_employees.first_name','company_employees.last_name','company_employees.profile_image')->get();
 
                 foreach ($group_rec as $gr) {
                     $gmr = new GroupMessageRead();
@@ -188,7 +187,7 @@ class MessageController extends Controller
                     $gmr->message_id = $gm->id;
                     $gmr->save();
 
-                    event(new GroupMessageSent($gm, $gr->user_id));
+                    event(new GroupMessageSent($gm, $gr->user_id,$gr->first_name,$gr->last_name,$gr->profile_image));
                 }
             } else {
                 $rec_id = $request->rId;
@@ -198,8 +197,8 @@ class MessageController extends Controller
                 $gm->content = $filename;
                 $gm->message_type = $message_type;
                 $gm->save();
-                $ce = CompanyEmployee::find($rec_id);
-                event(new MessageSent($gm, $ce->user_id));
+                $e = CompanyEmployee::find($rec_id);
+                event(new MessageSent($gm, $e->user_id,$e->first_name,$e->last_name,$e->profile_image));
             }
             return response(["status" => "success", "res" => $gm], 200);
         }
@@ -333,20 +332,22 @@ class MessageController extends Controller
         $gm->content = $content;
         $gm->message_type = $message_type;
         $gm->save();
+        $img_path = url('public/');
+
 
         $group_rec = CompanyChatGroupEmployee::join('company_employees', 'company_employees.id', 'company_chat_group_employees.company_employee_id')
-            ->where("chat_group_id", $groupId)
-            ->where('company_employee_id', '!=', $sender_id)
-            ->select('company_employee_id', 'company_employees.user_id')->get();
+                    ->where("chat_group_id", $groupId)
+                    ->where('company_employee_id', '!=', $sender_id)
+                    ->select('company_employee_id', 'company_employees.user_id','company_employees.first_name','company_employees.last_name','company_employees.profile_image')->get();
 
-        foreach ($group_rec as $gr) {
-            $gmr = new GroupMessageRead();
-            $gmr->rec_id = $gr->company_employee_id;
-            $gmr->group_id = $groupId;
-            $gmr->message_id = $gm->id;
-            $gmr->save();
+                foreach ($group_rec as $gr) {
+                    $gmr = new GroupMessageRead();
+                    $gmr->rec_id = $gr->company_employee_id;
+                    $gmr->group_id = $groupId;
+                    $gmr->message_id = $gm->id;
+                    $gmr->save();
 
-            event(new GroupMessageSent($gm, $gr->user_id));
+                    event(new GroupMessageSent($gm, $gr->user_id,$gr->first_name,$gr->last_name,$gr->profile_image));
         }
 
         // $new_msg = GroupChatMessage::select('group_chat_messages.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.profile_image')
