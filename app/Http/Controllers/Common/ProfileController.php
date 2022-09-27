@@ -23,17 +23,18 @@ class ProfileController extends Controller
         $user = Auth::guard('api')->user();
         $c = Company::where('user_id', $user->id)->first();
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-        if($c){
+        if ($c) {
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
                 'company_name' => 'required|max:255',
-                'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain,'.$c->id, 
+                'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain,' . $c->id,
             ]);
-        }else{
+        } else {
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
+                'title' => 'required|max:255'
             ]);
         }
         if ($validator->fails()) {
@@ -45,7 +46,7 @@ class ProfileController extends Controller
             if (empty($parsed['scheme'])) {
                 $url = 'http://' . ltrim($url, '/');
             }
-         
+
             if ($c) {
                 $c->company_name = $request->company_name;
                 $c->company_domain = $url;
@@ -54,6 +55,7 @@ class ProfileController extends Controller
             $e = CompanyEmployee::where('user_id', $user->id)->first();
             $e->first_name = $request->first_name;
             $e->last_name = $request->last_name;
+            $e->title = $request->title;
             $e->save();
             return response(["status" => "success", "res" => $e], 200);
         }
@@ -82,7 +84,7 @@ class ProfileController extends Controller
             $destinationPath = public_path() . '/profile-images';
 
             if ($company_employee->profile_image != 'default.png') {
-                if(file_exists($destinationPath . '/' . $company_employee->profile_image)){
+                if (file_exists($destinationPath . '/' . $company_employee->profile_image)) {
                     unlink($destinationPath . '/' . $company_employee->profile_image);
                 }
             }
@@ -202,14 +204,14 @@ class ProfileController extends Controller
         }
     }
 
-    public function active_inactive_company($id,$status){
+    public function active_inactive_company($id, $status)
+    {
         $c = Company::find($id);
-        if($status){
+        if ($status) {
             $u = User::withTrashed()->find($c->user_id)->restore();
-        }else{
+        } else {
             $u = User::find($c->user_id)->delete();
         }
         return response(["status" => "success", 'res' => $u], 200);
-
     }
 }
