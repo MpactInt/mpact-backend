@@ -76,26 +76,47 @@ class ProfileController extends Controller
         } else {
 
             $user = Auth::guard('api')->user();
-            $company_employee = CompanyEmployee::where('user_id', $user->id)->first();
+            if ($user->role != 'ADMIN') {
+                $company_employee = CompanyEmployee::where('user_id', $user->id)->first();
 
-            $uploadedFile = $request->file('profile_image');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $uploadedFile = $request->file('profile_image');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
-            $destinationPath = public_path() . '/profile-images';
+                $destinationPath = public_path() . '/profile-images';
 
-            if ($company_employee->profile_image != 'default.png') {
-                if (file_exists($destinationPath . '/' . $company_employee->profile_image)) {
-                    unlink($destinationPath . '/' . $company_employee->profile_image);
+                if ($company_employee->profile_image != 'default.png') {
+                    if (file_exists($destinationPath . '/' . $company_employee->profile_image)) {
+                        unlink($destinationPath . '/' . $company_employee->profile_image);
+                    }
                 }
+
+                $uploadedFile->move($destinationPath, $filename);
+
+                $company_employee->profile_image = $filename;
+                $company_employee->save();
+
+                $company_employee->profile_image = url('public/profile-images/' . $company_employee->profile_image);
+                return response(["status" => "success", 'res' => $company_employee], 200);
+            }else{
+                $uploadedFile = $request->file('profile_image');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
+                $destinationPath = public_path() . '/profile-images';
+
+                if ($user->profile_image != 'default.png') {
+                    if (file_exists($destinationPath . '/' . $user->profile_image)) {
+                        unlink($destinationPath . '/' . $user->profile_image);
+                    }
+                }
+
+                $uploadedFile->move($destinationPath, $filename);
+
+                $user->profile_image = $filename;
+                $user->save();
+
+                $user->profile_image = url('public/profile-images/' . $user->profile_image);
+                return response(["status" => "success", 'res' => $user], 200);
             }
-
-            $uploadedFile->move($destinationPath, $filename);
-
-            $company_employee->profile_image = $filename;
-            $company_employee->save();
-
-            $company_employee->profile_image = url('public/profile-images/' . $company_employee->profile_image);
-            return response(["status" => "success", 'res' => $company_employee], 200);
         }
     }
 
@@ -173,6 +194,7 @@ class ProfileController extends Controller
             }
         } else {
             $u = $user;
+            $u->profile_image = url('public/profile-images/' . $u->profile_image);
         }
         return response(["status" => "success", "res" => $u, 'id' => $user->id], 200);
     }

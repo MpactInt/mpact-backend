@@ -44,6 +44,7 @@ class RequestWorkshopController extends Controller
     {
         $keyword = $request->keyword;
         $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
 
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
@@ -56,8 +57,8 @@ class RequestWorkshopController extends Controller
         if ($keyword) {
             $res = $res->where('name', 'like', "%$keyword%");
         }
-        if ($sort_by) {
-            $res = $res->orderby($sort_by, "asc");
+        if ($sort_by && $sort_order) {
+            $res = $res->orderby($sort_by, $sort_order);
         }
         $res = $res->paginate(10);
         return response(["status" => "success", "res" => $res], 200);

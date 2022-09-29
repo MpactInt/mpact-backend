@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/upload-logo', [EmployerController::class, 'upload_logo']);
     Route::post('/ask-question', [EmployerController::class, 'ask_question']);
     Route::post('/get-question-list', [EmployerController::class, 'get_question_list']);
+    Route::get('/forward-to-admin/{id}', [EmployerController::class, 'forward_to_admin']);
     Route::post('/get-companies-list', [EmployerController::class, 'get_company_list']);
 
     ###################################################################
@@ -112,7 +113,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     //company feedback routes
 
     Route::post('/submit-company-feedback', [EmployerController::class, 'submit_company_feedback']);
-    Route::get('/get-company-feedback-list', [EmployerController::class, 'get_company_feedback_list']);
+    Route::post('/get-company-feedback-list', [EmployerController::class, 'get_company_feedback_list']);
 
 
     //Announcement routes

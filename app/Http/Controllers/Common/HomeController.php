@@ -256,6 +256,8 @@ class HomeController extends Controller
                     }
                     $user->last_login = DB::raw('CURRENT_TIMESTAMP');
                     $user->save();
+                    
+                    $user->profile_image = url('public/profile-images/' . $user->profile_image);
 
                     return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
                 }

@@ -75,6 +75,7 @@ class TodoController extends Controller
     {
         $sortBy = $request->sortBy;
         $keyword = $request->keyword;
+        $sort_order = $request->sortOrder;
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
@@ -93,8 +94,8 @@ class TodoController extends Controller
                        ->orWhere('description','like',"%$keyword%");
                });
         }
-        if ($sortBy) {
-            $ca = $ca->orderby($sortBy, "asc");
+        if ($sortBy && $sort_order) {
+            $ca = $ca->orderby($sortBy, $sort_order);
         }
         $ca = $ca->paginate(10);
         return response(["status" => "success", "res" => $ca], 200);

@@ -130,6 +130,7 @@ class WorkshopController extends Controller
     {
         $keyword = $request->keyword;
         $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
 
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
@@ -147,8 +148,8 @@ class WorkshopController extends Controller
             $workshops = $workshops->where('title', 'like', "%$keyword%")
                 ->orwhere('description', 'like', "%$keyword%");
         }
-        if ($sort_by) {
-            $workshops = $workshops->orderby($sort_by, "desc");
+        if ($sort_by && $sort_order) {
+            $workshops = $workshops->orderby($sort_by, $sort_order);
         }
 
         $workshops = $workshops->paginate(10);

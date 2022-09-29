@@ -13,6 +13,6 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert(['email'=>'admin@mpact.com','password'=>Hash::make(12345678),'role'=>'ADMIN']);
+        DB::table('users')->insert(['email'=>'admin@mpact.com','password'=>Hash::make(12345678),'role'=>'ADMIN','profile_image'=>'default.png']);
     }
 }

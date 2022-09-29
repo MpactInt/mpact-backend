@@ -86,12 +86,36 @@ class EmployerController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function get_question_list()
+    public function get_question_list(Request $request)
     {
-        $ql = CompanyQuestion::select('company_questions.*', 'companies.company_name', 'company_employees.first_name', 'company_employees.last_name')
-            ->join('company_employees', 'company_employees.id', 'company_questions.company_id')
-            ->join('companies', 'companies.id', 'company_employees.company_id')
-            ->paginate(10);
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+        $user = Auth::guard('api')->user();
+        $company_emp = CompanyEmployee::where('id', $user->id)->first();
+     
+        $company_id = $company_emp->company_id;
+
+        $company_employees = CompanyEmployee::where('company_id',$company_id)->pluck('id');
+
+        if($user->role == 'ADMIN'){
+            $ql = CompanyQuestion::select('company_questions.*', 'companies.company_name', 'company_employees.first_name', 'company_employees.last_name')
+                ->join('company_employees', 'company_employees.id', 'company_questions.company_id')
+                ->join('companies', 'companies.id', 'company_employees.company_id')
+                ->where('forward_to_admin',1);
+               
+        }else{
+            $ql = CompanyQuestion::select('company_questions.*', 'companies.company_name', 'company_employees.first_name', 'company_employees.last_name')
+                ->join('company_employees', 'company_employees.id', 'company_questions.company_id')
+                ->join('companies', 'companies.id', 'company_employees.company_id')
+                ->whereIn('company_employees.id',$company_employees);
+        }
+
+        if ($sort_by && $sort_order) {
+            $ql = $ql->orderby($sort_by, $sort_order);
+        }
+
+        $ql = $ql->paginate(10);
+
         return response(["status" => "success", 'res' => $ql], 200);
     }
 
@@ -101,12 +125,18 @@ class EmployerController extends Controller
     public function get_company_list(Request $request)
     {
         $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+
         $ql = User::withTrashed()->select('companies.*', 'company_name as name', 'company_employees.first_name', 'company_employees.last_name', 'users.deleted_at')
             ->join('companies', 'companies.user_id', 'users.id')
             ->join('company_employees', 'companies.id', 'company_employees.company_id')
             ->where('company_employees.role', 'COMPANY_ADMIN');
         if($keyword){
             $ql = $ql->where('company_name','like',"%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $ql = $ql->orderby($sort_by, $sort_order);
         }
             $ql = $ql->paginate(10);
         $path = url('/') . '/public/uploads/';
@@ -135,15 +165,29 @@ class EmployerController extends Controller
         return response(["status" => "success", 'res' => $cf], 200);
     }
 
-    public function get_company_feedback_list()
+    public function get_company_feedback_list(Request $request)
     {
         $user = Auth::guard('api')->user();
         $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
-
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
         $res = CompanyFeedback::select('company_feedbacks.*', 'company_employees.first_name', 'company_employees.last_name')
             ->join('company_employees', 'company_employees.id', 'company_feedbacks.company_employee_id')
-            ->where('company_feedbacks.company_id', $companyEmp->company_id)
-            ->paginate(10);
+            ->where('company_feedbacks.company_id', $companyEmp->company_id);
+
+            if ($sort_by && $sort_order) {
+                $res = $res->orderby($sort_by, $sort_order);
+            }
+
+            $res = $res->paginate(10);
+            
         return response(["status" => "success", 'res' => $res], 200);
+    }
+
+    public function forward_to_admin($id){
+        $cq = CompanyQuestion::find($id);
+        $cq->forward_to_admin = 1;
+        $cq->save();
+        return response(["status" => "success"], 200);
     }
 }

@@ -83,6 +83,7 @@ class AnnouncementController extends Controller
     {
         $keyword = $request->keyword;
         $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
 
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
@@ -102,15 +103,15 @@ class AnnouncementController extends Controller
                     ->orWhere('description','like',"%$keyword%");
             });
      }
-        if ($sort_by) {
-            $res = $res->orderby($sort_by, 'asc');
+        if ($sort_by && $sort_order) {
+            $res = $res->orderby($sort_by, $sort_order);
         }
 
         if($company->role == 'COMPANY_EMP'){
             $res = $res->limit(5);
         }
 
-        $res = $res->orderBy('id','desc')->paginate(10);
+        $res = $res->paginate(10);
 
         return response(["status" => "success", "res" => $res], 200);
     }

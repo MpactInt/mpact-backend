@@ -125,6 +125,7 @@ class ResourceController extends Controller
     {
         $keyword = $request->keyword;
         $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
 
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
@@ -152,8 +153,8 @@ class ResourceController extends Controller
                        ->orWhere('description','like',"%$keyword%");
                });
         }
-        if ($sort_by) {
-            $resources = $resources->orderby($sort_by, "asc");
+        if ($sort_by && $sort_order) {
+            $resources = $resources->orderby($sort_by, $sort_order);
         }
         $resources = $resources->paginate(10);
         return response(["status" => "success", 'res' => $resources, 'path' => $path], 200);

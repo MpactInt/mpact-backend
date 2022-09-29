@@ -104,6 +104,7 @@ class TeamController extends Controller
         $name = $request->name;
         $email = $request->email;
         $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
         $res = CompanyEmployee::select('users.last_login', 'users.email', 'company_employees.*','profile_types.profile_type')
             ->join('users', 'company_employees.user_id', 'users.id')
             ->join('profile_types','profile_types.id','company_employees.profile_type_id')
@@ -116,8 +117,8 @@ class TeamController extends Controller
         if ($email) {
             $res = $res->where('email', 'like', "%$email%");
         }
-        if ($sort_by) {
-            $res = $res->orderby($sort_by, 'asc');
+        if ($sort_by && $sort_order) {
+            $res = $res->orderby($sort_by, $sort_order);
         }
         $res = $res->paginate(10);
 
@@ -170,12 +171,13 @@ class TeamController extends Controller
         $page = $request->page;
         $email = $request->email;
         $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
         $res = Invitation::where('company_id', $id);
         if ($email) {
             $res = $res->where('email', 'like', "%$email%");
         }
-        if ($sort_by) {
-            $res = $res->orderby($sort_by, 'asc');
+        if ($sort_by ) {
+            $res = $res->orderby($sort_by, $sort_order);
         }
         $res = $res->paginate(10);
 

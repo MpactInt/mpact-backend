@@ -24,6 +24,7 @@ class CheckInSurveyController extends Controller
         $ps->question = $request->question;
         $ps->min_desc = $request->minDesc;
         $ps->max_desc = $request->maxDesc;
+        $ps->day = $request->day;
         $ps->save();
         return response(["status" => "success", "res" => $ps], 200);
     }
@@ -38,6 +39,7 @@ class CheckInSurveyController extends Controller
         $ps->question = $request->question;
         $ps->min_desc = $request->minDesc;
         $ps->max_desc = $request->maxDesc;
+        $ps->day = $request->day;
         $ps->save();
         return response(["status" => "success", "res" => $ps], 200);
     }
@@ -93,11 +95,13 @@ class CheckInSurveyController extends Controller
     public function get_check_in_survey_questions($id)
     {
         $companyEmp = CompanyEmployee::where('user_id', decrypt($id))->first();
-
+        $day =  date('l'); 
+        $day = date('N', strtotime($day));
         $answered_questions = CheckInSurveyAnswer::where('company_employee_id', $companyEmp->id)->pluck('question_id');
         $question = CheckInSurveyQuestion::
 //        whereNotIn('id', $answered_questions)->
-        get();
+        where('day',$day)
+        ->get();
         $elements = [];
         foreach ($question as $q) {
             $obj = [
