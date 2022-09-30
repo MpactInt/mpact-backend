@@ -196,9 +196,22 @@ class WelcomeNoteController extends Controller
 
     public function get_welcome_note_list(Request $request)
     {
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+
         $note = WelcomeNote::with(['company' => function ($q) {
             $q->join('companies', 'companies.id', 'company_welcome_notes.company_id')->pluck('companies.company_name');
-        }])->paginate(10);
+        }]);
+        
+        if ($keyword) {
+            $note = $note->where('title', 'like', "%$keyword%")
+                ->orwhere('description', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $note = $note->orderby($sort_by, $sort_order);
+        }
+        $note = $note->paginate(10);
         $path = url('/public/welcome-notes/');
         return response(["status" => "success", 'res' => $note, 'path' => $path], 200);
     }

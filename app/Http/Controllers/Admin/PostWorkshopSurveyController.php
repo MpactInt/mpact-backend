@@ -83,7 +83,20 @@ class PostWorkshopSurveyController extends Controller
      */
     public function get_post_workshop_survey_question_list(Request $request)
     {
-        $ps = PostWorkshopSurveyQuestion::paginate(10);
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+        $ps = PostWorkshopSurveyQuestion::where('created_at','!=',null);
+        
+        if ($keyword) {
+            $ps = $ps->where('question', 'like', "%$keyword%")
+            ->orWhere('min_desc', 'like', "%$keyword%")
+            ->orWhere('max_desc', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $ps = $ps->orderby($sort_by, $sort_order);
+        }
+        $ps = $ps->paginate(10);
         return response(["status" => "success", "res" => $ps], 200);
     }
 

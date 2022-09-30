@@ -259,6 +259,6 @@ class ChargebeeController extends Controller
         $property->setAccessible(true);
         $sub1 = $property->getValue($sub);
 
-        return response()->json(['status' => 'success', 'res' => $sub1['subscription']['subscription_items']], 200);
+        return response()->json(['status' => 'success', 'res' => $sub1['subscription']['subscription_items'],'id'=>$sub_id], 200);
     }
 }

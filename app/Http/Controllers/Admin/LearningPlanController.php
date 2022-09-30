@@ -124,6 +124,9 @@ class LearningPlanController extends Controller
      */
     public function get_learning_plan_list(Request $request)
     {
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
         $path = url('/public/learning-plan-files/');
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
@@ -135,6 +138,16 @@ class LearningPlanController extends Controller
         // if($company){
         //     $ca = $ca->where('profile_types.id',$company->profile_type_id);
         // }
+
+        if ($keyword) {
+            $ca = $ca->where('title', 'like', "%$keyword%")
+            ->orWhere('description', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $ca = $ca->orderby($sort_by, $sort_order);
+        }
+
+
             $ca = $ca->paginate(10);
         return response(["status" => "success", "res" => $ca, "path" => $path], 200);
     }

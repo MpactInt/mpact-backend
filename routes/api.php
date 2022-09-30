@@ -73,6 +73,7 @@ Route::group([
     Route::get('/get-company-details/{link}', [EmployerController::class, 'get_company_details']);
 //    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
     Route::get('/get-profile-type-list', [ProfileTypeController::class, 'get_profile_type_list']);
+    Route::post('/get-profile-type-list1', [ProfileTypeController::class, 'get_profile_type_list1']);
     Route::get('/get-profile-type-list-multiselect', [ProfileTypeController::class, 'get_profile_type_list_multiselect']);
     Route::get('/get-profile-type-list-multiselect-update', [ProfileTypeController::class, 'get_profile_type_list_multiselect_update']);
 
@@ -156,7 +157,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-welcome-note', [WelcomeNoteController::class, 'get_welcome_note']);
     Route::get('/get-single-welcome-note/{id}', [WelcomeNoteController::class, 'get_single_welcome_note']);
     Route::get('/get-single-welcome-note-company', [WelcomeNoteController::class, 'get_single_welcome_note_company']);
-    Route::get('/get-welcome-note-list', [WelcomeNoteController::class, 'get_welcome_note_list']);
+    Route::post('/get-welcome-note-list', [WelcomeNoteController::class, 'get_welcome_note_list']);
     Route::get('/get-welcome-note-company-list', [WelcomeNoteController::class, 'get_welcome_note_company_list']);
 
     //Membership routes
@@ -324,7 +325,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/update-learning-plan-file', [LearningPlanFileController::class, 'update_learning_plan_file']);
     Route::get('/delete-learning-plan-file/{id}', [LearningPlanFileController::class, 'delete_learning_plan_file']);
     Route::get('/download-learning-plan-file/{id}', [LearningPlanFileController::class, 'download_learning_plan_file']);
-    Route::get('/get-learning-plan-files/{id}', [LearningPlanFileController::class, 'get_learning_plan_files']);
+    Route::post('/get-learning-plan-files/{id}', [LearningPlanFileController::class, 'get_learning_plan_files']);
 
 
 });

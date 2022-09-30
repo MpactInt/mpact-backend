@@ -69,9 +69,21 @@ class ZoomMeetingController extends Controller
     }
 
     public function get_meetings_list(Request $request){
+
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
         $res = ZoomMeeting::select('zoom_meetings.*','workshops.title')
-                            ->join('workshops','workshops.id','zoom_meetings.workshop_id')
-                            ->paginate(10);
+                            ->join('workshops','workshops.id','zoom_meetings.workshop_id');
+                            if ($keyword) {
+                                $res = $res->where('topic', 'like', "%$keyword%")
+                                ->orWhere('agenda', 'like', "%$keyword%")
+                                ->orWhere('title', 'like', "%$keyword%");
+                            }
+                            if ($sort_by && $sort_order) {
+                                $res = $res->orderby($sort_by, $sort_order);
+                            }
+           $res = $res->paginate(10);
         return response(['status'=>'success','res'=>$res]);
     }
 }

@@ -84,7 +84,22 @@ class PopupSurveyController extends Controller
      */
     public function get_popup_survey_question_list(Request $request)
     {
-        $ps = PopupSurveyQuestion::paginate(10);
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+        $ps = PopupSurveyQuestion::where('created_at','!=',null);
+        
+        if ($keyword) {
+            $ps = $ps->where('question', 'like', "%$keyword%")
+            ->orWhere('option_1', 'like', "%$keyword%")
+            ->orWhere('option_2', 'like', "%$keyword%")
+            ->orWhere('option_3', 'like', "%$keyword%")
+            ->orWhere('option_4', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $ps = $ps->orderby($sort_by, $sort_order);
+        }
+        $ps = $ps->paginate(10);
         return response(["status" => "success", "res" => $ps], 200);
     }
 

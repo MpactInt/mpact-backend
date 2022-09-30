@@ -48,16 +48,39 @@ class ProfileTypeController extends Controller
     {
         $res = ProfileType::all();
         return response(["status" => "success", "res" => $res], 200);
-
     }
 
-    public function get_profile_type_list_multiselect(){
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function get_profile_type_list1(Request $request)
+    {
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+        $res = ProfileType::where('created_at','!=',null);
+
+        if ($keyword) {
+            $res = $res->where('profile_type', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $res = $res->orderby($sort_by, $sort_order);
+        }
+
+        $res = $res->get();
+
+        return response(["status" => "success", "res" => $res], 200);
+    }
+
+    public function get_profile_type_list_multiselect()
+    {
         $pt = LearningPlanProfileType::pluck('profile_type_id');
         $res = ProfileType::select('id', 'profile_type as name')->whereNotIn('id', $pt)->get();
         return response(["status" => "success", "res" => $res], 200);
     }
 
-    public function get_profile_type_list_multiselect_update(){
+    public function get_profile_type_list_multiselect_update()
+    {
         $res = ProfileType::select('id', 'profile_type as name')->get();
         return response(["status" => "success", "res" => $res], 200);
     }
@@ -68,29 +91,28 @@ class ProfileTypeController extends Controller
      */
     public function update_profile_type(Request $request)
     {
-           $pt = ProfileType::find($request->id);
-           if ($request->hasFile('file')) {
-           $validator = Validator::make($request->all(), [
-               'file'=>'mimes:pdf'
-           ]);
-           if ($validator->fails()) {
-               $error = $validator->getMessageBag()->first();
-               return response()->json(["status" => "error", "message" => $error], 400);
-           }else{
-            $destinationPath = public_path() . '/profile-types';
-            if(file_exists($destinationPath . '/' . $pt->file)){
-                unlink($destinationPath . '/' . $pt->file);
-            }
-            $uploadedFile = $request->file('file');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-            $uploadedFile->move($destinationPath, $filename);
-            $pt->file = $filename;
-            return response(["status" => "success", "res" => $pt], 200);
+        $pt = ProfileType::find($request->id);
+        if ($request->hasFile('file')) {
+            $validator = Validator::make($request->all(), [
+                'file' => 'mimes:pdf'
+            ]);
+            if ($validator->fails()) {
+                $error = $validator->getMessageBag()->first();
+                return response()->json(["status" => "error", "message" => $error], 400);
+            } else {
+                $destinationPath = public_path() . '/profile-types';
+                if (file_exists($destinationPath . '/' . $pt->file)) {
+                    unlink($destinationPath . '/' . $pt->file);
+                }
+                $uploadedFile = $request->file('file');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $uploadedFile->move($destinationPath, $filename);
+                $pt->file = $filename;
+                return response(["status" => "success", "res" => $pt], 200);
             }
         }
         $pt->profile_type = $request->profileType;
         $pt->save();
-
     }
 
     /**
@@ -122,7 +144,8 @@ class ProfileTypeController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function get_profile_type($id){
+    public function get_profile_type($id)
+    {
         $pt = ProfileType::find($id);
         return response(["status" => "success", "res" => $pt], 200);
     }

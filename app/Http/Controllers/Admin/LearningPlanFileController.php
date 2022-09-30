@@ -9,6 +9,7 @@ use App\Models\MyLearningPlanFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\LearningPlanProfileType;
 
 class LearningPlanFileController extends Controller
 {
@@ -69,7 +70,7 @@ class LearningPlanFileController extends Controller
                 $destinationPath = public_path() . '/learning-plan-files';
                 $uploadedFile->move($destinationPath, $filename);
                 if ($t->image) {
-                    if(file_exists($destinationPath . '/' . $t->image)){
+                    if (file_exists($destinationPath . '/' . $t->image)) {
                         unlink($destinationPath . '/' . $t->image);
                     }
                 }
@@ -89,18 +90,43 @@ class LearningPlanFileController extends Controller
     public function get_learning_plan_file($id)
     {
         $ca = MyLearningPlanFile::where('id', $id)->first();
-        $ca->image = url('/public/learning-plan-files/').'/'.$ca->image;
+        $ca->image = url('/public/learning-plan-files/') . '/' . $ca->image;
         return response(["status" => "success", "res" => $ca], 200);
     }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function get_learning_plan_files($id)
+    public function get_learning_plan_files($id, Request $request)
     {
-        $ca = MyLearningPlanFile::where('my_learning_plan_id',$id)->get();
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+
+        $ca = MyLearningPlan::where('my_learning_plans.id', $id)->first();
+
+        $pt = LearningPlanProfileType::join('profile_types', 'profile_types.id', 'learning_plan_profile_types.profile_type_id')
+            ->select('profile_types.id', 'profile_types.profile_type as name')
+            ->where('learning_plan_id', $id)
+            ->get();
+
+        $ca->profile_type = $pt;
+
+        $file = MyLearningPlanFile::where('my_learning_plan_id',$id);
+        if ($keyword) {
+            $file = $file->where('title', 'like', "%$keyword%")
+                ->orWhere('description', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $file = $file->orderby($sort_by, $sort_order);
+        }
+
+        $file = $file->get();
+
+        $ca->files = $file;
+
         $path = url('/public/learning-plan-files/');
-        return response(["status" => "success", "res" => $ca,'path'=>$path], 200);
+        return response(["status" => "success", "res" => $ca, 'path' => $path], 200);
     }
     /**
      * @param $id

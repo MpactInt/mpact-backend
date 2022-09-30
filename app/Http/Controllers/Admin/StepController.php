@@ -95,6 +95,7 @@ class StepController extends Controller
     {
         $keyword = $request->keyword;
         $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
 
         $user = Auth::guard('api')->user();
         $steps = Step::where('created_at','!=',null);
@@ -102,8 +103,8 @@ class StepController extends Controller
             $steps = $steps->where('title', 'like', "%$keyword%")
                 ->orwhere('description', 'like', "%$keyword%");
         }
-        if ($sort_by) {
-            $steps = $steps->orderby($sort_by, "desc");
+        if ($sort_by && $sort_order) {
+            $steps = $steps->orderby($sort_by, $sort_order);
         }
 
         $steps = $steps->get();
