@@ -38,7 +38,7 @@ class ChargebeeController extends Controller
 {
     public function __construct()
     {
-//        Environment::configure("manifestinfotech-test", "test_7cuzNbMkBMqDbDSGZyu0JBW9jyBKLXcdcur");
+        //        Environment::configure("manifestinfotech-test", "test_7cuzNbMkBMqDbDSGZyu0JBW9jyBKLXcdcur");
         Environment::configure("mpact-int-test", "test_PBGB6V3hcdHW8G9vRwOHUP8SmCk5XguNr");
     }
 
@@ -107,7 +107,8 @@ class ChargebeeController extends Controller
         $property->setAccessible(true);
         $res1 = $property->getValue($res);
 
-        $result = HostedPage::checkoutExistingForItems(array(
+        $result = HostedPage::checkoutExistingForItems(
+            array(
                 "subscription" => array(
                     "id" => $res1['hosted_page']['content']['subscription']['id']
                 ),
@@ -124,7 +125,6 @@ class ChargebeeController extends Controller
         $property->setAccessible(true);
         $res = $property->getValue($hostedPage);
         return response()->json(['status' => 'success', 'res' => $res], 200);
-
     }
 
     /**
@@ -136,23 +136,24 @@ class ChargebeeController extends Controller
     {
         $payOffline = $request->payOffline;
         $link = $request->link;
-        if(Auth::guard('api')->user()){
+        if (Auth::guard('api')->user()) {
             $link1 = env('FRONT_URL') . '/admin/payment-success/' . $link;
-        }else{
+        } else {
             $link1 = env('FRONT_URL') . '/payment-success/' . $link;
         }
         $result = HostedPage::checkoutNewForItems(array(
             "subscription" => array(
                 "auto_collection" => "on"
             ),
-            "subscriptionItems" => array(array(
-                "itemPriceId" => "$request->plan",
-                "quantity" => $request->employees,
-            ),
-//                array(
-//                    "itemPriceId" => "$request->addon",
-//                    "quantity" => 1
-//                )
+            "subscriptionItems" => array(
+                array(
+                    "itemPriceId" => "$request->plan",
+                    "quantity" => $request->employees,
+                ),
+                //                array(
+                //                    "itemPriceId" => "$request->addon",
+                //                    "quantity" => 1
+                //                )
             ),
             "customer" => array(
                 "firstName" => $request->billingAddress['firstName'],
@@ -217,26 +218,26 @@ class ChargebeeController extends Controller
             return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
         } else {
             return response(['user' => '', 'company' => '', 'access_token' => '']);
-
         }
     }
 
     public function create_estimate(Request $request)
     {
         $result = Estimate::createSubItemEstimate(array(
-            "subscriptionItems" => array(array(
-                "itemPriceId" => $request->plan,
-                "quantity" => $request->employees
-            ),
-//                array(
-//                    "itemPriceId" => $request->addon,
-//                    "quantity" => 1
-//                )
+            "subscriptionItems" => array(
+                array(
+                    "itemPriceId" => $request->plan,
+                    "quantity" => $request->employees
+                ),
+                //                array(
+                //                    "itemPriceId" => $request->addon,
+                //                    "quantity" => 1
+                //                )
             )
         ));
         $estimate1 = [];
         $estimate = $result->estimate();
-//        dd($estimate);
+        //        dd($estimate);
         $reflection = new ReflectionClass($estimate);
         $property = $reflection->getProperty('_values');
         $property->setAccessible(true);
@@ -259,6 +260,6 @@ class ChargebeeController extends Controller
         $property->setAccessible(true);
         $sub1 = $property->getValue($sub);
 
-        return response()->json(['status' => 'success', 'res' => $sub1['subscription']['subscription_items'],'id'=>$sub_id], 200);
+        return response()->json(['status' => 'success', 'res' => $sub1['subscription']['subscription_items'], 'id' => $sub_id], 200);
     }
 }

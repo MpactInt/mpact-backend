@@ -217,27 +217,27 @@ class HomeController extends Controller
             'email' => ['required', 'email', 'string'],
             'password' => ['required', 'string']
         ]);
-        $u = User::join('company_employees','users.id','company_employees.user_id')->withTrashed()->where('email',$request->email)->first();
-        if($u){
-            $c = User::join('companies','users.id','companies.user_id')->withTrashed()->where('companies.id',$u->company_id)->first();
+        $u = User::join('company_employees', 'users.id', 'company_employees.user_id')->withTrashed()->where('email', $request->email)->first();
+        if ($u) {
+            $c = User::join('companies', 'users.id', 'companies.user_id')->withTrashed()->where('companies.id', $u->company_id)->first();
         }
         if ($validator->fails()) {
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
         } else {
             if (!Auth::attempt($data)) {
                 if ($u) {
-                    if ($u->role=="COMPANY_ADMIN" && $u->deleted_at) {
+                    if ($u->role == "COMPANY_ADMIN" && $u->deleted_at) {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
-                    }elseif($u->role == "COMPANY_EMP" && $c->deleted_at){
+                    } elseif ($u->role == "COMPANY_EMP" && $c->deleted_at) {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                     } else {
-                        return response()->json(['status' => 'error', 'message' => 'Invalid Credentials','user'=>$u], 400);
+                        return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                     }
                 } else {
-                    return response()->json(['status' => 'error', 'message' => 'Invalid Credentials','user'=>$u], 400);
+                    return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                 }
-            }else{
-                if($u && $u->role == "COMPANY_EMP" && $c->deleted_at){
+            } else {
+                if ($u && $u->role == "COMPANY_EMP" && $c->deleted_at) {
                     return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                 } else {
                     $accessToken = Auth::user()->createToken('authToken')->accessToken;
@@ -256,7 +256,7 @@ class HomeController extends Controller
                     }
                     $user->last_login = DB::raw('CURRENT_TIMESTAMP');
                     $user->save();
-                    
+
                     $user->profile_image = url('public/profile-images/' . $user->profile_image);
 
                     return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
