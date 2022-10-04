@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 class EmployerController extends Controller
 {
@@ -94,6 +95,7 @@ class EmployerController extends Controller
         $company_emp = CompanyEmployee::where('id', $user->id)->first();
      
         $company_id = $company_emp->company_id;
+        DB::enableQueryLog();
 
         $company_employees = CompanyEmployee::where('company_id',$company_id)->pluck('id');
 
@@ -116,7 +118,7 @@ class EmployerController extends Controller
 
         $ql = $ql->paginate(10);
 
-        return response(["status" => "success", 'res' => $ql], 200);
+        return response(["status" => "success", 'res' => $ql,'query'=>DB::getQueryLog()], 200);
     }
 
     /**
