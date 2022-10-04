@@ -92,13 +92,7 @@ class EmployerController extends Controller
         $sort_by = $request->sortBy;
         $sort_order = $request->sortOrder;
         $user = Auth::guard('api')->user();
-        $company_emp = CompanyEmployee::where('user_id', $user->id)->first();
      
-        $company_id = $company_emp->company_id;
-        DB::enableQueryLog();
-
-        $company_employees = CompanyEmployee::where('company_id',$company_id)->pluck('id');
-
         if($user->role == 'ADMIN'){
             $ql = CompanyQuestion::select('company_questions.*', 'companies.company_name', 'company_employees.first_name', 'company_employees.last_name')
                 ->join('company_employees', 'company_employees.id', 'company_questions.company_id')
@@ -106,6 +100,10 @@ class EmployerController extends Controller
                 ->where('forward_to_admin',1);
                
         }else{
+            $company_emp = CompanyEmployee::where('user_id', $user->id)->first();
+            $company_id = $company_emp->company_id;    
+            $company_employees = CompanyEmployee::where('company_id',$company_id)->pluck('id');
+    
             $ql = CompanyQuestion::select('company_questions.*', 'companies.company_name', 'company_employees.first_name', 'company_employees.last_name')
                 ->join('company_employees', 'company_employees.id', 'company_questions.company_id')
                 ->join('companies', 'companies.id', 'company_employees.company_id')
@@ -118,7 +116,7 @@ class EmployerController extends Controller
 
         $ql = $ql->paginate(10);
 
-        return response(["status" => "success", 'res' => $ql,'query'=>DB::getQueryLog(),'user'=>$user], 200);
+        return response(["status" => "success", 'res' => $ql], 200);
     }
 
     /**
