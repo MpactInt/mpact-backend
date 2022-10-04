@@ -118,7 +118,7 @@ class EmployerController extends Controller
 
         $ql = $ql->paginate(10);
 
-        return response(["status" => "success", 'res' => $ql,'query'=>DB::getQueryLog()], 200);
+        return response(["status" => "success", 'res' => $ql,'query'=>DB::getQueryLog(),'user'=>$user], 200);
     }
 
     /**
