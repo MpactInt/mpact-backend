@@ -92,7 +92,7 @@ class EmployerController extends Controller
         $sort_by = $request->sortBy;
         $sort_order = $request->sortOrder;
         $user = Auth::guard('api')->user();
-        $company_emp = CompanyEmployee::where('id', $user->id)->first();
+        $company_emp = CompanyEmployee::where('user_id', $user->id)->first();
      
         $company_id = $company_emp->company_id;
         DB::enableQueryLog();
