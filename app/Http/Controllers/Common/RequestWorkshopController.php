@@ -90,17 +90,17 @@ class RequestWorkshopController extends Controller
 
         $workshop = RequestWorkshop::find($id);
         $workshop->delete();
+        if ($user->role != "ADMIN") {
+            $an = new AdminNotification();
+            $an->from_company_id = $company->id;
+            $an->from_employee_id = $companyEmp->id;
+            $an->notification = $company->company_name . " deleted requested workshop " . $workshop->name;
+            $an->link = "/admin/request-workshop";
+            $an->save();
 
-        $an = new AdminNotification();
-        $an->from_company_id = $company->id;
-        $an->from_employee_id = $companyEmp->id;
-        $an->notification = $company->company_name." deleted requested workshop ".$workshop->name;
-        $an->link = "/admin/request-workshop";
-        $an->save();
-
-        $admin = User::where('role','ADMIN')->first();
-        event(new AdminNotificationEvent($an, $admin->id));
-
+            $admin = User::where('role', 'ADMIN')->first();
+            event(new AdminNotificationEvent($an, $admin->id));
+        }
         return response(["status" => "success", 'res' => $workshop], 200);
     }
 
@@ -127,5 +127,4 @@ class RequestWorkshopController extends Controller
         $workshop->save();
         return response(["status" => "success", 'res' => $workshop], 200);
     }
-
 }
