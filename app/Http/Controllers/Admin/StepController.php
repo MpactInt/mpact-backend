@@ -20,9 +20,9 @@ class StepController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
-            'overview'=>'required',
+            'overview' => 'required',
             'description' => 'required',
-            'image'=>'required|image'
+            'image' => 'required|image'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -53,7 +53,7 @@ class StepController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
-            'overview'=>'required',
+            'overview' => 'required',
             'description' => 'required'
         ]);
         if ($validator->fails()) {
@@ -64,14 +64,14 @@ class StepController extends Controller
             $step = Step::find($request->id);
             if ($request->hasFile('image')) {
                 $validator = Validator::make($request->all(), [
-                    'image'=>'image'
+                    'image' => 'image'
                 ]);
                 if ($validator->fails()) {
                     $error = $validator->getMessageBag()->first();
                     return response()->json(["status" => "error", "message" => $error], 400);
                 }
                 $destinationPath = public_path() . '/steps';
-                if(file_exists($destinationPath . '/' . $step->image)){
+                if (file_exists($destinationPath . '/' . $step->image)) {
                     unlink($destinationPath . '/' . $step->image);
                 }
                 $uploadedFile = $request->file('image');
@@ -98,7 +98,7 @@ class StepController extends Controller
         $sort_order = $request->sortOrder;
 
         $user = Auth::guard('api')->user();
-        $steps = Step::where('created_at','!=',null);
+        $steps = Step::where('created_at', '!=', null);
         if ($keyword) {
             $steps = $steps->where('title', 'like', "%$keyword%")
                 ->orwhere('description', 'like', "%$keyword%");
@@ -109,7 +109,7 @@ class StepController extends Controller
 
         $steps = $steps->get();
         $path = url('/public/steps/');
-        return response(["status" => "success", 'res' => $steps,'path'=>$path], 200);
+        return response(["status" => "success", 'res' => $steps, 'path' => $path], 200);
     }
 
     /**
@@ -120,7 +120,7 @@ class StepController extends Controller
     {
         $steps = Step::with('toolkit')->find($id);
         $path = url('/public/steps/');
-        return response(["status" => "success", 'res' => $steps,'toolkitPath'=>$path], 200);
+        return response(["status" => "success", 'res' => $steps, 'toolkitPath' => $path], 200);
     }
 
     /**
@@ -150,7 +150,9 @@ class StepController extends Controller
     public function upload_toolkit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'file'=>'required|mimes:pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,svg,png,jpg,jpeg'
+            'file' => 'required|mimes:pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,svg,png,jpg,jpeg',
+            'title' => 'required',
+            'description' => 'required'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -169,10 +171,48 @@ class StepController extends Controller
             $st->step_id = $request->id;
             $st->file = $filename;
             $st->type = $ext;
+            $st->title = $request->title;
+            $st->description = $request->description;
             $st->save();
             return response(["status" => "success", 'res' => $st], 200);
         }
     }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function update_toolkit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'nullable|mimes:pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,svg,png,jpg,jpeg',
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
+            $filename = '';
+            $ext = '';
+            $st = StepToolkit::find($request->id);
+            if ($request->hasFile('file')) {
+                $uploadedFile = $request->file('file');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $ext = $uploadedFile->getClientOriginalExtension();
+                $destinationPath = public_path() . '/steps';
+                $uploadedFile->move($destinationPath, $filename);
+                $st->file = $filename;
+                $st->type = $ext;
+            }
+            $st->title = $request->title;
+            $st->description = $request->description;
+            $st->save();
+            return response(["status" => "success", 'res' => $st], 200);
+        }
+    }
+
 
     /**
      * @param $id
@@ -186,6 +226,26 @@ class StepController extends Controller
             unlink($destinationPath . '/' . $toolkit->file);
             $toolkit->delete();
         }
+        return response(["status" => "success", 'res' => $toolkit], 200);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function get_toolkit_list($id, Request $request)
+    {
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+        $toolkit = StepToolkit::where('step_id', $id);
+        if ($request->keyword) {
+            $toolkit = $toolkit->where('title', 'like', '%' . $request->keyword . '%')
+                ->orWhere('description', 'like', '%' . $request->keyword . '%');
+        }
+        if ($sort_by && $sort_order) {
+            $toolkit = $toolkit->orderby($sort_by, $sort_order);
+        }
+        $toolkit = $toolkit->paginate(9);
         return response(["status" => "success", 'res' => $toolkit], 200);
     }
 
@@ -206,9 +266,10 @@ class StepController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
 
-    public function upload_guide_book(Request $request){
+    public function upload_guide_book(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'guideBook'=>'required|mimes:pdf'
+            'guideBook' => 'required|mimes:pdf'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -218,7 +279,7 @@ class StepController extends Controller
             $st = Step::find($request->id);
             if ($request->hasFile('guideBook')) {
                 $destinationPath = public_path() . '/steps';
-                if($st->guide_book){
+                if ($st->guide_book) {
                     unlink($destinationPath . '/' . $st->guide_book);
                 }
                 $uploadedFile = $request->file('guideBook');

@@ -202,8 +202,10 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/update-step', [StepController::class, 'update_step']);
     Route::get('/delete-step/{id}', [StepController::class, 'delete_step']);
     Route::post('/upload-toolkit', [StepController::class, 'upload_toolkit']);
+    Route::post('/update-toolkit', [StepController::class, 'update_toolkit']);
     Route::post('/delete-toolkit/{id}', [StepController::class, 'delete_toolkit']);
     Route::get('/download-toolkit/{id}', [StepController::class, 'download_toolkit']);
+    Route::post('/get-toolkit-list/{id}', [StepController::class, 'get_toolkit_list']);
     Route::post('/upload-guide-book', [StepController::class, 'upload_guide_book']);
 
     //opportunity routes
