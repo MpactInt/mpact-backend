@@ -8,6 +8,7 @@ use App\Models\CompanyEmployee;
 use App\Models\Country;
 use App\Models\Invitation;
 use App\Models\User;
+use App\Models\PlanTier;
 use ChargeBee\ChargeBee\Models\Estimate;
 use ChargeBee\ChargeBee\Models\ItemPrice;
 use Illuminate\Http\Request;
@@ -67,6 +68,13 @@ class HomeController extends Controller
             // $destinationPath = public_path() . '/uploads';
             // $uploadedFile->move($destinationPath, $filename);
 
+
+            $planTier = PlanTier::where('plan_id', $plan)
+            ->whereRaw("$total_employees between starting_unit and ending_unit")
+            //->where('starting_unit', '<=', $total_employees)->where('ending_unit', '>=', $total_employees)
+            ->first();
+
+            $max_employees = $planTier->ending_unit;
             $parsed = parse_url($domain);
             if (empty($parsed['scheme'])) {
                 $domain = 'http://' . ltrim($domain, '/');
@@ -88,6 +96,7 @@ class HomeController extends Controller
             $cu->total_hours = $hours;
             $cu->remaining_hours = $hours;
             $cu->total_employees = $total_employees;
+            $cu->max_employees = $max_employees;
             $cu->employee_registration_link = $link;
             $cu->company_logo = 'default.png';
             $cu->save();
@@ -143,7 +152,7 @@ class HomeController extends Controller
             $company = Company::where('employee_registration_link', $link)->first();
             if ($company) {
                 $total_emp = CompanyEmployee::where('company_id', $company->id)->count();
-                if ($total_emp < $company->total_employees) {
+                if ($total_emp < $company->max_employees) {
                     $employee_email_domain = explode('@', $email);
                     $employee_email_domain = $employee_email_domain[1];
                     $company_domain = $this->remove_http($company->company_domain);

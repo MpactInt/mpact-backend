@@ -50,6 +50,11 @@ class ProfileController extends Controller
             if ($c) {
                 $c->company_name = $request->company_name;
                 $c->company_domain = $url;
+                if($request->total_employees<=$c->max_employees){
+                    $c->total_employees = $request->total_employees;
+                }else{
+                    return response(["status" => "error", "message" => 'Total number of max employees as per your selected plan is '.$c->max_employees.',You need to upgrade the plan.'], 400);        
+                }
                 $c->save();
             }
             $e = CompanyEmployee::where('user_id', $user->id)->first();
