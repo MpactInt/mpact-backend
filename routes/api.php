@@ -41,10 +41,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group([
-    'middleware' => ['cors']],function () {
+    'middleware' => ['cors']
+], function () {
 
-//    Route::post('/create-customer', [ChargebeeController::class, 'create_customer']);
-//    Route::get('/webhook-listen',[ChargebeeController::class,'webhook_listen']);
+    //    Route::post('/create-customer', [ChargebeeController::class, 'create_customer']);
+    //    Route::get('/webhook-listen',[ChargebeeController::class,'webhook_listen']);
 
     ###################################################################
     /**************************Registration Routes********************/
@@ -52,11 +53,11 @@ Route::group([
 
     Route::post('/create-company', [HomeController::class, 'create_company']);
     Route::post('/create-company-employee', [HomeController::class, 'create_company_employee']);
-    Route::get('/get-plans',[ChargebeeController::class,'get_plans']);
-    Route::get('/get-plans2',[ChargebeeController::class,'get_plans2']);
-    Route::get('/get-addons',[ChargebeeController::class,'get_addons']);
-    Route::post('/select-addon/{id}',[ChargebeeController::class,'select_addon']);
-    Route::post('/create-estimate',[ChargebeeController::class,'create_estimate']);
+    Route::get('/get-plans', [ChargebeeController::class, 'get_plans']);
+    Route::get('/get-plans2', [ChargebeeController::class, 'get_plans2']);
+    Route::get('/get-addons', [ChargebeeController::class, 'get_addons']);
+    Route::post('/select-addon/{id}', [ChargebeeController::class, 'select_addon']);
+    Route::post('/create-estimate', [ChargebeeController::class, 'create_estimate']);
     Route::post('/create-subscription', [ChargebeeController::class, 'create_subscription']);
     Route::get('/update-payment-status/{link}', [ChargebeeController::class, 'update_payment_status']);
     Route::get('/get-countries', [HomeController::class, 'get_countries']);
@@ -72,7 +73,7 @@ Route::group([
 
 
     Route::get('/get-company-details/{link}', [EmployerController::class, 'get_company_details']);
-//    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
+    //    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
     Route::get('/get-profile-type-list', [ProfileTypeController::class, 'get_profile_type_list']);
     Route::post('/get-profile-type-list1', [ProfileTypeController::class, 'get_profile_type_list1']);
     Route::get('/get-profile-type-list-multiselect', [ProfileTypeController::class, 'get_profile_type_list_multiselect']);
@@ -84,7 +85,6 @@ Route::group([
 
     Route::get('/get-post-workshop-survey-questions/{id}', [PostWorkshopSurveyController::class, 'get_post_workshop_survey_questions']);
     Route::post('/submit-post-workshop-survey/{id}/{w_id}', [PostWorkshopSurveyController::class, 'submit_post_workshop_survey']);
-
 });
 Route::group(['middleware' => ['auth:api', 'cors']], function () {
 
@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-auth-user', [ProfileController::class, 'get_auth_user']);
     Route::post('/update-profile', [ProfileController::class, 'update_profile']);
     Route::post('/update-profile-company', [ProfileController::class, 'update_profile_company']);
-    Route::get('/active-inactive-company/{id}/{status}',[ProfileController::class, 'active_inactive_company']);
+    Route::get('/active-inactive-company/{id}/{status}', [ProfileController::class, 'active_inactive_company']);
     Route::post('/upload-profile-image', [ProfileController::class, 'upload_profile_image']);
     Route::post('/change-password', [ProfileController::class, 'change_password']);
 
@@ -163,15 +163,15 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
 
     //Membership routes
 
-    Route::get('/get-plan-details-by-subscription-id/{id}',[ChargebeeController::class,'get_plan_details_by_subscription_id']);
+    Route::get('/get-plan-details-by-subscription-id/{id}', [ChargebeeController::class, 'get_plan_details_by_subscription_id']);
 
     ###################################################################
     /******************************Common Routes**********************/
     ###################################################################
 
-    Route::get('/get-admin-notifications',[NotificationController::class,'get_admin_notifications']);
-    Route::get('/read-admin-notifications',[NotificationController::class,'read_admin_notifications']);
-    
+    Route::get('/get-admin-notifications', [NotificationController::class, 'get_admin_notifications']);
+    Route::get('/read-admin-notifications', [NotificationController::class, 'read_admin_notifications']);
+
     //group chat routes
 
     Route::post('/create-chat-group', [MessageController::class, 'create_chat_group']);
@@ -179,7 +179,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-chat-group/{id}', [MessageController::class, 'get_company_chat_group']);
     Route::post('/get-group-chat-message/{rId}', [MessageController::class, 'get_group_chat_message']);
     Route::post('/send-group-chat-message', [MessageController::class, 'send_group_chat_message']);
-    
+
     //Chat routes
     Route::get('/read-group-message/{group_id}', [MessageController::class, 'read_group_message']);
     Route::get('/read-one-to-message/{sender_id}', [MessageController::class, 'read_one_to_one_message']);
@@ -255,7 +255,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/get-popup-survey-list', [PopupSurveyController::class, 'get_popup_survey_question_list']);
     Route::get('/get-survey-questions-dashboard', [PopupSurveyController::class, 'get_survey_questions_dashboard']);
     Route::post('/submit-popup-survey', [PopupSurveyController::class, 'submit_popup_survey']);
-    Route::get('/get-chart-data',[PopupSurveyController::class,'get_chart_data']);
+    Route::get('/get-chart-data', [PopupSurveyController::class, 'get_chart_data']);
 
 
     //CheckIn surveys routes
@@ -329,13 +329,12 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/delete-learning-plan-file/{id}', [LearningPlanFileController::class, 'delete_learning_plan_file']);
     Route::get('/download-learning-plan-file/{id}', [LearningPlanFileController::class, 'download_learning_plan_file']);
     Route::post('/get-learning-plan-files/{id}', [LearningPlanFileController::class, 'get_learning_plan_files']);
-
-
-    //webhook related apis
-
-    Route::get('/update-tiers-chargebee', [ChargebeeController::class, 'update_tiers_chargebee']);
-
-
 });
+
+
+//webhook related apis
+
+Route::get('/update-tiers-chargebee', [ChargebeeController::class, 'update_tiers_chargebee']);
+
 
 Route::post('/update-meeting/{id}', [ZoomMeetingController::class, 'update']);

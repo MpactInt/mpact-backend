@@ -265,9 +265,16 @@ class ChargebeeController extends Controller
     }
 
     public function update_tiers_chargebee(Request $request,Response $res){
-        echo "request object";
-        dd($request);
-        echo "response object";
-        dd($res);
+        $resp = ["request"=>$request,"res"=>$res];
+        Mail::send('webhook-email', $resp, function ($message) {
+            $message->to("deepika.manifest@gmail.com","webhook")
+                ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
+            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        });
+
+        // echo "request object";
+        // dd($request);
+        // echo "response object";
+        // dd($res);
     }
 }
