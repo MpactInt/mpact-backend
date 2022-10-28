@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\CompanyEmployee;
 use App\Models\Invitation;
 use App\Models\Plan;
+use App\Models\PlanTier;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use ChargeBee\ChargeBee\Models\Estimate;
@@ -265,7 +266,21 @@ class ChargebeeController extends Controller
     }
 
     public function update_tiers_chargebee(Request $request){
-        $resp = ["request"=>$request->all()];
+        
+
+        $plan_id = $request->content->item_price->id;
+        $res = PlanTier::where('plan_id',$plan_id)->delete();
+        $tiers = $request->content->tiers;
+        $resp = ["request"=>$tiers];
+        foreach($tiers as $t){
+            $pt = new PlanTier();
+            $pt->plan_id = $plan_id;
+            $pt->starting_unit = $t->starting_unit;
+            $pt->ending_unit = $t->ending_unit;
+            $pt->price = $t->price;
+            $pt->save();
+        }
+
         Mail::send('webhook-email', $resp, function ($message) {
             $message->to("deepika.manifest@gmail.com","webhook")
                 ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
