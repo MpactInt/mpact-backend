@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\Subscription;
 use ChargeBee\ChargeBee\Models\Customer;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -261,5 +262,12 @@ class ChargebeeController extends Controller
         $sub1 = $property->getValue($sub);
 
         return response()->json(['status' => 'success', 'res' => $sub1['subscription']['subscription_items'], 'id' => $sub_id], 200);
+    }
+
+    public function update_tiers_chargebee(Request $request,Response $res){
+        echo "request object";
+        dd($request);
+        echo "response object";
+        dd($res);
     }
 }

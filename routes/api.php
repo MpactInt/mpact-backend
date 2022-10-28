@@ -19,6 +19,7 @@ use App\Http\Controllers\Common\NotificationController;
 use App\Http\Controllers\Employer\AnnouncementController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Common\MessageController;
+use App\Http\Controllers\Common\PaymentController;
 use App\Http\Controllers\Employer\ResourceController;
 use App\Http\Controllers\Employer\TeamController;
 use App\Http\Controllers\Employer\WelcomeNoteController;
@@ -328,6 +329,11 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/delete-learning-plan-file/{id}', [LearningPlanFileController::class, 'delete_learning_plan_file']);
     Route::get('/download-learning-plan-file/{id}', [LearningPlanFileController::class, 'download_learning_plan_file']);
     Route::post('/get-learning-plan-files/{id}', [LearningPlanFileController::class, 'get_learning_plan_files']);
+
+
+    //webhook related apis
+
+    Route::get('/update-tiers-chargebee', [ChargebeeController::class, 'update_tiers_chargebee']);
 
 
 });
