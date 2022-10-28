@@ -272,7 +272,7 @@ class ChargebeeController extends Controller
         // $plan_id = $request->content->item_price->id;
         // $res = PlanTier::where('plan_id',$plan_id)->delete();
         // $tiers = $request->content->tiers;
-         $resp = ["request"=>$req]['content'];
+         $resp = ["request"=>$req['content']];
         // foreach($tiers as $t){
         //     $pt = new PlanTier();
         //     $pt->plan_id = $plan_id;
