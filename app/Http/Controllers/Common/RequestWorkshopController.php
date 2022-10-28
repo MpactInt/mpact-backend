@@ -59,6 +59,8 @@ class RequestWorkshopController extends Controller
         }
         if ($sort_by && $sort_order) {
             $res = $res->orderby($sort_by, $sort_order);
+        }else{
+            $res = $res->orderby('id','desc');
         }
         $res = $res->paginate(10);
         return response(["status" => "success", "res" => $res], 200);
