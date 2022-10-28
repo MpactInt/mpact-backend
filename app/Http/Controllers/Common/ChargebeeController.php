@@ -267,19 +267,20 @@ class ChargebeeController extends Controller
 
     public function update_tiers_chargebee(Request $request){
         
+        $req = $request->all();
 
-        $plan_id = $request->content->item_price->id;
-        $res = PlanTier::where('plan_id',$plan_id)->delete();
-        $tiers = $request->content->tiers;
-        $resp = ["request"=>$tiers];
-        foreach($tiers as $t){
-            $pt = new PlanTier();
-            $pt->plan_id = $plan_id;
-            $pt->starting_unit = $t->starting_unit;
-            $pt->ending_unit = $t->ending_unit;
-            $pt->price = $t->price;
-            $pt->save();
-        }
+        // $plan_id = $request->content->item_price->id;
+        // $res = PlanTier::where('plan_id',$plan_id)->delete();
+        // $tiers = $request->content->tiers;
+         $resp = ["request"=>$req]['content'];
+        // foreach($tiers as $t){
+        //     $pt = new PlanTier();
+        //     $pt->plan_id = $plan_id;
+        //     $pt->starting_unit = $t->starting_unit;
+        //     $pt->ending_unit = $t->ending_unit;
+        //     $pt->price = $t->price;
+        //     $pt->save();
+        // }
 
         Mail::send('webhook-email', $resp, function ($message) {
             $message->to("deepika.manifest@gmail.com","webhook")
