@@ -334,7 +334,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
 
 //webhook related apis
 
-Route::get('/update-tiers-chargebee', [ChargebeeController::class, 'update_tiers_chargebee']);
+Route::post('/update-tiers-chargebee', [ChargebeeController::class, 'update_tiers_chargebee']);
 
 
 Route::post('/update-meeting/{id}', [ZoomMeetingController::class, 'update']);
