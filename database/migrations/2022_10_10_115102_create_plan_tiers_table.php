@@ -18,7 +18,7 @@ class CreatePlanTiersTable extends Migration
             $table->string('plan_id');
             $table->string('starting_unit');
             $table->string('ending_unit');
-            $table->float('price');
+            $table->double('price');
             $table->timestamps();
         });
     }
