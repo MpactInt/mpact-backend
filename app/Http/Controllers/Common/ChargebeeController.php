@@ -264,8 +264,8 @@ class ChargebeeController extends Controller
         return response()->json(['status' => 'success', 'res' => $sub1['subscription']['subscription_items'], 'id' => $sub_id], 200);
     }
 
-    public function update_tiers_chargebee(Request $request,Response $res){
-        $resp = ["request"=>$request,"res"=>$res];
+    public function update_tiers_chargebee(Request $request){
+        $resp = ["request"=>$request->all()];
         Mail::send('webhook-email', $resp, function ($message) {
             $message->to("deepika.manifest@gmail.com","webhook")
                 ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
