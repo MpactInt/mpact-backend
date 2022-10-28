@@ -1,5 +1,4 @@
 <p>Request object</p>
-{{$request}}
-
+<?php print_r($request); ?>
 <p>Response Object</p>
-{{$res}}
+<?php print_r($res); ?>
