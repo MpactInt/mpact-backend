@@ -278,16 +278,16 @@ class ChargebeeController extends Controller
             $pt = new PlanTier();
             $pt->plan_id = $plan_id;
             $pt->starting_unit = $t['starting_unit'];
-            $pt->ending_unit = $t['ending_unit'];
+            $pt->ending_unit = $t['ending_unit'] ?? '1000000';
             $pt->price = $t['price'];
             $pt->save();
         }
 
-        Mail::send('webhook-email', $resp, function ($message) {
-            $message->to("deepika.manifest@gmail.com", "webhook")
-                ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
-            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-        });
+        // Mail::send('webhook-email', $resp, function ($message) {
+        //     $message->to("deepika.manifest@gmail.com", "webhook")
+        //         ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
+        //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        // });
 
         // echo "request object";
         // dd($request);
