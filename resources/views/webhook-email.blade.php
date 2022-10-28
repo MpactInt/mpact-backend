@@ -1,5 +1,5 @@
 <p>Request object</p>
-{{$resp->request}}
+{{$request}}
 
 <p>Response Object</p>
-{{$resp->res}}
+{{$res}}
