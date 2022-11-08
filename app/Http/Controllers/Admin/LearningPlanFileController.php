@@ -39,7 +39,7 @@ class LearningPlanFileController extends Controller
             }
 
             $t = new MyLearningPlanFile();
-            $t->my_learning_plan_id = $request->my_learning_plan_id;
+            // $t->my_learning_plan_id = $request->my_learning_plan_id;
             $t->title = $request->title;
             $t->description = $request->description;
             $t->image = $filename;
