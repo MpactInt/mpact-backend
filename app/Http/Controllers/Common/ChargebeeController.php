@@ -264,4 +264,26 @@ class ChargebeeController extends Controller
 
         return response()->json(['status' => 'success', 'res' => $sub1['subscription']['subscription_items'], 'id' => $sub_id], 200);
     }
+
+    public function update_tiers_chargebee(Request $request)
+    {
+        $req = $request->all();
+        $plan_id = $request['content']['item_price']['id'];
+        PlanTier::where('plan_id', $plan_id)->delete();
+        $tiers = $request['content']['item_price']['tiers'];
+        $resp = ["request" => $req['content']];
+        foreach ($tiers as $t) {
+            $pt = new PlanTier();
+            $pt->plan_id = $plan_id;
+            $pt->starting_unit = $t['starting_unit'];
+            $pt->ending_unit = $t['ending_unit'] ?? '1000000';
+            $pt->price = $t['price']/100;
+            $pt->save();
+        }
+        // Mail::send('webhook-email', $resp, function ($message) {
+        //     $message->to("deepika.manifest@gmail.com", "webhook")
+        //         ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
+        //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        // });
+    }
 }

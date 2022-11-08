@@ -256,6 +256,7 @@ class WorkshopController extends Controller
             $ca = Workshop::select('workshops.*')
                 ->join('company_workshops', 'company_workshops.workshop_id', 'workshops.id')
                 ->where("company_id", $company->company_id)
+                ->where('date','>',time())
                 ->orderBy('id', 'desc')
                 ->limit(4)
                 ->get();

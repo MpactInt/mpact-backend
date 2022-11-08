@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class MyLearningPlan extends Model
 {
     public function files(){
-        return $this->hasMany(MyLearningPlanFile::class,'my_learning_plan_id','id');
+        return $this->hasMany(LearningPlanResource::class,'learning_plan_id','id');
     }
 
     public function profileType(){

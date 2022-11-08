@@ -15,11 +15,9 @@ class CreateMyLearningPlanFilesTable extends Migration
     {
         Schema::create('my_learning_plan_files', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('my_learning_plan_id');
             $table->string('title');
             $table->text('description');
             $table->string('image');
-            $table->foreign('my_learning_plan_id')->references('id')->on('my_learning_plans')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

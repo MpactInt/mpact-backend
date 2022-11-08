@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CompanyEmployee;
 use App\Models\MyLearningPlan;
 use App\Models\MyLearningPlanFile;
+use App\Models\LearningPlanResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +23,8 @@ class LearningPlanFileController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'description' => 'required',
-            'image' => 'required|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
+            'link' => 'nullable|url',
+            'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -41,6 +43,7 @@ class LearningPlanFileController extends Controller
             $t->title = $request->title;
             $t->description = $request->description;
             $t->image = $filename;
+            $t->link = $request->link;
             $t->save();
 
             return response(["status" => "success", "res" => $t], 200);
@@ -56,6 +59,7 @@ class LearningPlanFileController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'description' => 'required',
+            'link' => 'nullable|url',
             'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
         ]);
         if ($validator->fails()) {
@@ -78,6 +82,7 @@ class LearningPlanFileController extends Controller
             }
             $t->title = $request->title;
             $t->description = $request->description;
+            $t->link = $request->link;
             $t->save();
             return response(["status" => "success", "res" => $t], 200);
         }
@@ -92,6 +97,33 @@ class LearningPlanFileController extends Controller
         $ca = MyLearningPlanFile::where('id', $id)->first();
         $ca->image = url('/public/learning-plan-files/') . '/' . $ca->image;
         return response(["status" => "success", "res" => $ca], 200);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+
+    public function get_learning_plan_resources(Request $request)
+    {
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+
+        $file = MyLearningPlanFile::where('id', '!=', '');
+        if ($keyword) {
+            $file = $file->where('title', 'like', "%$keyword%")
+                ->orWhere('description', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $file = $file->orderby($sort_by, $sort_order);
+        }
+
+        $file = $file->get();
+
+        $files = $file;
+
+        $path = url('/public/learning-plan-files/');
+        return response(["status" => "success", "res" => $files, 'path' => $path], 200);
     }
 
     /**
@@ -112,7 +144,8 @@ class LearningPlanFileController extends Controller
 
         $ca->profile_type = $pt;
 
-        $file = MyLearningPlanFile::where('my_learning_plan_id',$id);
+        $file = LearningPlanResource::join('my_learning_plan_files','my_learning_plan_files.id','learning_plan_resources.resource_id')
+        ->where('learning_plan_id', $id);
         if ($keyword) {
             $file = $file->where('title', 'like', "%$keyword%")
                 ->orWhere('description', 'like', "%$keyword%");
@@ -152,5 +185,10 @@ class LearningPlanFileController extends Controller
         $filename = $filename->image;
         $file = public_path() . '/learning-plan-files/' . $filename;
         return response()->download($file);
+    }
+
+    public function get_learning_plan_resources_list_multiselect(){
+        $res = MyLearningPlanFile::select('id', 'title as name')->get();
+        return response(["status" => "success", "res" => $res], 200);
     }
 }

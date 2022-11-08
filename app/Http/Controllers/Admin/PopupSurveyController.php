@@ -117,7 +117,6 @@ class PopupSurveyController extends Controller
         if($question){
             $is_answered = PopupSurveyAnswer::where(['company_employee_id' => $companyEmp->id, 'question_id' => $question->id])->first();
 
-
         if (!$is_answered) {
             $q = $question->id ?? '';
             $obj = [
