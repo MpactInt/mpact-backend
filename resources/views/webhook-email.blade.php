@@ -1,4 +1,4 @@
 <p>Request object</p>
 <?php echo "<pre>"; 
-print_r($request); ?>
+print_r($resp); ?>
 
