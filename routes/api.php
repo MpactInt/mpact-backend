@@ -95,8 +95,12 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/upload-logo', [EmployerController::class, 'upload_logo']);
     Route::post('/ask-question', [EmployerController::class, 'ask_question']);
     Route::post('/get-question-list', [EmployerController::class, 'get_question_list']);
+    Route::post('/submit-response',[EmployerController::class, 'submit_response']);
     Route::get('/forward-to-admin/{id}', [EmployerController::class, 'forward_to_admin']);
+    Route::get('/archive-question/{id}', [EmployerController::class, 'archive_question']);
     Route::post('/get-companies-list', [EmployerController::class, 'get_company_list']);
+    Route::get('/get-question/{id}', [EmployerController::class, 'get_question']);
+
 
     ###################################################################
     /****************************Common Routes************************/
@@ -348,6 +352,6 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
 //webhook related apis
 
 Route::post('/update-tiers-chargebee', [ChargebeeController::class, 'update_tiers_chargebee']);
-
+Route::post('/update-question-response-freshdesk', [EmployerController::class, 'update_question_response_freshdesk']);
 
 Route::post('/update-meeting/{id}', [ZoomMeetingController::class, 'update']);
