@@ -339,7 +339,8 @@ class EmployerController extends Controller
 
     function update_question_response_freshdesk(Request $request)
     {
-        $resp = $request->all();
+        $request1 = $request->all();
+        $resp = ['resp'=>$request1];
         Mail::send('webhook-email', $resp, function ($message) {
             $message->to("deepika.manifest@gmail.com", "webhook")
                 ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
