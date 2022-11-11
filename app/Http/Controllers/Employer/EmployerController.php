@@ -340,19 +340,14 @@ class EmployerController extends Controller
     function update_question_response_freshdesk(Request $request)
     {
         $request1 = $request->all();
-        $resp = ['resp'=>$request1];
-        Mail::send('webhook-email', $resp, function ($message) {
-            $message->to("deepika.manifest@gmail.com", "webhook")
-                ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
-            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-        });
-        // $freshdesk_ticket_id = $request->freshdesk_webhook->ticket_id;
-        // $response = $request->freshdesk_webhook->ticket_latest_public_comment;
+      
+        $freshdesk_ticket_id = $request1['freshdesk_webhook']['ticket_id'];
+        $response = $request1['freshdesk_webhook']['ticket_latest_public_comment'];
 
-        // $q = CompanyQuestion::where('freshdesk_ticket_id', $freshdesk_ticket_id)->first();
-        // $q->response = $response;
-        // $q->save();
+        $q = CompanyQuestion::where('freshdesk_ticket_id', $freshdesk_ticket_id)->first();
+        $q->response = $response;
+        $q->save();
 
-        // return response(["status" => "success"], 200);
+        return response(["status" => "success"], 200);
     }
 }
