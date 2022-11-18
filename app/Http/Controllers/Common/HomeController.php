@@ -110,13 +110,12 @@ class HomeController extends Controller
             $emp->profile_type_id = 1;
             $emp->save();
 
-            //            $link1 = env('FRONT_URL') . '/registration/' . $link;
-            //            $data = ['link' => $link1, 'name' => $companyname];
-            //            Mail::send('registration-email', $data, function ($message) use ($email) {
-            //                $message->to($email, 'MPACT INT')
-            //                    ->subject('Employee registration link');
-            //                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            //            });
+            $data = ['name' => $companyname];
+            Mail::send('registration-email', $data, function ($message) use ($email) {
+                $message->to($email, 'MPACT INT')
+                    ->subject('Welcome to Mpact International');
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            });
 
             return response()->json(['status' => 'success', 'res' => $cu], 200);
         }
@@ -143,7 +142,7 @@ class HomeController extends Controller
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
             //            'password' => 'required|max:255|min:8',
-            'profileType' => 'required'
+            // 'profileType' => 'required'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -170,7 +169,7 @@ class HomeController extends Controller
                         $emp->first_name = $firstname;
                         $emp->last_name = $lastname;
                         $emp->role = $role ?? "COMPANY_EMP";
-                        $emp->profile_type_id = $pt;
+                        $emp->profile_type_id = 1;
                         $emp->save();
 
                         if (!$request->password) {
@@ -372,5 +371,14 @@ class HomeController extends Controller
     {
         $res = Country::all();
         return response(["status" => "success", "res" => $res], 200);
+    }
+
+    public function send_email1(){
+        $data = ['name' => "test c"];
+        Mail::send('registration-email', $data, function ($message){
+            $message->to("deepika.manifest@gmail.com", 'MPACT INT')
+                ->subject('Welcome to Mpact International');
+            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        });
     }
 }

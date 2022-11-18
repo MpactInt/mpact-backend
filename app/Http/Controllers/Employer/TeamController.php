@@ -156,7 +156,7 @@ class TeamController extends Controller
         $e->first_name = $request->firstname;
         $e->last_name = $request->lastname;
         $e->role = $request->role;
-        $e->profile_type_id = $request->profileType;
+        // $e->profile_type_id = $request->profileType;
         $e->save();
         return response(["status" => "success", "res" => $e], 200);
     }

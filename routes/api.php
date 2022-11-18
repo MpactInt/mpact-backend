@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\StepController;
 use App\Http\Controllers\Admin\TodoController;
 use App\Http\Controllers\Admin\ZoomMeetingController;
 use App\Http\Controllers\Common\ChargebeeController;
+use App\Http\Controllers\Common\DashboardController;
 use App\Http\Controllers\Common\HomeController;
 use App\Http\Controllers\Common\ProfileController;
 use App\Http\Controllers\Common\RequestWorkshopController;
@@ -346,6 +347,15 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
      Route::get('/delete-learning-plan-file/{id}', [LearningPlanFileController::class, 'delete_learning_plan_file']);
      Route::get('/download-learning-plan-file/{id}', [LearningPlanFileController::class, 'download_learning_plan_file']);
      Route::post('/get-learning-plan-resources', [LearningPlanFileController::class, 'get_learning_plan_resources']);
+
+     //recent section dashboard routes
+
+     Route::get('/get-recent-announcement-list/{id}', [DashboardController::class, 'get_recent_announcement_list']);
+     Route::get('/get-recent-requested-workshop-list/{id}', [DashboardController::class, 'get_recent_requested_workshop_list']);
+     Route::get('/get-recent-workshop-list/{id}', [DashboardController::class, 'get_recent_workshop_list']);
+     Route::get('/get-recent-resource-list/{id}', [DashboardController::class, 'get_recent_resource_list']);
+     Route::get('/get-recent-chat-list/{id}', [DashboardController::class, 'get_recent_chat_list']);
+
 });
 
 
@@ -355,3 +365,5 @@ Route::post('/update-tiers-chargebee', [ChargebeeController::class, 'update_tier
 Route::post('/update-question-response-freshdesk', [EmployerController::class, 'update_question_response_freshdesk']);
 
 Route::post('/update-meeting/{id}', [ZoomMeetingController::class, 'update']);
+
+Route::get('/send-email1', [HomeController::class, 'send_email1']);
