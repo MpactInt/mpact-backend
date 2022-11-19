@@ -89,16 +89,13 @@ class EmployerController extends Controller
         ));
         if ($request->role == "COMPANY_ADMIN") {
             $info = $this->create_question_in_freshdesk($ticket_data);
-            if ($info['http_code'] == 201) {
-                $aq = new CompanyQuestion();
-                $aq->company_id = $company_id;
-                $aq->description = $request->description;
-                $aq->forward_to_admin = 1;
-                $aq->save();
-                return response(["status" => "success", 'res' => $aq], 200);
-            } else {
-                return response(["status" => "erroe", 'message' => 'Error in ticket creation'], 400);
-            }
+            $response = json_decode($info);
+            $aq = new CompanyQuestion();
+            $aq->company_id = $company_id;
+            $aq->description = $request->description;
+            $aq->forward_to_admin = 1;
+            $aq->save();
+            return response(["status" => "success", 'res' => $aq, 'info' => $response], 200);
         } else {
             $aq = new CompanyQuestion();
             $aq->company_id = $company_id;
@@ -340,7 +337,7 @@ class EmployerController extends Controller
     function update_question_response_freshdesk(Request $request)
     {
         $request1 = $request->all();
-      
+
         $freshdesk_ticket_id = $request1['freshdesk_webhook']['ticket_id'];
         $response = $request1['freshdesk_webhook']['ticket_latest_public_comment'];
 
