@@ -94,6 +94,7 @@ class EmployerController extends Controller
             $aq->company_id = $company_id;
             $aq->description = $request->description;
             $aq->forward_to_admin = 1;
+            $aq->freshdesk_ticket_id = $response->id;
             $aq->save();
             return response(["status" => "success", 'res' => $aq, 'info' => $response], 200);
         } else {
