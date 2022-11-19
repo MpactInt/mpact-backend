@@ -298,12 +298,12 @@ class EmployerController extends Controller
         $q = CompanyQuestion::find($id);
 
         $info = $this->delete_question_in_freshdesk($q->freshdesk_ticket_id);
-        if ($info['http_code'] == 204) {
+        // if ($info['http_code'] == 204) {
             $q->delete();
             return response(["status" => "success", "result" => $info], 200);
-        } else {
-            return response(["status" => "error", 'message' => 'Error in ticket creation'], 400);
-        }
+        // } else {
+        //     return response(["status" => "error", 'message' => 'Error in ticket deletion'], 400);
+        // }
         // return response(["status" => "success"], 200);
     }
 
