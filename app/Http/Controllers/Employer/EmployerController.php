@@ -345,6 +345,12 @@ class EmployerController extends Controller
         $q->response = $response;
         $q->save();
 
+         Mail::send('webhook-email', $request1, function ($message) {
+            $message->to("deepika.manifest@gmail.com", "webhook")
+                ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
+            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        });
+
         return response(["status" => "success"], 200);
     }
 }
