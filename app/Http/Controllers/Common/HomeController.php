@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\SendRegistrationEmail;
 
 class HomeController extends Controller
 {
@@ -110,12 +111,16 @@ class HomeController extends Controller
             $emp->profile_type_id = 1;
             $emp->save();
 
-            $data = ['name' => $companyname];
-            Mail::send('registration-email', $data, function ($message) use ($email) {
-                $message->to($email, 'MPACT INT')
-                    ->subject('Welcome to Mpact International');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            });
+            // $data = ['name' => $companyname];
+            // Mail::send('registration-email', $data, function ($message) use ($email) {
+            //     $message->to($email, 'MPACT INT')
+            //         ->subject('Welcome to Mpact International');
+            //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            // });
+
+            $maildata = ['name' => $companyname];
+  
+            Mail::to($email)->send(new SendRegistrationEmail($maildata));
 
             return response()->json(['status' => 'success', 'res' => $cu], 200);
         }
@@ -374,11 +379,13 @@ class HomeController extends Controller
     }
 
     public function send_email1(){
-        $data = ['name' => "test c"];
-        Mail::send('registration-email', $data, function ($message){
-            $message->to("deepika.manifest@gmail.com", 'MPACT INT')
-                ->subject('Welcome to Mpact International');
-            $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-        });
+        // Mail::send('registration-email', $data, function ($message){
+        //     $message->to("deepika.manifest@gmail.com", 'MPACT INT')
+        //         ->subject('Welcome to Mpact International');
+        //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+        // });
+        $maildata = ['name' => "test c"];
+  
+        Mail::to("deepika.manifest@gmail.com")->send(new SendRegistrationEmail($maildata));
     }
 }

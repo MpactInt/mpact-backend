@@ -1,20 +1,3 @@
-<!-- <h1>Hi {{$name}}.</h1>
-<p>We would like to welcome you to Mpact International. Our Cognitive Dynamism platform is
-    transforming workplaces across the globe, fostering climates in which all ideas can flourish and where
-    employees feel safe and ready to contribute their knowledge and experience.
-</p>
-<p>
-    We have created an experience to empower you to lead transformation, and one that empowers your
-    employees to be active participants in the change.
-</p>
-<p>
-    Log into the portal by <a href="{{env('FRONT_URL')}}/login">clicking here.</a>
-</p>
-<p>
-    Welcome aboard, we are so pleased to have you.
-</p> -->
-
-
 <!DOCTYPE html>
 <html>
 
@@ -193,14 +176,14 @@
             padding-top: 25px;
             background: #090446;
             padding-bottom: 15%;">
-                <a href=""><img style=" height: 90px;" src="../images/logo.png" alt="Mpact"></a>
+                <a href=""><img style=" height: 90px;" src="{{asset('public/images/logo.png')}}" alt="Mpact"></a>
             </div>
         </div>
         <div class="email-body">
             <div class="container">
                 <div class="email-text">
                     <h2 class="hd">Welcome!</h2>
-                    <div class="customer-name mb-4">Hi {{$name}},</div>
+                    <div class="customer-name mb-4">Hi {{$maildata['name']}},</div>
                     <div class="customer-text mb-4">
                     We would like to welcome you to Mpact International. Our Cognitive Dynamism platform is
     transforming workplaces across the globe, fostering climates in which all ideas can flourish and where
@@ -232,7 +215,7 @@
         <div class="email-footer">
             <div class="container">
                 <div class="footer-logo">
-                    <a href=""><img src="../images/logo.png"></a>
+                    <a href=""><img src="{{asset('public/images/logo.png')}}"></a>
                 </div>
                 <ul class="footer-socila-link mb-4 border-btm-list">
                     <li><a href="">LinkedIn</a></li>
