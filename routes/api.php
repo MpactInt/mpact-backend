@@ -24,6 +24,7 @@ use App\Http\Controllers\Common\PaymentController;
 use App\Http\Controllers\Employer\ResourceController;
 use App\Http\Controllers\Employer\TeamController;
 use App\Http\Controllers\Employer\WelcomeNoteController;
+use App\Http\Controllers\Common\AssementController;
 use App\Http\Controllers\WorkshopController;
 use App\Models\PopupSurveyQuestion;
 use Illuminate\Http\Request;
@@ -367,3 +368,6 @@ Route::post('/update-question-response-freshdesk', [EmployerController::class, '
 Route::post('/update-meeting/{id}', [ZoomMeetingController::class, 'update']);
 
 Route::get('/send-email1', [HomeController::class, 'send_email1']);
+
+// Route::get('/assesment-login', [AssementController::class, 'login']);
+Route::post('/mpact-login', [AssementController::class, 'mpact_login']);

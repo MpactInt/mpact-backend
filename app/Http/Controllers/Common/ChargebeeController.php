@@ -208,14 +208,14 @@ class ChargebeeController extends Controller
             $user->last_login = DB::raw('CURRENT_TIMESTAMP');
             $user->save();
 
-            $link1 = env('FRONT_URL') . '/registration/' . $link;
-            $data = ['link' => $link1, 'name' => $c->company_name];
+            // $link1 = env('FRONT_URL') . '/registration/' . $link;
+            // $data = ['link' => $link1, 'name' => $c->company_name];
 
-            Mail::send('registration-email', $data, function ($message) use ($user, $c) {
-                $message->to($user->email, $c->company_name)
-                    ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            });
+            // Mail::send('registration-email', $data, function ($message) use ($user, $c) {
+            //     $message->to($user->email, $c->company_name)
+            //         ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
+            //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+            // });
 
             return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
         } else {
