@@ -185,6 +185,7 @@ class ProfileController extends Controller
             ->join('company_employees', 'companies.id', 'company_employees.company_id')
             ->where('company_employees.user_id', $user->id)
             ->first();
+
         if ($u) {
             if ($u->role == "COMPANY_EMP") {
                 $u = Company::select('companies.*', 'company_employees.*', 'company_employees.id as emp_id', 'profile_types.profile_type', 'company_employees.profile_image')
@@ -201,6 +202,9 @@ class ProfileController extends Controller
             $u = $user;
             $u->profile_image = url('public/profile-images/' . $u->profile_image);
         }
+        $parent_company_id = Company::find($u->company_id);
+        $parent_company_user_id = User::find($parent_company_id->user_id);
+        $u->company_assesment_id = $parent_company_user_id->assesment_id;
         return response(["status" => "success", "res" => $u, 'id' => $user->id], 200);
     }
 
