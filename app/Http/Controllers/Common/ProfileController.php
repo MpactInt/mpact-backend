@@ -50,10 +50,10 @@ class ProfileController extends Controller
             if ($c) {
                 $c->company_name = $request->company_name;
                 $c->company_domain = $url;
-                if($request->total_employees<=$c->max_employees){
+                if ($request->total_employees <= $c->max_employees) {
                     $c->total_employees = $request->total_employees;
-                }else{
-                    return response(["status" => "error", "message" => 'Total number of max employees as per your selected plan is '.$c->max_employees.',You need to upgrade the plan.'], 400);        
+                } else {
+                    return response(["status" => "error", "message" => 'Total number of max employees as per your selected plan is ' . $c->max_employees . ',You need to upgrade the plan.'], 400);
                 }
                 $c->save();
             }
@@ -102,7 +102,7 @@ class ProfileController extends Controller
 
                 $company_employee->profile_image = url('public/profile-images/' . $company_employee->profile_image);
                 return response(["status" => "success", 'res' => $company_employee], 200);
-            }else{
+            } else {
                 $uploadedFile = $request->file('profile_image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
@@ -202,9 +202,11 @@ class ProfileController extends Controller
             $u = $user;
             $u->profile_image = url('public/profile-images/' . $u->profile_image);
         }
-        $parent_company_id = Company::find($u->company_id);
-        $parent_company_user_id = User::find($parent_company_id->user_id);
-        $u->company_assesment_id = $parent_company_user_id->assesment_id;
+        if ($user->role != "ADMIN") {
+            $parent_company_id = Company::find($u->company_id);
+            $parent_company_user_id = User::find($parent_company_id->user_id);
+            $u->company_assesment_id = $parent_company_user_id->assesment_id;
+        }
         return response(["status" => "success", "res" => $u, 'id' => $user->id], 200);
     }
 

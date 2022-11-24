@@ -89,14 +89,18 @@ class EmployerController extends Controller
         ));
         if ($request->role == "COMPANY_ADMIN") {
             $info = $this->create_question_in_freshdesk($ticket_data);
-            $response = json_decode($info);
-            $aq = new CompanyQuestion();
-            $aq->company_id = $company_id;
-            $aq->description = $request->description;
-            $aq->forward_to_admin = 1;
-            $aq->freshdesk_ticket_id = $response->id;
-            $aq->save();
-            return response(["status" => "success", 'res' => $aq, 'info' => $response], 200);
+            if ($info) {
+                $response = json_decode($info);
+                $aq = new CompanyQuestion();
+                $aq->company_id = $company_id;
+                $aq->description = $request->description;
+                $aq->forward_to_admin = 1;
+                $aq->freshdesk_ticket_id = $response->id;
+                $aq->save();
+                return response(["status" => "success", 'res' => $aq, 'info' => $info], 200);
+            } else {
+                return response(["status" => "error", 'message' => 'Error in ticket creation on freshdesk'], 400);
+            }
         } else {
             $aq = new CompanyQuestion();
             $aq->company_id = $company_id;
@@ -248,14 +252,18 @@ class EmployerController extends Controller
             "status" => 2
         ));
         $info = $this->create_question_in_freshdesk($ticket_data);
-        $response = json_decode($info);
-        if ($response) {
-            $cq->forward_to_admin = 1;
-            $cq->freshdesk_ticket_id = $response->id;
-            $cq->save();
-            return response(["status" => "success"], 200);
+        if ($info) {
+            $response = json_decode($info);
+            if ($response) {
+                $cq->forward_to_admin = 1;
+                $cq->freshdesk_ticket_id = $response->id;
+                $cq->save();
+                return response(["status" => "success"], 200);
+            } else {
+                return response(["status" => "error", 'message' => 'Error in ticket forward'], 400);
+            }
         } else {
-            return response(["status" => "error", 'message' => 'Error in ticket creation'], 400);
+            return response(["status" => "error", 'message' => 'Error in ticket creation on freshdesk'], 400);
         }
     }
 
@@ -283,6 +291,8 @@ class EmployerController extends Controller
         curl_close($ch);
         if ($info['http_code'] == 201) {
             return $response;
+        } else {
+            return false;
         }
     }
 
@@ -299,8 +309,8 @@ class EmployerController extends Controller
 
         $info = $this->delete_question_in_freshdesk($q->freshdesk_ticket_id);
         // if ($info['http_code'] == 204) {
-            $q->delete();
-            return response(["status" => "success", "result" => $info], 200);
+        $q->delete();
+        return response(["status" => "success", "result" => $info], 200);
         // } else {
         //     return response(["status" => "error", 'message' => 'Error in ticket deletion'], 400);
         // }
@@ -346,7 +356,7 @@ class EmployerController extends Controller
         $q->response = $response;
         $q->save();
 
-         Mail::send('webhook-email', $request1, function ($message) {
+        Mail::send('webhook-email', $request1, function ($message) {
             $message->to("deepika.manifest@gmail.com", "webhook")
                 ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform');
             $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
