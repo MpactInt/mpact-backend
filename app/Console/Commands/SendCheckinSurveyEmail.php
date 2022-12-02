@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\CheckinSurveyEmail;
 
 class SendCheckinSurveyEmail extends Command
 {
@@ -43,14 +44,8 @@ class SendCheckinSurveyEmail extends Command
         foreach ($users as $u) {
             $link = encrypt($u->id);
             $link1 = env('FRONT_URL') . '/submit-checkin-survey/' . $link;
-            $data = array('link' => $link1, 'text' => 'You can use below link to get participate in check in survey');
-            Mail::send('check-in-survey-email', $data, function ($message) use ($u) {
-                $message->to($u->email, 'MPACT INT')
-                    ->subject('Check In Email');
-//                    ->setBody('Check In Email');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-
-            });
+            $maildata = array('link' => $link1, 'text' => 'You can use below link to get participate in check in survey');
+            Mail::to($u->email)->send(new CheckinSurveyEmail($maildata));
         }
         $this->info('Weekly Checkin survey email has been sent successfully');
 

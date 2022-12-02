@@ -11,6 +11,8 @@ use App\Models\WorkshopRegistration;
 use App\Models\ZoomMeeting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\PostWorkshopSurveyEmail;
+use App\Models\Workshop;
 
 class PostWorkshopSurveyController extends Controller
 {
@@ -68,7 +70,7 @@ class PostWorkshopSurveyController extends Controller
      */
     public function get_post_workshop_survey_answer_list()
     {
-        $ps = PostWorkshopSurveyQuestion::select('post_workshop_survey_answers.*', 'post_workshop_survey_questions.question', 'company_employees.first_name', 'company_employees.last_name', 'companies.company_name','workshops.title')
+        $ps = PostWorkshopSurveyQuestion::select('post_workshop_survey_answers.*', 'post_workshop_survey_questions.question', 'company_employees.first_name', 'company_employees.last_name', 'companies.company_name', 'workshops.title')
             ->join('post_workshop_survey_answers', 'post_workshop_survey_answers.question_id', 'post_workshop_survey_questions.id')
             ->join('company_employees', 'post_workshop_survey_answers.company_employee_id', 'company_employees.id')
             ->join('companies', 'company_employees.company_id', 'companies.id')
@@ -86,12 +88,12 @@ class PostWorkshopSurveyController extends Controller
         $keyword = $request->keyword;
         $sort_by = $request->sortBy;
         $sort_order = $request->sortOrder;
-        $ps = PostWorkshopSurveyQuestion::where('created_at','!=',null);
-        
+        $ps = PostWorkshopSurveyQuestion::where('created_at', '!=', null);
+
         if ($keyword) {
             $ps = $ps->where('question', 'like', "%$keyword%")
-            ->orWhere('min_desc', 'like', "%$keyword%")
-            ->orWhere('max_desc', 'like', "%$keyword%");
+                ->orWhere('min_desc', 'like', "%$keyword%")
+                ->orWhere('max_desc', 'like', "%$keyword%");
         }
         if ($sort_by && $sort_order) {
             $ps = $ps->orderby($sort_by, $sort_order);
@@ -110,8 +112,8 @@ class PostWorkshopSurveyController extends Controller
 
         $answered_questions = PostWorkshopSurveyAnswer::where('company_employee_id', $companyEmp->id)->pluck('question_id');
         $question = PostWorkshopSurveyQuestion::
-//        whereNotIn('id', $answered_questions)->
-        get();
+            //        whereNotIn('id', $answered_questions)->
+            get();
         $elements = [];
         foreach ($question as $q) {
             $obj = [
@@ -132,7 +134,7 @@ class PostWorkshopSurveyController extends Controller
         return response(["status" => "success", "res" => $elements], 200);
     }
 
-    public function submit_post_workshop_survey(Request $request,$id,$w_id)
+    public function submit_post_workshop_survey(Request $request, $id, $w_id)
     {
         $emp = CompanyEmployee::where('user_id', decrypt($id))->first();
         $w_id = decrypt($w_id);
@@ -153,22 +155,17 @@ class PostWorkshopSurveyController extends Controller
      */
     public function send_email($id)
     {
-        $employees = WorkshopRegistration::where('workshop_id',$id)->pluck('company_employee_id');
-        $ce = CompanyEmployee::whereIn('id',$employees)->pluck('user_id');
+        $workshop = Workshop::find($id);
+        $employees = WorkshopRegistration::where('workshop_id', $id)->pluck('company_employee_id');
+        $ce = CompanyEmployee::whereIn('id', $employees)->pluck('user_id');
         $users = User::whereIn('id', $ce)->get();
         $w_id = encrypt($id);
         foreach ($users as $u) {
             $link = encrypt($u->id);
-            $link1 = env('FRONT_URL') . '/submit-post-workshop-survey/' . $link ."/".$w_id;
-            $data = array('link' => $link1, 'text' => 'You can use below link to get participate in post workshop survey');
-            Mail::send('post-workshop-survey-email', $data, function ($message) use ($u) {
-                $message->to($u->email, 'MPACT INT')
-                    ->subject('Post Workshop Survey Email');
-//                    ->setBody('Check In Email');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            });
+            $link1 = env('FRONT_URL') . '/submit-post-workshop-survey/' . $link . "/" . $w_id;
+            $maildata = array('link' => $link1, 'text' => 'You can use below link to get participate in post workshop survey','workshop'=>$workshop->title, 'date'=>$workshop->date);
+            Mail::to($u->email)->send(new PostWorkshopSurveyEmail($maildata));
         }
         return response(["status" => "success", "message" => "Email Sent Successfully"], 200);
     }
-
 }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SendRegistrationEmail extends Mailable
+class PostWorkshopSurveyEmail extends Mailable
 {
     use Queueable, SerializesModels;
     public $maildata;
@@ -29,8 +29,8 @@ class SendRegistrationEmail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.sendRegistrationEmail')
-            ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform')
+        return $this->markdown('emails.postWorkshopSurveyEmail')
+            ->subject('Your Feedback is Requested')
             ->with('maildata', $this->maildata);
     }
 }

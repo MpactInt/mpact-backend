@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SendRegistrationEmail extends Mailable
+class CheckinSurveyEmail extends Mailable
 {
     use Queueable, SerializesModels;
     public $maildata;
@@ -29,8 +29,15 @@ class SendRegistrationEmail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.sendRegistrationEmail')
-            ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform')
+        $day = date('l');
+        if ($day == "Friday") {
+            return $this->markdown('emails.checkinSurveyEmail')
+                ->subject('Friday Mpact Check-In')
+                ->with('maildata', $this->maildata);
+        }else{
+            return $this->markdown('emails.checkinSurveyEmail')
+            ->subject('Monday Mpact Check-In')
             ->with('maildata', $this->maildata);
+        }
     }
 }
