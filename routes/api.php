@@ -371,3 +371,10 @@ Route::get('/send-email1', [HomeController::class, 'send_email1']);
 
 // Route::get('/assesment-login', [AssementController::class, 'login']);
 Route::post('/mpact-login', [AssementController::class, 'mpact_login']);
+
+// admin profile type update api
+Route::post('/mpact-update', [AssementController::class, 'mpact_update']);
+
+
+
+

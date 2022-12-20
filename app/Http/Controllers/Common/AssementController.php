@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class AssementController extends Controller
 {
@@ -32,5 +33,19 @@ class AssementController extends Controller
         $u->save();
         return response(["status" => "success",'user'=>$u], 200);
 
+    }
+
+
+    public function mpact_update(Request $request){
+        $id = $request->id;
+        $email = $request->email;
+        $email =
+        $u = User::where("email",$email)->first();
+        $user_id = $u->id;
+        $data = DB::table('company_employees')->where('user_id', $user_id)->update(['profile_type_id' => $id ]);
+
+        if($data){
+            return response(["status" => "success",'message'=>'profile type updated suceessfully'], 200);
+        }
     }
 }
