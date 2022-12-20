@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\SendRegistrationEmail;
+use App\Mail\ForgotPasswordEmail;
 
 class HomeController extends Controller
 {
@@ -71,9 +72,9 @@ class HomeController extends Controller
 
 
             $planTier = PlanTier::where('plan_id', $plan)
-            ->whereRaw("$total_employees between starting_unit and ending_unit")
-            //->where('starting_unit', '<=', $total_employees)->where('ending_unit', '>=', $total_employees)
-            ->first();
+                ->whereRaw("$total_employees between starting_unit and ending_unit")
+                //->where('starting_unit', '<=', $total_employees)->where('ending_unit', '>=', $total_employees)
+                ->first();
 
             $max_employees = $planTier->ending_unit;
             $parsed = parse_url($domain);
@@ -119,7 +120,7 @@ class HomeController extends Controller
             // });
 
             $maildata = ['name' => $companyname];
-  
+
             Mail::to($email)->send(new SendRegistrationEmail($maildata));
 
             return response()->json(['status' => 'success', 'res' => $cu], 200);
@@ -181,11 +182,8 @@ class HomeController extends Controller
                             $link = md5(uniqid());
                             $link1 = env('FRONT_URL') . '/create-password/' . $link;
                             DB::table('password_resets')->insert(['email' => $email, 'token' => $link]);
-                            $data = array('link' => $link1, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
-                            Mail::send('forgot-pass-email', $data, function ($message) use ($u) {
-                                $message->to($u->email, 'MPACT INT')->subject('Create Password Email');
-                                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-                            });
+                            $maildata = array('link' => $link1, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
+                            Mail::to($email)->send(new ForgotPasswordEmail($maildata));
                         }
 
                         Invitation::where('email', $email)->delete();
@@ -303,11 +301,9 @@ class HomeController extends Controller
             $link = md5(uniqid());
             $link1 = env('FRONT_URL') . '/reset-password/' . $link;
             DB::table('password_resets')->insert(['email' => $email, 'token' => $link, 'expiry' => strtotime("+10 minutes")]);
-            $data = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
-            Mail::send('forgot-pass-email', $data, function ($message) use ($user) {
-                $message->to($user->email, 'MPACT INT')->subject('Reset Password Email');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            });
+            $maildata = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
+            Mail::to($email)->send(new ForgotPasswordEmail($maildata));
+
             return response(["status" => "success", "message" => "Email Sent Successfully"], 200);
         }
     }
@@ -378,14 +374,15 @@ class HomeController extends Controller
         return response(["status" => "success", "res" => $res], 200);
     }
 
-    public function send_email1(){
+    public function send_email1()
+    {
         // Mail::send('registration-email', $data, function ($message){
         //     $message->to("deepika.manifest@gmail.com", 'MPACT INT')
         //         ->subject('Welcome to Mpact International');
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
         $maildata = ['name' => "test c"];
-  
+
         Mail::to("deepika.manifest@gmail.com")->send(new SendRegistrationEmail($maildata));
     }
 }

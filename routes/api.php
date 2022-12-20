@@ -276,7 +276,6 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-check-in-survey/{id}', [CheckInSurveyController::class, 'get_check_in_survey_question']);
     Route::get('/get-check-in-survey-answer-list', [CheckInSurveyController::class, 'get_check_in_survey_answer_list']);
     Route::post('/get-check-in-survey-list', [CheckInSurveyController::class, 'get_check_in_survey_question_list']);
-    Route::get('/send-email', [CheckInSurveyController::class, 'send_email']);
 
     //Post Workshop surveys routes
 
@@ -375,6 +374,4 @@ Route::post('/mpact-login', [AssementController::class, 'mpact_login']);
 // admin profile type update api
 Route::post('/mpact-update', [AssementController::class, 'mpact_update']);
 
-
-
-
+Route::get('/send-email', [CheckInSurveyController::class, 'send_email']);

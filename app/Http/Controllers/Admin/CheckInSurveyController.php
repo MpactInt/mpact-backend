@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Console\Question\Question;
+use App\Mail\CheckinSurveyEmail;
 
 class CheckInSurveyController extends Controller
 {
@@ -87,12 +88,12 @@ class CheckInSurveyController extends Controller
         $keyword = $request->keyword;
         $sort_by = $request->sortBy;
         $sort_order = $request->sortOrder;
-        $ps = CheckInSurveyQuestion::where('created_at','!=',null);
-        
+        $ps = CheckInSurveyQuestion::where('created_at', '!=', null);
+
         if ($keyword) {
             $ps = $ps->where('question', 'like', "%$keyword%")
-            ->orWhere('min_desc', 'like', "%$keyword%")
-            ->orWhere('max_desc', 'like', "%$keyword%");
+                ->orWhere('min_desc', 'like', "%$keyword%")
+                ->orWhere('max_desc', 'like', "%$keyword%");
         }
         if ($sort_by && $sort_order) {
             $ps = $ps->orderby($sort_by, $sort_order);
@@ -108,13 +109,13 @@ class CheckInSurveyController extends Controller
     public function get_check_in_survey_questions($id)
     {
         $companyEmp = CompanyEmployee::where('user_id', decrypt($id))->first();
-        $day =  date('l'); 
+        $day =  date('l');
         $day = date('N', strtotime($day));
         $answered_questions = CheckInSurveyAnswer::where('company_employee_id', $companyEmp->id)->pluck('question_id');
         $question = CheckInSurveyQuestion::
-//        whereNotIn('id', $answered_questions)->
-        where('day',$day)
-        ->get();
+            //        whereNotIn('id', $answered_questions)->
+            where('day', $day)
+            ->get();
         $elements = [];
         foreach ($question as $q) {
             $obj = [
@@ -135,7 +136,7 @@ class CheckInSurveyController extends Controller
         return response(["status" => "success", "res" => $elements], 200);
     }
 
-    public function submit_check_in_survey(Request $request,$id)
+    public function submit_check_in_survey(Request $request, $id)
     {
         $emp = CompanyEmployee::where('user_id', decrypt($id))->first();
         $data = $request->all();
@@ -158,16 +159,9 @@ class CheckInSurveyController extends Controller
         foreach ($users as $u) {
             $link = encrypt($u->id);
             $link1 = env('FRONT_URL') . '/submit-checkin-survey/' . $link;
-            $data = array('link' => $link1, 'text' => 'You can use below link to get participate in check in survey');
-            Mail::send('check-in-survey-email', $data, function ($message) use ($u) {
-                $message->to($u->email, 'MPACT INT')
-                    ->subject('Check In Email');
-//                    ->setBody('Check In Email');
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-
-            });
+            $maildata = array('link' => $link1, 'text' => 'You can use below link to get participate in check in survey');
+            Mail::to($u->email)->send(new CheckinSurveyEmail($maildata));
         }
         return response(["status" => "success", "message" => "Email Sent Successfully"], 200);
     }
-
 }
