@@ -37,12 +37,16 @@ class AssementController extends Controller
 
 
     public function mpact_update(Request $request){
-        $id = $request->id;
+        
+        $profile_name = $request->profile_name;
         $email = $request->email;
-        $email =
         $u = User::where("email",$email)->first();
         $user_id = $u->id;
-        $data = DB::table('company_employees')->where('user_id', $user_id)->update(['profile_type_id' => $id ]);
+        $profile_id = DB::table('profile_types')->select('id')->where('profile_type','like', '%' . $profile_name . '%')->first();
+        if(!isset($profile_id)){
+            $profile_id = DB::table('profile_types')->select('id')->where('profile_type','like', '%General%')->first();
+        }
+        $data = DB::table('company_employees')->where('user_id', $user_id)->update(['profile_type_id' => $profile_id->id ]);
 
         if($data){
             return response(["status" => "success",'message'=>'profile type updated suceessfully'], 200);
