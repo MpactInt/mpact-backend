@@ -242,10 +242,10 @@ class HomeController extends Controller
                     } elseif ($u->role == "COMPANY_EMP" && $c->deleted_at) {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                     } else {
-                        return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u, 'what' => 'the ....'], 400);
+                        return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                     }
                 } else {
-                    return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u, 'what' => 'the .....'], 400);
+                    return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                 }
             } else {
                 if ($u && $u->role == "COMPANY_EMP" && $c->deleted_at) {
