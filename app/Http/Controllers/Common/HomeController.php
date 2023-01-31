@@ -220,6 +220,10 @@ class HomeController extends Controller
      */
     public function login(Request $request)
     {
+        $abc=9;
+
+
+
         $data = [
             'email' => $request->email,
             'password' => $request->password
