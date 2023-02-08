@@ -23,7 +23,7 @@ class WelcomeNoteController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'description' => 'required',
-            'image' => 'required|image'
+            //'image' => 'required|image'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -32,24 +32,30 @@ class WelcomeNoteController extends Controller
 
             $user = Auth::guard('api')->user();
             $company = Company::where('user_id', $user->id)->first();
-            $uploadedFile = $request->file('image');
-            $filename = time() . '_' . $uploadedFile->getClientOriginalName();
-
-            $destinationPath = public_path() . '/welcome-notes';
 
             $note = CompanyEmployeeWelcomeNote::where('company_id', $company->id)->first();
             if (!$note) {
                 $note = new CompanyEmployeeWelcomeNote();
-            } else {
+            } 
+
+            $destinationPath = public_path() . '/welcome-notes';
+
+            if($request->hasFile('image')){ 
+                $uploadedFile = $request->file('image');
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+
                 if(file_exists($destinationPath . '/' . $note->image)){
                     unlink($destinationPath . '/' . $note->image);
                 }
+
+                $uploadedFile->move($destinationPath, $filename);
+                $note->image = $filename;
             }
-            $uploadedFile->move($destinationPath, $filename);
+
             $note->company_id = $company->id;
             $note->title = $request->title;
             $note->description = $request->description;
-            $note->image = $filename;
+            
             $note->save();
             return response(["status" => "success", 'res' => $note], 200);
         }

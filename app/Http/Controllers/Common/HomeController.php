@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\SendRegistrationEmail;
+use App\Mail\SendEmployeeRegistrationEmail;
 use App\Mail\ForgotPasswordEmail;
 
 class HomeController extends Controller
@@ -182,8 +183,13 @@ class HomeController extends Controller
                             $link = md5(uniqid());
                             $link1 = env('FRONT_URL') . '/create-password/' . $link;
                             DB::table('password_resets')->insert(['email' => $email, 'token' => $link]);
-                            $maildata = array('link' => $link1, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
-                            Mail::to($email)->send(new ForgotPasswordEmail($maildata));
+
+
+                            // $maildata = array('link' => $link1, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
+                            // Mail::to($email)->send(new ForgotPasswordEmail($maildata));
+
+                            $maildata = ['name' => $firstname];
+                            Mail::to($email)->send(new SendEmployeeRegistrationEmail($maildata));
                         }
 
                         Invitation::where('email', $email)->delete();
