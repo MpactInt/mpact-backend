@@ -158,6 +158,10 @@ class WorkshopController extends Controller
                 $c->registered = WorkshopRegistration::where(['workshop_id' => $c->id, 'company_employee_id' => $company->id])->first();
             }
         }
+
+        foreach($workshops as $k=>$c){
+            $workshops[$k]->date = date("Y-m-d H:i:s", $c->date);//$c->date;
+        }
         $path = url('/public/workshops/');
         return response(["status" => "success", 'res' => $workshops, 'path' => $path], 200);
     }
@@ -189,6 +193,7 @@ class WorkshopController extends Controller
                 ->where('workshop_id', $id)->get();
             $registered = WorkshopRegistration::where(['workshop_id' => $id, 'company_employee_id' => $companyEmp->id])->first();
         }
+        $workshops->date = date("Y-m-d H:i:s", $workshops->date);
 
         $path = url('/public/workshops/');
         return response(["status" => "success", 'res' => $workshops, 'path' => $path, 'registered' => $registered], 200);
