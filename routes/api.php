@@ -63,6 +63,7 @@ Route::group([
     Route::post('/create-subscription', [ChargebeeController::class, 'create_subscription']);
     Route::get('/update-payment-status/{link}', [ChargebeeController::class, 'update_payment_status']);
     Route::get('/get-countries', [HomeController::class, 'get_countries']);
+    Route::post('/update-plan', [HomeController::class, 'update_plan']);
 
     ###################################################################
     /***************************Before Login Routes*******************/
@@ -117,6 +118,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/active-inactive-company/{id}/{status}', [ProfileController::class, 'active_inactive_company']);
     Route::post('/upload-profile-image', [ProfileController::class, 'upload_profile_image']);
     Route::post('/change-password', [ProfileController::class, 'change_password']);
+   
 
     ###################################################################
     /**************************Employer Routes************************/

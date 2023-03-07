@@ -192,7 +192,7 @@
                    
                   
                     <div class="mb-4">
-                        <a class=" btn btn-primary" href="{{env('FRONT_URL')}}/login">HEAD TO THE PLATFORM</a>
+                        <a class=" btn btn-primary" href="{{$maildata['link']}}">HEAD TO THE PLATFORM</a>
                     </div>
                     <div class="bottom-fade-text">
                         If you did not sign up for this account. you can Ignore this email

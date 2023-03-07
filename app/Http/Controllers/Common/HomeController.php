@@ -131,6 +131,34 @@ class HomeController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     */ 
+
+    public function update_plan(Request $request)
+    { 
+        //return response()->json(["status" => "error", "message" => $request->plan], 400);
+        $employee_registration_link = $request->link;
+        $c = Company::where('employee_registration_link', $employee_registration_link)->first();
+        $validator = Validator::make($request->all(), [
+            'plan' => 'required|max:255',
+            'employees' => 'required|max:255'
+        ]);
+       
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
+            if ($c) {
+                $c->selected_plan_id = $request->plan;
+                $c->total_employees = $request->employees;
+                $c->save();
+            }
+            return response(["status" => "success", "res" => $c], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function create_company_employee(Request $request)
     {
@@ -185,10 +213,10 @@ class HomeController extends Controller
                             DB::table('password_resets')->insert(['email' => $email, 'token' => $link]);
 
 
-                            // $maildata = array('link' => $link1, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
+                            $maildata = array('link' => $link1, 'name' => $firstname, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
                             // Mail::to($email)->send(new ForgotPasswordEmail($maildata));
 
-                            $maildata = ['name' => $firstname];
+                            //$maildata = ['name' => $firstname];
                             Mail::to($email)->send(new SendEmployeeRegistrationEmail($maildata));
                         }
 
