@@ -135,7 +135,7 @@ class HomeController extends Controller
 
     public function update_plan(Request $request)
     { 
-        //return response()->json(["status" => "error", "message" => $request->plan], 400);
+        //return response()->json(["status" => "error", "message" => $request->plan['id']], 400);
         $employee_registration_link = $request->link;
         $c = Company::where('employee_registration_link', $employee_registration_link)->first();
         $validator = Validator::make($request->all(), [
@@ -148,7 +148,7 @@ class HomeController extends Controller
             return response()->json(["status" => "error", "message" => $error], 400);
         } else {
             if ($c) {
-                $c->selected_plan_id = $request->plan;
+                $c->selected_plan_id = $request->plan['id'];
                 $c->total_employees = $request->employees;
                 $c->save();
             }
