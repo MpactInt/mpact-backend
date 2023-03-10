@@ -74,8 +74,12 @@ class ProfileTypeController extends Controller
 
     public function get_profile_type_list_multiselect()
     {
-        $pt = LearningPlanProfileType::pluck('profile_type_id');
-        $res = ProfileType::select('id', 'profile_type as name')->whereNotIn('id', $pt)->get();
+        //$pt = LearningPlanProfileType::pluck('profile_type_id');
+        //$res = ProfileType::select('id', 'profile_type as name')->whereNotIn('id', $pt)->get();
+
+        $res = ProfileType::select('id', 'profile_type as name')->get();
+        return response(["status" => "success", "res" => $res], 200);
+
         return response(["status" => "success", "res" => $res], 200);
     }
 
