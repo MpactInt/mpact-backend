@@ -129,8 +129,9 @@ class WorkshopController extends Controller
     public function get_workshops_list(Request $request)
     {
         $keyword = $request->keyword;
-        $sort_by = $request->sortBy;
-        $sort_order = $request->sortOrder;
+        $sort_by = $request->sortBy == "" ? "created_at" : $request->sortBy;
+        $sort_order = $request->sortOrder == "" ? "DESC" : $request->sortOrder;
+        //return response(["status" => "success", 'res' => $sort_by], 200);
 
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();

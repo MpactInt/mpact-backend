@@ -29,7 +29,7 @@ class sendEmployeeRegistrationEmail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.sendEmployeeRegistrationEmail')
+        return $this->markdown('emails.sendEmployeeRegistrationEmail2')
             ->subject('Welcome to Mpact International’s Cognitive Dynamism Platform')
             ->with('maildata', $this->maildata);
     }

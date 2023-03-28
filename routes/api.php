@@ -80,6 +80,7 @@ Route::group([
     Route::get('/get-profile-type-list', [ProfileTypeController::class, 'get_profile_type_list']);
     Route::post('/get-profile-type-list1', [ProfileTypeController::class, 'get_profile_type_list1']);
     Route::get('/get-profile-type-list-multiselect', [ProfileTypeController::class, 'get_profile_type_list_multiselect']);
+
     Route::get('/get-profile-type-list-multiselect-update', [ProfileTypeController::class, 'get_profile_type_list_multiselect_update']);
 
    
@@ -329,8 +330,10 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/update-learning-plan', [LearningPlanController::class, 'update_learning_plan']);
     Route::get('/get-learning-plan/{id}', [LearningPlanController::class, 'get_learning_plan']);
     Route::post('/get-learning-plan-list', [LearningPlanController::class, 'get_learning_plan_list']);
+    Route::post('/get-emp-learning-plan-list', [LearningPlanController::class, 'get_emp_learning_plan_list']);
     Route::get('/delete-learning-plan/{id}', [LearningPlanController::class, 'delete_learning_plan']);
     Route::post('/get-learning-plan-list-dashboard', [LearningPlanController::class, 'get_learning_plan_list_dashboard']);
+    Route::get('/get-company-list-multiselect-update', [LearningPlanController::class, 'get_company_list_multiselect_update']);
 
 
     //learning plan files routes

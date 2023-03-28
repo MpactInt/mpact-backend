@@ -30,7 +30,7 @@ class ForgotPasswordEmail extends Mailable
     public function build()
     {
         return $this->markdown('emails.forgotPasswordEmail')
-            ->subject('Account Password Reset')
+            ->subject('Welcome to the Mpact International Cognitive Dynamism Platform')
             ->with('maildata', $this->maildata);
     }
 }
