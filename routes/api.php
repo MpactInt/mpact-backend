@@ -269,6 +269,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-survey-questions-dashboard', [PopupSurveyController::class, 'get_survey_questions_dashboard']);
     Route::post('/submit-popup-survey', [PopupSurveyController::class, 'submit_popup_survey']);
     Route::get('/get-chart-data', [PopupSurveyController::class, 'get_chart_data']);
+    Route::post('/export-popup-survey', [PopupSurveyController::class, 'export_popup_survey']);
 
 
     //CheckIn surveys routes
@@ -279,6 +280,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-check-in-survey/{id}', [CheckInSurveyController::class, 'get_check_in_survey_question']);
     Route::get('/get-check-in-survey-answer-list', [CheckInSurveyController::class, 'get_check_in_survey_answer_list']);
     Route::post('/get-check-in-survey-list', [CheckInSurveyController::class, 'get_check_in_survey_question_list']);
+    Route::post('/export-check-in-survey', [CheckInSurveyController::class, 'export_check_in_survey']);
 
     //Post Workshop surveys routes
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\PopupSurveyExport;
 use App\Http\Controllers\Controller;
 use App\Models\CompanyEmployee;
 use App\Models\PopupSurveyAnswer;
@@ -9,6 +10,7 @@ use App\Models\PopupSurveyQuestion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Question\Question;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PopupSurveyController extends Controller
 {
@@ -199,5 +201,16 @@ class PopupSurveyController extends Controller
             $per = ["per1" => $option_1_per, "per2" => $option_2_per, "per3" => $option_3_per, "per4" => $option_4_per];
         }
         return response(["status" => "success", "res" => $res, 'per' => $per], 200);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+
+    public function export_popup_survey(Request $request)
+    {
+        return Excel::download(new PopupSurveyExport(), 'PopupSurveyExport.xlsx');
     }
 }

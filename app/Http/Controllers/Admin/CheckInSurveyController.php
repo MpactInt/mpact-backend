@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\CheckinSurveyExport;
 use App\Http\Controllers\Controller;
 use App\Models\CompanyEmployee;
 use App\Models\CheckInSurveyAnswer;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Console\Question\Question;
 use App\Mail\CheckinSurveyEmail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CheckInSurveyController extends Controller
 {
@@ -163,5 +165,16 @@ class CheckInSurveyController extends Controller
             Mail::to($u->email)->send(new CheckinSurveyEmail($maildata));
         }
         return response(["status" => "success", "message" => "Email Sent Successfully"], 200);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+
+    public function export_check_in_survey(Request $request)
+    {
+        return Excel::download(new CheckInSurveyExport(), 'CheckInSurveyExport.xlsx');
     }
 }
