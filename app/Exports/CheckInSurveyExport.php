@@ -10,7 +10,7 @@ class CheckInSurveyExport implements FromCollection,WithHeadings
 {
     public function headings(): array
     {
-        return ["Company employee id", "Question", "Min Desc", "Max Desc", "Answer", "Day"];
+        return ["Company employee id", "User id", "Question", "Min Desc", "Max Desc", "Answer", "Day"];
     }
 
     /**
@@ -20,8 +20,9 @@ class CheckInSurveyExport implements FromCollection,WithHeadings
     {
         //return CheckInSurveyQuestion::all();
 
-        $res = CheckInSurveyQuestion::select('check_in_survey_answers.company_employee_id', 'check_in_survey_questions.question','check_in_survey_questions.min_desc','check_in_survey_questions.max_desc','check_in_survey_answers.answer','check_in_survey_questions.day')
+        $res = CheckInSurveyQuestion::select('company_employees.id', 'company_employees.user_id', 'check_in_survey_questions.question','check_in_survey_questions.min_desc','check_in_survey_questions.max_desc','check_in_survey_answers.answer','check_in_survey_questions.day')
             ->join('check_in_survey_answers', 'check_in_survey_answers.question_id', 'check_in_survey_questions.id')
+            ->join('company_employees', 'check_in_survey_answers.company_employee_id', 'company_employees.id')
             ->get();
         return collect($res);
     }

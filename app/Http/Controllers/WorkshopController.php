@@ -139,11 +139,16 @@ class WorkshopController extends Controller
             $workshops = Workshop::select('workshops.*')
                                 ->join('company_workshops','company_workshops.workshop_id','workshops.id')
                                 ->where('company_workshops.company_id',$company->company_id)
-                                ->where('workshops.created_at', '!=', null);
+                                ->where('workshops.date','>',time())
+                                ->where('workshops.created_at', '!=', null)
+                                ->orderby('workshops.date');
         } else {
             $workshops = Workshop::with(['company' => function ($q) {
                 $q->join('companies', 'companies.id', 'company_workshops.company_id')->pluck('companies.company_name');
-            }])->where('created_at', '!=', null);
+            }])
+            ->where('date','>',time())
+            ->where('created_at', '!=', null)
+            ->orderby('date');
         }
         if ($keyword) {
             $workshops = $workshops->where('title', 'like', "%$keyword%")

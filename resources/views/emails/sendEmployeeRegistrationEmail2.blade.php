@@ -10,7 +10,7 @@
             padding: 0;
             margin: 0;
             box-sizing: border-box;
-            font-family: 'Avenir', Helvetica, Arial, sans-serif;
+            font-family: 'Avenir', lato, Arial !important;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -37,6 +37,7 @@
         }
 
         .email-body {
+            font-family: 'Avenir', lato, Arial !important;
             background-color: #fff;
             min-height: 90vh;
             color: #090446;
@@ -191,7 +192,7 @@
                     
                     <div style="">
                         <div style="float:left;margin: 30px;"> 
-                            <a href=""><img style=" height: 90px; border-radius: 50%;" src="{{asset('public/learning-plan-files/1667376228_hash.png')}}" alt="Mpact"></a>
+                            <a href=""><img style=" height: 90px; border-radius: 50%;" src="{{asset('public/welcome-notes/building_psychological.jpg')}}" alt="Mpact"></a>
                         </div>
                         <h2>An Introduction</h2>
                         Mpact International is a personalized experience platform providing tools, tips, and every day nudges to help you be more of you – at work or at play. Your company has opted to join our platform and has invited you to register. 
@@ -205,7 +206,7 @@
                     <br />
                     <div style="">
                         <div style="float:left;margin: 30px;"> 
-                            <a href=""><img style=" height: 90px; border-radius: 50%;" src="{{asset('public/learning-plan-files/1667376228_hash.png')}}" alt="Mpact"></a>
+                            <a href=""><img style=" height: 90px; border-radius: 50%;" src="{{asset('public/welcome-notes/lights.jpg')}}" alt="Mpact"></a>
                         </div>
                         <h2>Tell Us About You</h2>
                         Be sure to complete your profile to tell us more about you. Take the assessment to learn more about hidden aspects of yourself that impact your interactions. Write our care team to let us know what you want to learn.
@@ -217,7 +218,7 @@
                     <br />
                     <div style="">
                         <div style="float:left;margin: 30px;"> 
-                            <a href=""><img style=" height: 90px; border-radius: 50%;" src="{{asset('public/learning-plan-files/1667376228_hash.png')}}" alt="Mpact"></a>
+                            <a href=""><img style=" height: 90px; border-radius: 50%;" src="{{asset('public/welcome-notes/purple_people.jpg')}}" alt="Mpact"></a>
                         </div>
                         <h2>Start Exploring</h2>
                         The platform is designed to engage at whatever level feels right for you – whether you choose to read, listen, or watch. We encourage you to attend an onboarding session to get acquainted with the platform. 

@@ -32,9 +32,7 @@ class AssementController extends Controller
         $u->assesment_id = $request->id;
         $u->save();
         return response(["status" => "success",'user'=>$u], 200);
-
     }
-
 
     public function mpact_update(Request $request){
         

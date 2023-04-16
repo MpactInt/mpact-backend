@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\Console\Question\Question;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 
 class PopupSurveyController extends Controller
 {
@@ -113,35 +114,42 @@ class PopupSurveyController extends Controller
     {
         $user = Auth::guard('api')->user();
         $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
-        $is_answered = "";
-        $question = PopupSurveyQuestion::orderby('id','desc')->first();
+        
+        $is_answered = PopupSurveyAnswer::where(['company_employee_id' => $companyEmp->id])->whereDate('created_at', Carbon::today())->first();
         $elements = [];
-        if($question){
-            $is_answered = PopupSurveyAnswer::where(['company_employee_id' => $companyEmp->id, 'question_id' => $question->id])->first();
+        if(!$is_answered){
+            
+            //$is_answered = PopupSurveyAnswer::where(['company_employee_id' => $companyEmp->id, 'question_id' => $question->id])->first();
 
-        if (!$is_answered) {
-            $q = $question->id ?? '';
-            $obj = [
-                "elements" => [
-                    [
-                        "type" => "radiogroup",
-                        "title" => $question->question ?? '',
-                        "name" => "question_" . $q,
-                        "isRequired" => true,
-                        "colCount" => 2,
-                        "choices" => [
-                            $question->option_1 ?? '',
-                            $question->option_2 ?? '',
-                            $question->option_3 ?? '',
-                            $question->option_4 ?? '',
+            $answered_questions = PopupSurveyAnswer::where(['company_employee_id' => $companyEmp->id])->pluck('question_id');
+
+            $question = PopupSurveyQuestion::whereNotIn('id', $answered_questions)
+                        ->inRandomOrder()
+                        ->first();
+            
+            if ($question) {
+                $q = $question->id ?? '';
+                $obj = [
+                    "elements" => [
+                        [
+                            "type" => "radiogroup",
+                            "title" => $question->question ?? '',
+                            "name" => "question_" . $q,
+                            "isRequired" => true,
+                            "colCount" => 2,
+                            "choices" => [
+                                $question->option_1 ?? '',
+                                $question->option_2 ?? '',
+                                $question->option_3 ?? '',
+                                $question->option_4 ?? '',
+                            ]
                         ]
                     ]
-                ]
-            ];
-            array_push($elements, $obj);
+                ];
+                array_push($elements, $obj);
+            }
         }
-        }
-        return response(["status" => "success", "res" => $elements], 200);
+        return response(["status" => "success", "res" => $elements, "answer" => $is_answered], 200);
     }
 
     /**

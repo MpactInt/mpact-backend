@@ -119,6 +119,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/active-inactive-company/{id}/{status}', [ProfileController::class, 'active_inactive_company']);
     Route::post('/upload-profile-image', [ProfileController::class, 'upload_profile_image']);
     Route::post('/change-password', [ProfileController::class, 'change_password']);
+    Route::get('/delete-company/{id}', [HomeController::class, 'delete_company']);
    
 
     ###################################################################

@@ -156,6 +156,19 @@ class HomeController extends Controller
         }
     }
 
+    public function delete_company($id)
+    {
+        $c = Company::find($id);
+        $u = User::find($c->user_id);
+        if ($c) {
+            $c->forceDelete();
+            $u->forceDelete();
+           //$u = User::find($c->user_id)->delete();
+           //$u = User::find($c->user_id)->delete();
+        }
+        return response(["status" => "success", 'res' => $c], 200);
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
