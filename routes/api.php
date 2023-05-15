@@ -17,6 +17,7 @@ use App\Http\Controllers\Common\HomeController;
 use App\Http\Controllers\Common\ProfileController;
 use App\Http\Controllers\Common\RequestWorkshopController;
 use App\Http\Controllers\Common\NotificationController;
+use App\Http\Controllers\Common\TipsController;
 use App\Http\Controllers\Employer\AnnouncementController;
 use App\Http\Controllers\Employer\EmployerController;
 use App\Http\Controllers\Common\MessageController;
@@ -363,6 +364,22 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
      Route::get('/get-recent-workshop-list/{id}', [DashboardController::class, 'get_recent_workshop_list']);
      Route::get('/get-recent-resource-list/{id}', [DashboardController::class, 'get_recent_resource_list']);
      Route::get('/get-recent-chat-list/{id}', [DashboardController::class, 'get_recent_chat_list']);
+
+     //settings routes
+
+     Route::post('/get-setting/{key}', [DashboardController::class, 'get_setting']);
+     Route::post('/get-settings-list', [DashboardController::class, 'get_settings_list']);
+     Route::post('/update-setting', [DashboardController::class, 'update_setting']);
+
+    //Tips routes
+
+    Route::post('/get-tip-by-id', [TipsController::class, 'get_tip_by_id']);
+    Route::post('/get-tips-by-profile-type', [TipsController::class, 'get_tips_by_profile_type']);
+    Route::post('/get-past-tips-by-profile-type', [TipsController::class, 'get_past_tips_by_profile_type']);
+    Route::post('/get-soundbites-by-profile-type', [TipsController::class, 'get_soundbites_by_profile_type']);
+    Route::post('/add-favourite-tip', [TipsController::class, 'add_favourite_tip']);
+    Route::post('/remove-favourite-tip', [TipsController::class, 'remove_favourite_tip']);
+    Route::post('/get-favourite-tips', [TipsController::class, 'get_favourite_tips']);
 
 });
 
