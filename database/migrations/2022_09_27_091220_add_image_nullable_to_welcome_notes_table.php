@@ -14,7 +14,7 @@ class AddImageNullableToWelcomeNotesTable extends Migration
     public function up()
     {
         Schema::table('welcome_notes', function (Blueprint $table) {
-            $table->string('image')->nullable()->change();
+            //$table->string('image')->nullable()->change();
         });
     }
 
