@@ -117,8 +117,8 @@ class LearningPlanFileController extends Controller
         if ($sort_by && $sort_order) {
             $file = $file->orderby($sort_by, $sort_order);
         }
-
-        $file = $file->get();
+        $file = $file->paginate(10);
+        //$file = $file->get();
 
         $files = $file;
 

@@ -9,6 +9,7 @@ use App\Models\RequestWorkshop;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
 use App\Models\Resource;
+use App\Models\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -93,5 +94,48 @@ class DashboardController extends Controller
             ->where('company_employees.id', '!=', $auth_id);
         $res = $res->orderby('id', 'desc')->limit(3)->get();
         return response(["status" => "success", "res" => $res], 200);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function get_setting($key)
+    {
+        $setting = Settings::select('id', 'key', 'value')->where('key', $key)->first();
+        return response(["status" => "success", "res" => $setting], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function get_settings_list(Request $request)
+    {
+        $sortBy = $request->sortBy;
+        $keyword = $request->keyword;
+        $sort_order = $request->sortOrder;
+        $user = Auth::guard('api')->user();
+        $settings = Settings::select('id', 'key', 'value');
+        
+        if ($sortBy && $sort_order) {
+            $settings = $settings->orderby($sortBy, $sort_order);
+        }
+        $settings = $settings->paginate(10);
+        return response(["status" => "success", "res" => $settings], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function update_setting(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+        $setting = Settings::find($request->id);
+        $setting->value = $request->value;
+        $setting->save();
+      
+        return response(["status" => "success", "res" => $setting], 200);
     }
 }
