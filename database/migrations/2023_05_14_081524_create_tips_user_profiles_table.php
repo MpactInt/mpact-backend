@@ -13,10 +13,10 @@ class CreateTipsUserProfilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tips_user_profile', function (Blueprint $table) {
+        Schema::create('tips_profile_type', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tip_id');
-            $table->unsignedBigInteger('profile_id');
+            $table->unsignedBigInteger('profile_type_id');
             $table->timestamps();
         });
     }

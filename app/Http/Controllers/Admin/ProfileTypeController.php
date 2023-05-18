@@ -79,8 +79,6 @@ class ProfileTypeController extends Controller
 
         $res = ProfileType::select('id', 'profile_type as name')->get();
         return response(["status" => "success", "res" => $res], 200);
-
-        return response(["status" => "success", "res" => $res], 200);
     }
 
     public function get_profile_type_list_multiselect_update()

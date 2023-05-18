@@ -16,9 +16,9 @@ class CreateTipsTable extends Migration
         Schema::create('tips', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('image');
-            $table->string('audio_file_url');
-            $table->text('desc');
+            $table->text('description')->nullable();
+            $table->string('audio_file')->nullable();
+            $table->string('tip_type');
             $table->timestamps();
         });
     }

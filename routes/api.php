@@ -381,6 +381,17 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/remove-favourite-tip', [TipsController::class, 'remove_favourite_tip']);
     Route::post('/get-favourite-tips', [TipsController::class, 'get_favourite_tips']);
 
+    Route::post('/get-categories-list', [TipsController::class, 'get_categories_list']);
+    Route::post('/add-category', [TipsController::class, 'add_category']);
+    Route::get('/delete-category/{id}', [TipsController::class, 'delete_category']);
+    Route::get('/get-category/{id}', [TipsController::class, 'get_category']);
+    Route::post('/update-category', [TipsController::class, 'update_category']);
+    Route::get('/get-categories-list-multiselect', [TipsController::class, 'get_categories_list_multiselect']);
+    Route::post('/add-tip', [TipsController::class, 'add_tip']);
+    Route::post('/update-tip', [TipsController::class, 'update_tip']);
+    Route::get('/get-tips-list', [TipsController::class, 'get_tips_list']);
+    Route::get('/delete-tip/{id}', [TipsController::class, 'delete_tip']);
+
 });
 
 
