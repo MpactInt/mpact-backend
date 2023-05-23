@@ -37,15 +37,29 @@ class TipsController extends Controller
         $past_days = 10;
         $past_days = now()->subDays($past_days);
 
-        $tips = Tips::select('tip_profile_types.*', 'tips.*')
-            ->join('tip_profile_types', 'tips.id', 'tip_profile_types.tip_id')
-            ->where("tips.tip_type", "tip")
-            ->where("tip_profile_types.profile_type_id", $profile_type_id)
-            ->whereDate('tips.created_at', '>=', $past_days)
-            //->get()
-            ;
-        $tips = $tips->paginate(10);
+        $tips = Tips::select('tips.*');
+        $tips->join('tip_profile_types', 'tips.id', 'tip_profile_types.tip_id')
+        ->where('tip_profile_types.profile_type_id', $profile_type_id)
+        ->where("tips.tip_type", "tip")
+        ->whereDate('tips.created_at', '>=', $past_days);
+        $tips->with(['categories' => function ($q) {
+            $q->join('categories', 'categories.id', 'tip_categories.category_id')->pluck('tip_categories.category_id');
+        }]);
+            
+        //$tips->join('tip_profile_types', 'tips.id', 'tip_profile_types.tip_id')
+        //->where('tip_profile_types.profile_type_id', $profile_type_id);
 
+        //$tips = Tips::select('tip_profile_types.*', 'tips.*')
+        //    ->join('tip_profile_types', 'tips.id', 'tip_profile_types.tip_id')
+        //    ->where("tips.tip_type", "tip")
+        //    ->where("tip_profile_types.profile_type_id", $profile_type_id)
+        //    ->whereDate('tips.created_at', '>=', $past_days)
+            //->get()
+        //   ;
+     
+
+        $tips = $tips->paginate(10);
+    
         return response(["status" => "success", "res" => $tips], 200);
     }
 
