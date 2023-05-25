@@ -130,9 +130,14 @@ class TipsController extends Controller
     {
         $user_id = $request->user_id;
 
-        $tips = Tips::select('tips.*', 'favourite_tips.*')
+        $tips = Tips::select('tips.*')
             ->join('favourite_tips', 'tips.id', 'favourite_tips.tip_id')
             ->where("favourite_tips.user_id", $user_id);
+
+        $tips->with(['categories' => function ($q) {
+            $q->join('categories', 'categories.id', 'tip_categories.category_id')->pluck('tip_categories.category_id');
+        }]);
+       //echo $tips->toSql();exit;
 
         $tips = $tips->paginate(10);
 
