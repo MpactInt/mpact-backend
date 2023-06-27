@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompanyEmployee;
 use App\Models\CompanyWorkshop;
+use App\Models\WorkshopProfileType;
 use App\Models\Workshop;
 use App\Models\Company;
 use App\Models\User;
@@ -63,6 +64,16 @@ class WorkshopController extends Controller
                 $cw->workshop_id = $workshop->id;
                 $cw->save();
             }
+
+            if ($request->profile_type) {
+                $profile_type = json_decode($request->profile_type);
+                foreach ($profile_type as $value) {
+                    $pw = new WorkshopProfileType();
+                    $pw->profile_type_id = $value->id;
+                    $pw->workshop_id = $workshop->id;
+                    $pw->save();
+                }
+            }
             return response(["status" => "success", 'res' => $workshop], 200);
         }
     }
@@ -82,7 +93,8 @@ class WorkshopController extends Controller
             'instructor' => 'required',
             'meeting_type' => 'required',
             'additional_info' => 'required',
-            'company' => 'required'
+            'company' => 'required',
+            'profile_type' => 'required'
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
@@ -118,6 +130,17 @@ class WorkshopController extends Controller
                     $cw->save();
                 }
             }
+
+            if ($request->profile_type) {
+                WorkshopProfileType::where('workshop_id', $request->id)->delete();
+                $profile_type = json_decode($request->profile_type);
+                foreach ($profile_type as $value) {
+                    $pw = new WorkshopProfileType();
+                    $pw->profile_type_id = $value->id;
+                    $pw->workshop_id = $workshop->id;
+                    $pw->save();
+                }
+            }
             return response(["status" => "success", 'res' => $workshop], 200);
         }
     }
@@ -138,7 +161,9 @@ class WorkshopController extends Controller
         if ($company) {
             $workshops = Workshop::select('workshops.*')
                                 ->join('company_workshops','company_workshops.workshop_id','workshops.id')
+                                ->join('workshop_profile_types','workshop_profile_types.workshop_id', 'workshops.id')
                                 ->where('company_workshops.company_id',$company->company_id)
+                                ->where('workshop_profile_types.profile_type_id',$company->profile_type_id)
                                 ->where('workshops.date','>',time())
                                 ->where('workshops.created_at', '!=', null)
                                 ->orderby('workshops.date');

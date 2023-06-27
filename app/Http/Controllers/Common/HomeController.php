@@ -312,6 +312,7 @@ class HomeController extends Controller
                             $c->profile_image =  url('/') . '/public/profile-images/' . $c->profile_image;
                         }
                     }
+                    $user->mobile_user = $request->mobile_user ? 1 : 0;
                     $user->last_login = DB::raw('CURRENT_TIMESTAMP');
                     $user->save();
 

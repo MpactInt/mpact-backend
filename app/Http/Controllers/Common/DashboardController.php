@@ -138,4 +138,35 @@ class DashboardController extends Controller
       
         return response(["status" => "success", "res" => $setting], 200);
     }
+
+    public function get_mobile_users_list(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+       
+        $page = $request->page;
+        $name = $request->name;
+        $email = $request->email;
+        $sort_by = $request->sortBy;
+        $sort_order = $request->sortOrder;
+       
+        $res = CompanyEmployee::select('users.last_login', 'users.email', 'company_employees.*','profile_types.profile_type')
+            ->join('users', 'company_employees.user_id', 'users.id')
+            ->join('profile_types','profile_types.id','company_employees.profile_type_id')
+            ->where('users.mobile_user', 1)
+            //->where('company_employees.role', '!=', 'COMPANY_ADMIN');
+            //->where('company_employees.id', '!=', $auth_id)
+            ;
+        if ($name) {
+            $res = $res->where('company_employees.first_name', 'like', "%$name%");
+        }
+        if ($email) {
+            $res = $res->where('email', 'like', "%$email%");
+        }
+        if ($sort_by && $sort_order) {
+            $res = $res->orderby($sort_by, $sort_order);
+        }
+        $res = $res->paginate(10);
+
+        return response(["status" => "success", "res" => $res], 200);
+    }
 }

@@ -371,7 +371,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
      Route::post('/get-settings-list', [DashboardController::class, 'get_settings_list']);
      Route::post('/update-setting', [DashboardController::class, 'update_setting']);
 
-    //Tips routes
+    //Mobiles and tips routes
 
     Route::post('/get-tip-by-id', [TipsController::class, 'get_tip_by_id']);
     Route::post('/get-tips-by-profile-type', [TipsController::class, 'get_tips_by_profile_type']);
@@ -390,7 +390,11 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::post('/add-tip', [TipsController::class, 'add_tip']);
     Route::post('/update-tip', [TipsController::class, 'update_tip']);
     Route::get('/get-tips-list', [TipsController::class, 'get_tips_list']);
+    Route::get('/get-past-tips-list', [TipsController::class, 'get_past_tips_list']);
+    Route::get('/get-old-tips-list', [TipsController::class, 'get_old_tips_list']);
     Route::get('/delete-tip/{id}', [TipsController::class, 'delete_tip']);
+
+    Route::post('/get-mobile-users-list', [dashboardcontroller::class, 'get_mobile_users_list']);
 
 });
 

@@ -8,6 +8,7 @@ use App\Models\FavouriteTip;
 use App\Models\Categories;
 use App\Models\TipCategories;
 use App\Models\TipProfileType;
+use App\Models\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +35,7 @@ class TipsController extends Controller
     {
         $profile_type_id = $request->profile_type_id;
 
-        $past_days = 10;
+        $past_days = Settings::select('id', 'key', 'value')->where('key', 'past_tip_days')->first()->value;
         $past_days = now()->subDays($past_days);
 
         $tips = Tips::select('tips.*');
@@ -68,7 +69,7 @@ class TipsController extends Controller
     {
         $profile_type_id = $request->profile_type_id;
 
-        $past_days = 10;
+        $past_days = Settings::select('id', 'key', 'value')->where('key', 'past_tip_days')->first()->value;
         $past_days = now()->subDays($past_days);
 
         $tips = Tips::select('tip_profile_types.*', 'tips.*')
@@ -90,7 +91,7 @@ class TipsController extends Controller
     {
         $profile_type_id = $request->profile_type_id;
 
-        $past_days = 10;
+        $past_days = Settings::select('id', 'key', 'value')->where('key', 'past_tip_days')->first()->value;
         $past_days = now()->subDays($past_days);
 
         $tips = Tips::select('tip_profile_types.*', 'tips.*')
@@ -248,16 +249,39 @@ class TipsController extends Controller
 
     public function get_tips_list(Request $request)
     {
-        //$past_days = 10;
-        //$past_days = now()->subDays($past_days);
+        $tips = Tips::select('tips.*');
+
+        $tips = $tips->paginate(10);
+
+        return response(["status" => "success", "res" => $tips], 200);
+    }
+
+    public function get_past_tips_list(Request $request)
+    {
+        $past_days = Settings::select('id', 'key', 'value')->where('key', 'past_tip_days')->first()->value;
+        $past_days = now()->subDays($past_days);
+
+        $old_days = Settings::select('id', 'key', 'value')->where('key', 'old_tip_days')->first()->value;
+        $old_days = now()->subDays($old_days);
 
         $tips = Tips::select('tips.*')
-            //->join('tip_profile_types', 'tips.id', 'tip_profile_types.tip_id')
-            //->where("tips.audio_file", "")
-            //->where("tip_profile_types.profile_type_id", $profile_type_id)
-            //->whereDate('tips.created_at', '>=', $past_days);
-            //->get();
-            ;
+                ->whereDate('tips.created_at', '<=', $past_days)
+                ->whereDate('tips.created_at', '>=', $old_days);
+                //->get();    
+
+        $tips = $tips->paginate(10);
+
+        return response(["status" => "success", "res" => $tips], 200);
+    }
+
+    public function get_old_tips_list(Request $request)
+    {
+        $old_days = Settings::select('id', 'key', 'value')->where('key', 'old_tip_days')->first()->value;
+        $old_days = now()->subDays($old_days);
+
+        $tips = Tips::select('tips.*')
+                ->whereDate('tips.created_at', '<=', $old_days);
+                //->get();
 
         $tips = $tips->paginate(10);
 
@@ -281,6 +305,7 @@ class TipsController extends Controller
             if ($request->hasFile('audio_file')) {
                 $uploadedFile = $request->file('audio_file');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $filename = str_replace(" ", "_", $filename);
                 $destinationPath = public_path() . '/tips';
                 $uploadedFile->move($destinationPath, $filename);
             }
@@ -333,6 +358,7 @@ class TipsController extends Controller
             if ($request->hasFile('audio_file')) {
                 $uploadedFile = $request->file('audio_file');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $filename = str_replace(" ", "_", $filename);
                 $destinationPath = public_path() . '/tips';
                 $uploadedFile->move($destinationPath, $filename);
             }
