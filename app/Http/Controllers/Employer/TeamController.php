@@ -37,7 +37,7 @@ class TeamController extends Controller
     public function send_link_to_email(Request $request)
     {
         $data = $request->all();
-       $validator = Validator::make($data, [
+        $validator = Validator::make($data, [
                 'email' => ['required', 'email', 'string'],
             ]);
             if ($validator->fails()) {

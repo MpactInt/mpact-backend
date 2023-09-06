@@ -194,7 +194,11 @@ class WelcomeNoteController extends Controller
     {
         $note = WelcomeNote::where('id', $id)->first();
         $destinationPath = public_path() . '/welcome-notes';
-        unlink($destinationPath.'/'.$note->image);
+        if($note->image)
+        {
+            unlink($destinationPath.'/'.$note->image);   
+        }
+        
         $note->delete();
         CompanyWelcomeNote::where('welcome_note_id',$id)->delete();
         return response(["status" => "success", 'res' => $note], 200);
