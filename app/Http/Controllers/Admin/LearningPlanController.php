@@ -169,7 +169,7 @@ class LearningPlanController extends Controller
             ->get();
 
         $ca->files = LearningPlanResource::join('my_learning_plan_files', 'my_learning_plan_files.id', 'learning_plan_resources.resource_id')
-            ->select('my_learning_plan_files.*')
+            ->select('my_learning_plan_files.*', 'my_learning_plan_files.title as name')
             ->where('learning_plan_id', $id)
             ->get();
 
@@ -292,11 +292,13 @@ class LearningPlanController extends Controller
             unlink($destinationPath . '/' . $ca->image);
         }
         $ca->delete();
-        $files = MyLearningPlanFile::where('my_learning_plan_id', $id);
-        foreach ($files as $f) {
-            unlink($destinationPath . '/' . $f->file);
-        }
-        $files->delete();
+        
+        LearningPlanResource::where('learning_plan_id', $id)->delete();
+        //$files = MyLearningPlanFile::where('my_learning_plan_id', $id);
+        //foreach ($files as $f) {
+            //unlink($destinationPath . '/' . $f->file);
+        //}
+        //$files->delete();
         return response(["status" => "success", "res" => $ca], 200);
     }
 }
