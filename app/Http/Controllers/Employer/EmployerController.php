@@ -88,14 +88,15 @@ class EmployerController extends Controller
             "status" => 2
         ));
         if ($request->role == "COMPANY_ADMIN") {
-            $info = $this->create_question_in_freshdesk($ticket_data);
+            $info = 1;
+            //$info = $this->create_question_in_freshdesk($ticket_data);
             if ($info) {
-                $response = json_decode($info);
+                //$response = json_decode($info);
                 $aq = new CompanyQuestion();
                 $aq->company_id = $company_id;
                 $aq->description = $request->description;
                 $aq->forward_to_admin = 1;
-                $aq->freshdesk_ticket_id = $response->id;
+                //$aq->freshdesk_ticket_id = $response->id;
                 $aq->save();
                 return response(["status" => "success", 'res' => $aq, 'info' => $info], 200);
             } else {

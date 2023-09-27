@@ -302,6 +302,8 @@ class HomeController extends Controller
                     $user = User::where('email', $request->email)->first();
                     $c = null;
 
+                    $welcome_note = $user->last_login ? 0 : 1;
+
                     if ($user->role == "COMPANY") {
                         $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role', 'company_employees.profile_type_id', 'company_employees.profile_image')
                             ->join('company_employees', 'companies.id', 'company_employees.company_id')
@@ -318,7 +320,7 @@ class HomeController extends Controller
 
                     $user->profile_image = url('public/profile-images/' . $user->profile_image);
 
-                    return response(['user' => $user, 'company' => $c, 'access_token' => $accessToken]);
+                    return response(['user' => $user, 'company' => $c, 'welcome_note' => $welcome_note, 'access_token' => $accessToken]);
                 }
             }
         }

@@ -42,6 +42,7 @@ class LearningPlanController extends Controller
             $t = new MyLearningPlan();
             $t->title = $request->title;
             $t->description = $request->description;
+            $t->part = $request->part;
             $t->image = $filename;
             $t->save();
 
@@ -107,6 +108,7 @@ class LearningPlanController extends Controller
         }
         $t->title = $request->title;
         $t->description = $request->description;
+        $t->part = $request->part;
         $t->save();
 
         if ($request->company) {
