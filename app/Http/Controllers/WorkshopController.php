@@ -215,6 +215,10 @@ class WorkshopController extends Controller
                 ->select('companies.id', 'companies.company_name as name')
                 ->where('workshop_id', $id)
                 ->get();
+            $workshops->profile_type = WorkshopProfileType::join('profile_types', 'profile_types.id', 'workshop_profile_types.profile_type_id')
+                ->select('profile_types.id', 'profile_types.profile_type as name')
+                ->where('workshop_id', $id)
+                ->get();
         } else {
             $companyEmp = CompanyEmployee::where('user_id', $user->id)->first();
             $workshops = Workshop::with('meetings')->where("id",$id)->first();

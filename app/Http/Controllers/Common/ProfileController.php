@@ -70,6 +70,33 @@ class ProfileController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
+
+    public function update_admin_profile(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+        //return response()->json(["status" => "error", "message" => $user], 400);
+        
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:255',
+        ]);
+        if ($validator->fails()) {
+            $error = $validator->getMessageBag()->first();
+            return response()->json(["status" => "error", "message" => $error], 400);
+        } else {
+            $user->email = $request->email;
+            if ($request->password) {
+                //$user->password = $request->email;
+            }
+            $user->save();
+            return response(["status" => "success", "res" => $user], 200);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
     public function upload_profile_image(Request $request)
     {
         $validator = Validator::make($request->all(), [

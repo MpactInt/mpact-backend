@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\CompanyEmployee;
 use App\Models\CompanyTodo;
+use App\Models\TodoProfileType;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +21,23 @@ class TodoController extends Controller
         $t = new Todo();
         $t->title = $request->title;
         $t->description = $request->description;
+        $t->role = $request->role;
+        $t->part = $request->part;
         $t->save();
         foreach ($request->company as $c){
             $ct = new CompanyTodo();
             $ct->company_id = $c['id'];
             $ct->todo_id = $t->id;
             $ct->save();
+        }
+
+        if ($request->profile_type) {
+            foreach ($request->profile_type as $p){
+                $pt = new TodoProfileType();
+                $pt->profile_type_id = $p['id'];
+                $pt->todo_id = $t->id;
+                $pt->save();
+            }
         }
 
         return response(["status" => "success", "res" => $t], 200);
@@ -40,6 +52,8 @@ class TodoController extends Controller
         $t = Todo::find($request->id);
         $t->title = $request->title;
         $t->description = $request->description;
+        $t->role = $request->role;
+        $t->part = $request->part;
         $t->save();
         if($request->company){
             CompanyTodo::where("todo_id",$request->id)->delete();
@@ -50,6 +64,17 @@ class TodoController extends Controller
                 $ct->save();
             }
         }
+
+        if ($request->profile_type) {
+            TodoProfileType::where('todo_id', $request->id)->delete();
+            foreach ($request->profile_type as $p){
+                $pt = new TodoProfileType();
+                $pt->profile_type_id = $p['id'];
+                $pt->todo_id = $t->id;
+                $pt->save();
+            }
+        }
+
         return response(["status" => "success", "res" => $t], 200);
     }
 
@@ -59,9 +84,13 @@ class TodoController extends Controller
      */
     public function get_todo($id)
     {
-        $ca = Todo::select('id', 'title', 'description')->where('id', $id)->first();
+        $ca = Todo::select('id', 'title', 'description', 'role', 'part')->where('id', $id)->first();
         $ca->company = CompanyTodo::join('companies','companies.id','company_todos.company_id')
             ->select('companies.id','companies.company_name as name')
+            ->where('todo_id',$id)
+            ->get();
+        $ca->profile_type = TodoProfileType::join('profile_types','profile_types.id','todo_profile_types.profile_type_id')
+            ->select('profile_types.id','profile_types.profile_type as name')
             ->where('todo_id',$id)
             ->get();
         return response(["status" => "success", "res" => $ca], 200);
