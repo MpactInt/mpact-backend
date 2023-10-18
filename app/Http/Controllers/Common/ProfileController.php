@@ -79,15 +79,15 @@ class ProfileController extends Controller
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
+            'password' => 'required|max:255|min:8',
         ]);
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
         } else {
             $user->email = $request->email;
-            if ($request->password) {
-                //$user->password = $request->email;
-            }
+            $user->password = Hash::make($request->password);
+            
             $user->save();
             return response(["status" => "success", "res" => $user], 200);
         }
