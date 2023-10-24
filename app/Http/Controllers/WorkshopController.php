@@ -198,6 +198,45 @@ class WorkshopController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function get_upcoming_workshop(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+        $company = CompanyEmployee::where('user_id', $user->id)->first();
+        if ($company) { 
+            $workshop = Workshop::select('workshops.*')
+                                ->join('company_workshops','company_workshops.workshop_id','workshops.id')
+                                ->join('workshop_profile_types','workshop_profile_types.workshop_id', 'workshops.id')
+                                ->where('company_workshops.company_id',$company->company_id)
+                                ->where('workshop_profile_types.profile_type_id',$company->profile_type_id)
+                                ->where('workshops.date','>',time())
+                                ->where('workshops.created_at', '!=', null)
+                                ->orderby('workshops.date')
+                                ->first();
+        } else { 
+            $workshop = Workshop::with(['company' => function ($q) {
+                $q->join('companies', 'companies.id', 'company_workshops.company_id')->pluck('companies.company_name');
+            }])
+            ->where('date','>',time())
+            ->where('created_at', '!=', null)
+            ->orderby('date')
+            ->first();
+        }
+        
+        if($workshop){
+            if($company){
+                    $workshop->registered = WorkshopRegistration::where(['workshop_id' => $workshop->id, 'company_employee_id' => $company->id])->first();
+            }
+            $workshop->date = date("Y-m-d H:i:s", $workshop->date);//$c->date;
+        }
+        
+        $path = url('/public/workshops/');
+        return response(["status" => "success", 'res' => ['data'=>[$workshop]], 'path' => $path], 200);
+    }
+
+    /**
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */

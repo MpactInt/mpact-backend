@@ -313,6 +313,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
 
     Route::post('/add-workshop', [WorkshopController::class, 'add_workshop']);
     Route::post('/get-workshops-list', [WorkshopController::class, 'get_workshops_list']);
+    Route::get('/get-upcoming-workshop', [WorkshopController::class, 'get_upcoming_workshop']);
     Route::get('/get-workshops-list-for-select', [WorkshopController::class, 'get_workshops_list_for_select']);
     Route::get('/get-workshop/{id}', [WorkshopController::class, 'get_workshop']);
     Route::post('/update-workshop', [WorkshopController::class, 'update_workshop']);
@@ -394,6 +395,7 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/get-past-tips-list', [TipsController::class, 'get_past_tips_list']);
     Route::get('/get-old-tips-list', [TipsController::class, 'get_old_tips_list']);
     Route::get('/delete-tip/{id}', [TipsController::class, 'delete_tip']);
+    Route::get('/get-personalized-tips', [TipsController::class, 'get_personalized_tips']);
 
     Route::post('/get-mobile-users-list', [dashboardcontroller::class, 'get_mobile_users_list']);
 

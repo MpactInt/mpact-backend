@@ -415,4 +415,24 @@ class TipsController extends Controller
         return response(["status" => "success", 'res' => $tip], 200);
     }
 
+    public function get_personalized_tips()
+    {
+        $user = Auth::guard('api')->user();
+
+        //$tips = Tips::select('tip_profile_types.*', 'tips.*')
+           // ->join('tip_profile_types', 'tips.id', 'tip_profile_types.tip_id')
+            //->where("tips.tip_type", "audio")
+            //->where("tip_profile_types.profile_type_id", $profile_type_id)
+            //->whereDate('tips.created_at', '>=', $past_days);
+
+        $tips = Tips::select('tips.*')
+            ->join('tip_profile_types', 'tips.id', 'tip_profile_types.tip_id')
+            ->join('company_employees', 'tip_profile_types.profile_type_id', 'company_employees.profile_type_id')
+            ->where("tips.tip_type", "tip")
+            ->where("company_employees.user_id", $user['id'])
+            ->get();
+
+        return response(["status" => "success", 'user' => $user['id'], 'res' => $tips], 200);
+    }
+
 }
