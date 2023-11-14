@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CompanyEmployee;
 use App\Models\CompanyTodo;
 use App\Models\TodoProfileType;
+use App\Models\TodoUserStatus;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,20 +25,40 @@ class TodoController extends Controller
         $t->role = $request->role;
         $t->part = $request->part;
         $t->save();
+
+        $company_array = array();
         foreach ($request->company as $c){
             $ct = new CompanyTodo();
             $ct->company_id = $c['id'];
             $ct->todo_id = $t->id;
             $ct->save();
+
+            $company_array[] = $c['id'];
         }
 
+        $profile_array = array();
         if ($request->profile_type) {
             foreach ($request->profile_type as $p){
                 $pt = new TodoProfileType();
                 $pt->profile_type_id = $p['id'];
                 $pt->todo_id = $t->id;
                 $pt->save();
+
+                $profile_array[] = $p['id'];
             }
+        }
+
+        $user = CompanyEmployee::select('user_id')
+                ->whereIn('company_id', $company_array)
+                ->whereIn('profile_type_id', $profile_array)
+                ->where('role', $request->role)
+                ->get();
+
+        foreach ($user as $u){
+            $tus = new TodoUserStatus();
+            $tus->user_id = $u['user_id'];
+            $tus->todo_id = $t->id;
+            $tus->save();
         }
 
         return response(["status" => "success", "res" => $t], 200);
@@ -55,6 +76,8 @@ class TodoController extends Controller
         $t->role = $request->role;
         $t->part = $request->part;
         $t->save();
+
+        $company_array = array();
         if($request->company){
             CompanyTodo::where("todo_id",$request->id)->delete();
             foreach ($request->company as $c){
@@ -62,9 +85,12 @@ class TodoController extends Controller
                 $ct->company_id = $c['id'];
                 $ct->todo_id = $t->id;
                 $ct->save();
+
+                $company_array[] = $c['id'];
             }
         }
 
+        $profile_array = array();
         if ($request->profile_type) {
             TodoProfileType::where('todo_id', $request->id)->delete();
             foreach ($request->profile_type as $p){
@@ -72,7 +98,24 @@ class TodoController extends Controller
                 $pt->profile_type_id = $p['id'];
                 $pt->todo_id = $t->id;
                 $pt->save();
+
+                $profile_array[] = $p['id'];
             }
+        }
+
+        TodoUserStatus::where('todo_id', $t->id)->delete();
+
+        $user = CompanyEmployee::select('user_id')
+                ->whereIn('company_id', $company_array)
+                ->whereIn('profile_type_id', $profile_array)
+                ->where('role', $request->role)
+                ->get();
+
+        foreach ($user as $u){
+            $tus = new TodoUserStatus();
+            $tus->user_id = $u['user_id'];
+            $tus->todo_id = $t->id;
+            $tus->save();
         }
 
         return response(["status" => "success", "res" => $t], 200);
@@ -84,6 +127,13 @@ class TodoController extends Controller
      */
     public function get_todo($id)
     {
+        $user = Auth::guard('api')->user();
+
+        TodoUserStatus::where('todo_id', $id)
+            ->where('user_id', $user->id)
+            ->update(['status' => 'Reviewed']);
+               
+
         $ca = Todo::select('id', 'title', 'description', 'role', 'part')->where('id', $id)->first();
         $ca->company = CompanyTodo::join('companies','companies.id','company_todos.company_id')
             ->select('companies.id','companies.company_name as name')
@@ -108,9 +158,16 @@ class TodoController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
-            $ca = Todo::select('todos.*')
-                ->join('company_todos','company_todos.todo_id','todos.id')
-                ->where("company_id", $company->company_id);
+            $ca = Todo::select('todos.*', 'todo_user_statuses.status')
+                //->join('company_todos','company_todos.todo_id','todos.id')
+                //->join('todo_profile_types','todo_profile_types.todo_id','todos.id')
+                ->join('todo_user_statuses','todo_user_statuses.todo_id','todos.id')
+                //->where("company_todos.company_id", $company->company_id)
+                //->where("todo_profile_types.profile_type_id", $company->profile_type_id)
+                //->where("todos.role", $company->role)
+                ->where("todo_user_statuses.user_id", $user->id);
+
+                //return response(["status" => "success", "res" => $ca->toSql()], 400);
         } else {
             $ca = Todo::with(['company' => function ($q) {
                 $q->join('companies', 'companies.id', 'company_todos.company_id')->pluck('companies.company_name');
@@ -158,9 +215,11 @@ class TodoController extends Controller
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
-            $ca = Todo::select('todos.*')
-                        ->join('company_todos','company_todos.todo_id','todos.id')
-                        ->where("company_id", $company->company_id)
+            $ca = Todo::select('todos.*', 'todo_user_statuses.status')
+                        //->join('company_todos','company_todos.todo_id','todos.id')
+                        ->join('todo_user_statuses','todo_user_statuses.todo_id','todos.id')
+                        ->where("todo_user_statuses.user_id", $user->id)
+                        //->where("company_id", $company->company_id)
                         ->orderBy('id', 'desc')
                         ->get();
         }
