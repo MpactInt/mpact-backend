@@ -46,9 +46,8 @@ class LearningPlanFileController extends Controller
             {
                 $video = $request->file('video_path');
                 $videofilename = time() . '_' . $video->getClientOriginalName();
-                // $request->video_path->move(public_path('videos'), $videofilename); 
-                $videofilename_space = str_replace(' ', '', $videofilename);
-                $request->video_path->move(public_path('videos'), $videofilename_space);       
+                $videofilename = str_replace(' ', '_', $videofilename);
+                $request->video_path->move(public_path('videos'), $videofilename);       
             }
             $t = new MyLearningPlanFile();
             // $t->my_learning_plan_id = $request->my_learning_plan_id;
@@ -56,7 +55,7 @@ class LearningPlanFileController extends Controller
             $t->description = $request->description;
             $t->image = $filename;
             $t->link = $request->link;
-            $t->video_path = 'videos/'.$videofilename_space;
+            $t->video_path = 'videos/'.$videofilename;
             $t->save();
 
             return response(["status" => "success", "res" => $t], 200);
