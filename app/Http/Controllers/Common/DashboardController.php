@@ -3,13 +3,22 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
-use App\Models\Workshop;
-use App\Models\CompanyAnnouncement;
-use App\Models\RequestWorkshop;
+use App\Models\ActivityLog;
 use App\Models\Company;
+use App\Models\CompanyAnnouncement;
 use App\Models\CompanyEmployee;
+use App\Models\LearningPlanLog;
+use App\Models\LearningPlanResource;
+use App\Models\MyLearningPlan;
+use App\Models\MyLearningPlanFile;
+use App\Models\RequestWorkshop;
 use App\Models\Resource;
 use App\Models\Settings;
+use App\Models\Workshop;
+use App\Models\User;
+use Carbon\Carbon;
+use DB;
+use Carbon\CarbonInterval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -169,4 +178,318 @@ class DashboardController extends Controller
 
         return response(["status" => "success", "res" => $res], 200);
     }
+
+    //   public function daily_visit(Request $request)
+    // {
+    //     $user = Auth::guard('api')->user();
+       
+      
+       
+    //      $daily_visit =  getActivity("login", $user->id);
+
+    //     return response(["status" => "success", "res" => $res], 200);
+    // }
+
+     public function getDailyVisitData(Request $request)
+    {
+        $dailyVisits = ActivityLog::selectRaw('created_at, COUNT(*) as visit_count')
+            ->groupBy('created_at')
+            ->orderBy('created_at')
+            ->get();
+
+        $dailyVisitorsUser = ActivityLog::whereMonth('login_time', now()->month)->whereDay('login_time', now()->day)->count();
+
+        $weeklyData = [];
+        $daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        // Initialize an array with zero counts for each day of the week
+        foreach ($daysOfWeek as $day) 
+        {
+            $weeklyData[$day] = 0;
+        }
+
+        // Populate the visit count for each day of the week
+        foreach ($dailyVisits as $visit) 
+        {
+            $dayOfWeek = \Carbon\Carbon::parse($visit->activity_date)->format('D');
+            $weeklyData[$dayOfWeek] = $visit->visit_count;
+        }
+
+        $formattedData = [
+            'categories' => array_values($daysOfWeek),
+            'data' => array_values($weeklyData),
+            'daily_visitors_user' => $dailyVisitorsUser
+        ];
+
+        return response()->json($formattedData);
+    }
+
+   // public function getTotalVisitingHours(Request $request)
+   //  {
+   //      $activityLogs = ActivityLog::whereNotNull('login_time')->whereNotNull('logout_time')->get();
+
+   //      $totalVisitingHours = $activityLogs->sum(function ($log) {
+   //          $loginTime = \Carbon\Carbon::parse($log->login_time);
+   //          $logoutTime = \Carbon\Carbon::parse($log->logout_time);
+   //          return $logoutTime->diffInSeconds($loginTime);
+   //      });
+
+   //      // Format the total visiting hours
+   //      $formattedHours = CarbonInterval::seconds($totalVisitingHours)->cascade()->forHumans();
+
+   //      return response()->json([
+   //          'total_visiting_hours' => $formattedHours,
+   //      ]);
+   //  }
+
+
+    // public function getTotalVisitingHours(Request $request)
+    // {
+    //     $timePeriod = $request->input('time_period', 'monthly');
+
+    //     $activityLogsQuery = ActivityLog::whereNotNull('login_time')->whereNotNull('logout_time');
+
+    //     if ($timePeriod === 'monthly') {
+    //         $activityLogsQuery->whereMonth('login_time', Carbon::now()->month);
+    //     } elseif ($timePeriod === 'yearly') {
+    //         $activityLogsQuery->whereYear('login_time', Carbon::now()->year);
+    //     }
+        
+    //     $activityLogs = $activityLogsQuery->get();
+
+    //     $totalVisitingSeconds = $activityLogs->sum(function ($log) {
+    //         $loginTime = Carbon::parse($log->login_time);
+    //         $logoutTime = Carbon::parse($log->logout_time);
+    //         return $logoutTime->diffInSeconds($loginTime);
+    //     });
+
+    //     // Use CarbonInterval directly without additional imports
+    //     $formattedHours = CarbonInterval::seconds($totalVisitingSeconds)->cascade()->forHumans();
+
+    //     return response()->json([
+    //         'total_visiting_hours' => $formattedHours,
+    //     ]);
+    // }
+
+     public function getTotalVisitingHours(Request $request)
+    {
+        // return $request->all();
+        $timePeriod = $request->input('time_period', 'monthly');
+        $allmonth = ['Jan','Feb','Mar','Apr','May','Jun','July','Aug','Sep','Oct','Nov','Dec'];
+       
+
+        $activityLogsQuery = ActivityLog::whereNotNull('login_time')->whereNotNull('logout_time');
+
+        if ($timePeriod === 'yearly') 
+        {
+            $activityLogsQuery->whereYear('login_time', Carbon::now()->year);
+        }
+        elseif (in_array($timePeriod,$allmonth)) 
+        {
+            $activityLogsQuery->where(DB::raw('MONTH(login_time)'), '=', array_search($timePeriod,$allmonth) + 1);
+          
+        } 
+        
+        $activityLogs = $activityLogsQuery->get();
+
+        $totalVisitingSeconds = $activityLogs->sum(function ($log) 
+        {
+            $loginTime = Carbon::parse($log->login_time);
+            $logoutTime = Carbon::parse($log->logout_time);
+            return $logoutTime->diffInSeconds($loginTime);
+        });
+
+        // Calculate total visiting hours
+        $totalVisitingHours = CarbonInterval::seconds($totalVisitingSeconds)->cascade()->hours()->forHumans();
+
+        // Calculate total visiting hours for the previous week
+        $previousWeekStart = Carbon::now()->subWeek()->startOfWeek();
+        $previousWeekEnd = Carbon::now()->subWeek()->endOfWeek();
+
+        $previousWeekLogs = ActivityLog::where('login_time', '>=', $previousWeekStart)
+            ->where('logout_time', '<=', $previousWeekEnd)
+            ->get();
+
+        $previousWeekVisitingSeconds = $previousWeekLogs->sum(function ($log) 
+        {
+            $loginTime = Carbon::parse($log->login_time);
+            $logoutTime = Carbon::parse($log->logout_time);
+            return $logoutTime->diffInSeconds($loginTime);
+        });
+
+        // Calculate total visiting hours for the previous week
+        $previousWeekVisitingHours = CarbonInterval::seconds($previousWeekVisitingSeconds)->cascade()->forHumans();
+
+        // Calculate the increase percentage compared to the previous week
+        $increasePercentage = 0; // Default value if previous week's hours are zero
+        if ($previousWeekVisitingSeconds > 0) 
+        {
+            $increasePercentage = (($totalVisitingSeconds - $previousWeekVisitingSeconds) / $previousWeekVisitingSeconds) * 100;
+        }
+
+        return response()->json([
+            'total_visiting_hours' => $totalVisitingHours,
+            'previous_week_visiting_hours' => $previousWeekVisitingHours,
+            'increase_percentage' => $increasePercentage,
+        ]);
+    }
+    
+    public function getPartPercentage(Request $request)
+    {
+            $user = Auth::guard('api')->user();
+            $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+
+            $total_learning_plan_id = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+                ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+                ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+                ->where('learning_plan_companies.company_id', $user_detail->company_id)
+                ->where('my_learning_plans.part', $request->part)
+                ->select('my_learning_plans.*')
+                ->pluck('my_learning_plans.id');
+
+            $resource_id = LearningPlanResource::whereIn('learning_plan_id', $total_learning_plan_id)->pluck('resource_id')->toArray();
+            $total_plan_file = MyLearningPlanFile::whereIn('id', $resource_id)->count();
+
+            $total_learning_view_count = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
+                ->where('company_id', $user_detail->company_id)
+                ->where('profile_id', $user_detail->id)
+                ->where('part', $request->part)
+                ->count();
+
+            $viewPercentage = 0; // Default value
+
+            if ($total_plan_file > 0) {
+                $viewPercentage = ($total_learning_view_count / $total_plan_file) * 100;
+            }
+
+
+           // Calculate total percent
+            $totalPercent = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
+                ->where('company_id', $user_detail->company_id)
+                ->where('part', $request->part)
+                ->count(); // Assuming 'completed' signifies completion
+            
+            $totalUsers = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
+                ->where('company_id', $user_detail->company_id)
+                ->where('part', $request->part)
+                ->distinct()->count('profile_id');
+
+                if ($totalPercent) {
+                    // code...
+                  $totalPercent = ($totalPercent / $totalUsers) * 100;
+                }else{
+                  $totalPercent = 0;
+
+                }
+
+            // Calculate average percent
+            if ($totalPercent) {
+               $averagePercent = $totalPercent / $totalUsers;
+            }else{
+               $averagePercent = 0;
+            }
+
+
+            // Calculate personal percent for user 4
+            $personalPercent = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
+                ->where('company_id', $user_detail->company_id)
+                ->where('profile_id', $user_detail->id)
+                ->where('part', $request->part)
+                ->count(); 
+                // Change 'user_id' and 'completed' to match your columns
+           if ($personalPercent) {
+            $personalPercent = ($personalPercent / $totalUsers) * 100;
+           }else{
+            $personalPercent = 0;
+           }
+               if ($personalPercent) {
+                    // Calculate overall percent for user 4
+                    $overallPercentUser = ($personalPercent * 100) / $averagePercent;
+               }else{
+                $overallPercentUser=0;
+               }
+
+
+            return response()->json([
+                'part_percentage' => $viewPercentage,
+                'overallPercentUser' => $overallPercentUser,
+            ]);
+        }
+
+        public function getAdminPartPercentage($id)
+        {
+            $user = Auth::guard('api')->user();
+            $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+             // Calculate total percent
+             $totalPercent = LearningPlanLog::where('part', $id)
+             ->count(); // Assuming 'completed' signifies completion
+         
+            $totalUsers = LearningPlanLog::where('part', $id)
+                ->distinct()->count('profile_id');
+
+                if ($totalPercent) 
+                {
+                    $totalPercent = ($totalPercent / $totalUsers) * 100;
+                }
+                else
+                {
+                    $totalPercent = 0;
+                }
+                 // Calculate average percent
+                if ($totalPercent) 
+                {
+                    $averagePercent = $totalPercent / ($totalUsers * 100);
+                }
+                else
+                {
+                    $averagePercent = 0;
+                }
+                return response()->json([
+                    'admin_part_percentage' => $averagePercent,
+                ]);
+        }
+
+      public function getAdminConsultingHours($id)
+     {
+        $results = User::withTrashed()
+        ->join('companies', 'companies.user_id', 'users.id')
+        ->join('company_employees', 'companies.id', 'company_employees.company_id')
+        ->where('company_employees.role', 'COMPANY_ADMIN')
+        ->select(
+            DB::raw('SUM(companies.total_hours) as total_hours_sum'),
+            DB::raw('SUM(companies.remaining_hours) as remaining_hours_sum'))
+        ->first();
+
+        // Extract the total_hours_sum and remaining_hours_sum from the result
+        $totalHoursSum = $results->total_hours_sum;
+        $remainingHoursSum = $results->remaining_hours_sum;
+
+        // Calculate the difference
+        $th = $totalHoursSum - $remainingHoursSum;
+
+            if($id== 'Jan-Mar')
+            {
+                $chartData =[16, 96, 96, 30];
+               
+            }
+            if($id == 'Apr-Jun')
+            {
+                $chartData =[96, 16, 96, 30];
+            }
+            if($id == 'Jul-Sep')
+            {
+                $chartData =[26, 56, 16, 30];
+            }
+            if($id == 'Oct-Dec')
+            {
+                $chartData =[76, 16, 76, 30];
+            }
+        
+        return response()->json([
+            'admin_consulting_hours' => $th,
+            'admin_consulting_data' => $chartData
+        ]);
+     }
+
+
 }

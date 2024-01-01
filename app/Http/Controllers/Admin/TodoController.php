@@ -159,12 +159,12 @@ class TodoController extends Controller
         $company = CompanyEmployee::where('user_id', $user->id)->first();
         if ($company) {
             $ca = Todo::select('todos.*', 'todo_user_statuses.status')
-                //->join('company_todos','company_todos.todo_id','todos.id')
-                //->join('todo_profile_types','todo_profile_types.todo_id','todos.id')
+                ->join('company_todos','company_todos.todo_id','todos.id')
+                ->join('todo_profile_types','todo_profile_types.todo_id','todos.id')
                 ->join('todo_user_statuses','todo_user_statuses.todo_id','todos.id')
-                //->where("company_todos.company_id", $company->company_id)
-                //->where("todo_profile_types.profile_type_id", $company->profile_type_id)
-                //->where("todos.role", $company->role)
+                ->where("company_todos.company_id", $company->company_id)
+                ->where("todo_profile_types.profile_type_id", $company->profile_type_id)
+                ->where("todos.role", $company->role)
                 ->where("todo_user_statuses.user_id", $user->id);
 
                 //return response(["status" => "success", "res" => $ca->toSql()], 400);
@@ -214,15 +214,32 @@ class TodoController extends Controller
     {
         $user = Auth::guard('api')->user();
         $company = CompanyEmployee::where('user_id', $user->id)->first();
-        if ($company) {
+        if ($company->role == "COMPANY_EMP") {
             $ca = Todo::select('todos.*', 'todo_user_statuses.status')
-                        //->join('company_todos','company_todos.todo_id','todos.id')
+                        ->join('company_todos','company_todos.todo_id','todos.id')
+                        ->join('todo_profile_types','todo_profile_types.todo_id','todos.id')
                         ->join('todo_user_statuses','todo_user_statuses.todo_id','todos.id')
                         ->where("todo_user_statuses.user_id", $user->id)
-                        //->where("company_id", $company->company_id)
+                        ->where("company_todos.company_id", $company->company_id)
+                        ->where("todo_profile_types.profile_type_id", $company->profile_type_id)
+                        ->where('todos.part', $request->part)
                         ->orderBy('id', 'desc')
                         ->get();
         }
-        return response(["status" => "success", "res" => $ca], 200);
+        else
+        {
+            $ca = Todo::select('todos.*', 'todo_user_statuses.status')
+                        ->join('company_todos','company_todos.todo_id','todos.id')
+                        ->join('todo_profile_types','todo_profile_types.todo_id','todos.id')
+                        ->join('todo_user_statuses','todo_user_statuses.todo_id','todos.id')
+                        ->where("todo_user_statuses.user_id", $user->id)
+                        ->where("company_todos.company_id", $company->company_id)
+                        ->where("todo_profile_types.profile_type_id", $company->profile_type_id)
+                        ->where('todos.role', $company->role)
+                        ->orderBy('id', 'desc')
+                        ->get();
+
+        }
+        return response(["status" => "success", "res" => $ca, "role" => $company->role], 200);
     }
 }

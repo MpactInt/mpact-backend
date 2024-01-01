@@ -430,6 +430,7 @@ class TipsController extends Controller
             ->join('company_employees', 'tip_profile_types.profile_type_id', 'company_employees.profile_type_id')
             ->where("tips.tip_type", "tip")
             ->where("company_employees.user_id", $user['id'])
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return response(["status" => "success", 'user' => $user['id'], 'res' => $tips], 200);

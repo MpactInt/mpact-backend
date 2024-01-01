@@ -149,6 +149,7 @@ class PopupSurveyController extends Controller
                 array_push($elements, $obj);
             }
         }
+      
         return response(["status" => "success", "res" => $elements, "answer" => $is_answered], 200);
     }
 

@@ -6,10 +6,10 @@ use App\Http\Controllers\Admin\LearningPlanController;
 use App\Http\Controllers\Admin\LearningPlanFileController;
 use App\Http\Controllers\Admin\OpportunityController;
 use App\Http\Controllers\Admin\PopupSurveyController;
-use App\Http\Controllers\Admin\PostWorkshopSurveyController;
+use App\Http\Controllers\Admin\PostWorkshopSurveyController; 
 use App\Http\Controllers\Admin\ProfileTypeController;
 use App\Http\Controllers\Admin\StepController;
-use App\Http\Controllers\Admin\TodoController;
+use App\Http\Controllers\Admin\TodoController; 
 use App\Http\Controllers\Admin\ZoomMeetingController;
 use App\Http\Controllers\Common\ChargebeeController;
 use App\Http\Controllers\Common\DashboardController;
@@ -95,7 +95,7 @@ Route::group([
     Route::get('/get-post-workshop-survey-questions/{id}', [PostWorkshopSurveyController::class, 'get_post_workshop_survey_questions']);
     Route::post('/submit-post-workshop-survey/{id}/{w_id}', [PostWorkshopSurveyController::class, 'submit_post_workshop_survey']);
 });
-Route::group(['middleware' => ['auth:api', 'cors']], function () {
+Route::group(['middleware' => ['auth:api', 'cors','log.activity']], function () {
 
     Route::post('/upload-logo', [EmployerController::class, 'upload_logo']);
     Route::post('/ask-question', [EmployerController::class, 'ask_question']);
@@ -340,6 +340,8 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/delete-learning-plan/{id}', [LearningPlanController::class, 'delete_learning_plan']);
     Route::post('/get-learning-plan-list-dashboard', [LearningPlanController::class, 'get_learning_plan_list_dashboard']);
     Route::get('/get-company-list-multiselect-update', [LearningPlanController::class, 'get_company_list_multiselect_update']);
+    Route::any('/update-learning-plan-view', [LearningPlanController::class, 'update_learning_plan_view']);
+    Route::any('/should_go_next_tab', [LearningPlanController::class, 'shouldGoNextTab']);
 
 
     //learning plan files routes
@@ -397,7 +399,13 @@ Route::group(['middleware' => ['auth:api', 'cors']], function () {
     Route::get('/delete-tip/{id}', [TipsController::class, 'delete_tip']);
     Route::get('/get-personalized-tips', [TipsController::class, 'get_personalized_tips']);
 
-    Route::post('/get-mobile-users-list', [dashboardcontroller::class, 'get_mobile_users_list']);
+    Route::post('/get-mobile-users-list', [Dashboardcontroller::class, 'get_mobile_users_list']);
+    Route::post('/daily_visit', [Dashboardcontroller::class, 'getDailyVisitData']);
+    Route::post('/get_total_visiting_hours', [Dashboardcontroller::class, 'getTotalVisitingHours']);
+    Route::post('/get_part_percentage', [Dashboardcontroller::class, 'getPartPercentage']);
+    Route::get('/get_admin_part_percentage/{id}', [Dashboardcontroller::class, 'getAdminPartPercentage']);
+    // Consulting Hours Api
+    Route::get('/get_admin_consulting_hours/{id}', [Dashboardcontroller::class, 'getAdminConsultingHours']);
 
 });
 

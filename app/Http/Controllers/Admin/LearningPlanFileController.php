@@ -25,25 +25,36 @@ class LearningPlanFileController extends Controller
             'description' => 'required',
             'link' => 'nullable',//url
             'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
+            'video_path' => 'required|mimes:mp4,mov,avi,wmv|max:102400', // Max size: 100MB
         ]);
-        if ($validator->fails()) {
+        if ($validator->fails()) 
+        {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
-        } else {
+        } 
+        else 
+        {
             $filename = '';
-            if ($request->hasFile('image')) {
+            if ($request->hasFile('image')) 
+            {
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $destinationPath = public_path() . '/learning-plan-files';
                 $uploadedFile->move($destinationPath, $filename);
             }
-
+            if ($request->hasFile('video_path')) 
+            {
+                $video = $request->file('video_path');
+                $videofilename = time() . '_' . $video->getClientOriginalName();
+                $request->video_path->move(public_path('videos'), $videofilename);        
+            }
             $t = new MyLearningPlanFile();
             // $t->my_learning_plan_id = $request->my_learning_plan_id;
             $t->title = $request->title;
             $t->description = $request->description;
             $t->image = $filename;
             $t->link = $request->link;
+            $t->video_path = 'videos/'.$videofilename;
             $t->save();
 
             return response(["status" => "success", "res" => $t], 200);
@@ -58,31 +69,46 @@ class LearningPlanFileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
-            'description' => 'required',
+            'description' => 'required', 
             'link' => 'nullable',//url
             'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
+            'video_path' => 'required|mimes:mp4,mov,avi,wmv', // Max size: 100MB
         ]);
-        if ($validator->fails()) {
+        if ($validator->fails()) 
+        {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
-        } else {
+        } 
+        else   
+        {
             $t = MyLearningPlanFile::find($request->id);
             $filename = '';
-            if ($request->hasFile('image')) {
+            if ($request->hasFile('image')) 
+            {
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
                 $destinationPath = public_path() . '/learning-plan-files';
                 $uploadedFile->move($destinationPath, $filename);
-                if ($t->image) {
-                    if (file_exists($destinationPath . '/' . $t->image)) {
+                if ($t->image) 
+                {
+                    if (file_exists($destinationPath . '/' . $t->image)) 
+                    {
                         unlink($destinationPath . '/' . $t->image);
                     }
                 }
                 $t->image = $filename;
             }
+            if ($request->hasFile('video_path')) 
+            {
+                $video = $request->file('video_path');
+                $videofilename = time() . '_' . $video->getClientOriginalName();
+                $request->video_path->move(public_path('videos'), $videofilename);        
+            }
             $t->title = $request->title;
             $t->description = $request->description;
             $t->link = $request->link;
+            // $t->part = $request->part;
+            $t->video_path = 'videos/'.$videofilename;
             $t->save();
             return response(["status" => "success", "res" => $t], 200);
         }
@@ -176,7 +202,7 @@ class LearningPlanFileController extends Controller
         return response(["status" => "success", "res" => $ca], 200);
     }
     /**
-     * @param $id
+     * @param $id 
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download_learning_plan_file($id)

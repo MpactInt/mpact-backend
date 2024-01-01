@@ -13,4 +13,8 @@ class MyLearningPlan extends Model
     public function profileType(){
         return $this->hasMany(LearningPlanProfileType::class,'learning_plan_id','id');
     }
+
+    // public function isView(){
+    //     return $this->hasMany(LearningPlanLog::class,'plan_id','id');
+    // }
 }

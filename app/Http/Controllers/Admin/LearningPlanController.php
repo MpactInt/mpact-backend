@@ -10,10 +10,11 @@ use App\Models\LearningPlanCompany;
 use App\Models\LearningPlanProfileType;
 use App\Models\MyLearningPlanFile;
 use App\Models\LearningPlanResource;
+use App\Models\LearningPlanLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use DB;
 
 class LearningPlanController extends Controller
 {
@@ -170,10 +171,17 @@ class LearningPlanController extends Controller
             ->where('learning_plan_id', $id)
             ->get();
 
-        $ca->files = LearningPlanResource::join('my_learning_plan_files', 'my_learning_plan_files.id', 'learning_plan_resources.resource_id')
-            ->select('my_learning_plan_files.*', 'my_learning_plan_files.title as name')
-            ->where('learning_plan_id', $id)
-            ->get();
+        // $ca->files = LearningPlanResource::join('my_learning_plan_files', 'my_learning_plan_files.id', 'learning_plan_resources.resource_id')
+        //     ->select('my_learning_plan_files.*', 'my_learning_plan_files.title as name')
+        //     ->where('learning_plan_id', $id)
+        //     ->get();
+
+            $ca->files = LearningPlanResource::join('my_learning_plan_files', 'my_learning_plan_files.id', 'learning_plan_resources.resource_id')
+                        ->join('my_learning_plans', 'my_learning_plans.id', 'learning_plan_resources.learning_plan_id')
+                        ->select('my_learning_plan_files.*', 'my_learning_plan_files.title as name')
+                        ->where('learning_plan_id', $id)
+                        ->where('my_learning_plans.part', $ca->part)
+                        ->get();
 
         $path = url('/public/learning-plan-files/');
         $ca->image = $path . '/' . $ca->image;
@@ -232,10 +240,62 @@ class LearningPlanController extends Controller
         // }])->select('*');
 
 
+
+
+
+
+
+
+            $user = Auth::guard('api')->user();
+          $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+     
+            $parts = ['',"part1","part2","part3",'part4'];
+            $get_part = ["part1",];
+            $i = 1;
+           
+            foreach ($parts as $key => $part) {
+                    if ($part == "") {
+                        continue;
+                    }
+                   $i++;
+                    $total_learning_plan_id = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+                        ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+                        ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+                        ->where('learning_plan_companies.company_id', $user_detail->company_id)
+                        ->where('my_learning_plans.part', $part)
+                        ->select('my_learning_plans.*')
+                        ->pluck("my_learning_plans.id");
+
+                    $resource_id =   LearningPlanResource::whereIn("learning_plan_id", $total_learning_plan_id)->pluck("resource_id")->toArray();
+                    $total_plan_file =   MyLearningPlanFile::whereIn("id", $resource_id)->count();
+           
+                    $total_learning_view_count = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
+                                                ->where('company_id', $user_detail->company_id)
+                                                ->where('profile_id', $user_detail->id)
+                                                ->select('learning_plan_logs.*')
+                                                 ->where('learning_plan_logs.part', $part)
+                                                ->count();
+
+                            $sixtyPercent = 0.6 * $total_plan_file;
+                            if ($total_learning_view_count >= $sixtyPercent) {
+                                if ($i == 5) {
+                                    // code...
+                                  array_push($get_part , "general");
+                                }else{
+                                  array_push($get_part , "part".$i);
+                                }
+                            }
+            }
+
+
+
+
+
         $ca = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
             ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
             ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
             ->where('learning_plan_companies.company_id', $user_detail->company_id)
+            ->whereIn('part', $get_part)
             ->select('my_learning_plans.*');
 
         // $ca = $ca->join("profile_types", 'profile_types.id', 'my_learning_plans.profile_type_id')
@@ -254,34 +314,147 @@ class LearningPlanController extends Controller
 
 
         $ca = $ca->paginate(10);
-        return response(["status" => "success", "res" => $ca, "path" => $path], 200);
+        return response(["status" => "success", "res" => $ca, "path" => $path,'get_part'=>$get_part], 200);
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function get_learning_plan_list_dashboard(Request $request)
+    // public function get_learning_plan_list_dashboard(Request $request)
+    // {
+    //     $path = url('/public/learning-plan-files/');
+    //     $user = Auth::guard('api')->user();
+    //     $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+
+    //     // $ca = MyLearningPlan::with('files');
+    //     // $ca = $ca->join("profile_types", 'profile_types.id', 'my_learning_plans.profile_type_id')
+    //     //     ->select('my_learning_plans.*', 'profile_types.profile_type')
+    //     //     ->where('profile_types.id',$company->profile_type_id)
+    //     //     ->limit(6)
+    //     //     ->get();
+
+    //     $ca = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+    //         ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+    //         ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+    //         ->where('learning_plan_companies.company_id', $user_detail->company_id)
+    //         ->where('my_learning_plans.part', $request->part)
+    //         ->select('my_learning_plans.*')
+    //         ->limit(6)->get();
+
+      
+    //     /*$ca = MyLearningPlan::with(['files', 'profileType' => function ($q) use ($company) {
+    //         $q->join('profile_types', 'profile_types.id', 'learning_plan_profile_types.profile_type_id')
+    //             ->where('profile_types.id', $company->profile_type_id)
+    //             ->pluck('profile_types.profile_type');
+    //     }])->select('*')->limit(6)->get();*/
+    //     return response(["status" => "success", "res" => $ca, "path" => $path], 200);
+    // }
+
+
+
+ /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+public function get_learning_plan_list_dashboard(Request $request)
+{
+    $path = url('/public/learning-plan-files/');
+    $user = Auth::guard('api')->user();
+    $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+
+    $ca = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+        ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+        ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+        ->where('learning_plan_companies.company_id', $user_detail->company_id)
+        ->where('my_learning_plans.part', $request->part)
+        ->select('my_learning_plans.*')
+        ->limit(6)
+        ->get();
+
+    // $partCounts = [];
+    // $partNames = ["part1", "part2", "part3", "part4", "general"]; // Add more parts if needed
+
+    // foreach ($partNames as $part) {
+       
+    //     $totalPartCount = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+    //         ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+    //         ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+    //         ->where('learning_plan_companies.company_id', $user_detail->company_id)
+    //         ->where('my_learning_plans.part', $part)
+    //         ->select('my_learning_plans.*')
+    //         ->count();
+
+       
+    //    $totalPartCount = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+    //         ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+    //         ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+    //         ->where('learning_plan_companies.company_id', $user_detail->company_id)
+    //         ->where('my_learning_plans.part', $part)
+    //         ->select('my_learning_plans.*')
+    //         ->whereHas(["isView"=>function($q){
+    //                 ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+    //                 ->where('learning_plan_companies.company_id', $user_detail->company_id);
+    //         }])
+    //         ->count();
+    //     $partCounts["total_$part"] = $totalPartCount;
+    //     $partCounts["total_viewed_$part"] = $totalPartCount;
+    // }
+
+    return response(["status" => "success", "res" => $ca, "path" => $path], 200);
+}
+
+
+    public function shouldGoNextTab(Request $request)
     {
-        $path = url('/public/learning-plan-files/');
-        $user = Auth::guard('api')->user();
-        $company = CompanyEmployee::where('user_id', $user->id)->first();
 
-        // $ca = MyLearningPlan::with('files');
-        // $ca = $ca->join("profile_types", 'profile_types.id', 'my_learning_plans.profile_type_id')
-        //     ->select('my_learning_plans.*', 'profile_types.profile_type')
-        //     ->where('profile_types.id',$company->profile_type_id)
-        //     ->limit(6)
-        //     ->get();
-        $ca = MyLearningPlan::with(['files', 'profileType' => function ($q) use ($company) {
-            $q->join('profile_types', 'profile_types.id', 'learning_plan_profile_types.profile_type_id')
-                ->where('profile_types.id', $company->profile_type_id)
-                ->pluck('profile_types.profile_type');
-        }])->select('*')->limit(6)->get();
-        return response(["status" => "success", "res" => $ca, "path" => $path], 200);
+          $user = Auth::guard('api')->user();
+          $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+
+
+        $total_learning_plan_id = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+            ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+            ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+            ->where('learning_plan_companies.company_id', $user_detail->company_id)
+            ->where('my_learning_plans.part', $request->part)
+            ->select('my_learning_plans.*')
+            ->pluck("my_learning_plans.id");
+
+        $resource_id =   LearningPlanResource::whereIn("learning_plan_id", $total_learning_plan_id)->pluck("resource_id")->toArray();
+        $total_plan_file =   MyLearningPlanFile::whereIn("id", $resource_id)->count();
+
+       
+        $total_learning_view_count = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
+                                            ->where('company_id', $user_detail->company_id)
+                                            ->where('profile_id', $user_detail->id)
+                                            ->select('learning_plan_logs.*')
+                                             ->where('learning_plan_logs.part', $request->part)
+                                            ->count();
+
+
+
+    
+
+            $sixtyPercent = 0.6 * $total_plan_file;
+            if ($total_learning_view_count >= $sixtyPercent) {
+                // echo "More than 60% of the videos have been viewed.";
+                return [
+                    "result"=>true,
+                    "totalLearningCount"=>$total_plan_file,
+                    "totalLearningViewCount"=>$total_learning_view_count,
+                    "sixtyPercent"=>$sixtyPercent,
+                ];
+            } else {
+                return [
+                    "result"=>false,
+                    "totalLearningCount"=>$total_plan_file,
+                    "totalLearningViewCount"=>$total_learning_view_count,
+                    "sixtyPercent"=>$sixtyPercent,
+                ];
+            }
+
+        
     }
-
-
     /**
      * @param $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
@@ -302,5 +475,32 @@ class LearningPlanController extends Controller
         //}
         //$files->delete();
         return response(["status" => "success", "res" => $ca], 200);
+    }
+
+      public function update_learning_plan_view(Request $request){
+
+            $data = $request->only(['company_id', 'part', 'type', 'profile_id','plan_id']);
+            $user = Auth::guard('api')->user();
+            $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+
+            $data = [
+                    'plan_id' => $data['plan_id'],
+                    'company_id' => $user_detail->company_id,
+                    'type' => $data['type'],
+                    'profile_id' => $user_detail->id,
+                    'profile_type_id' => $user_detail->profile_type_id,
+                    'part' => $data['part'] ?? '',
+                ];
+
+            // Check if the combination of company_id, part, type, and profile_id already exists
+            $existingRecord = DB::table('learning_plan_logs')
+                ->where($data)->first();
+
+            if (!$existingRecord) {
+              
+                DB::table('learning_plan_logs')->insert($data);
+            } 
+
+        return response(["status" => "success"], 200);
     }
 }

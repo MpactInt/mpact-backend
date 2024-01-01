@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ForgotPasswordEmail;
+use App\Mail\SendEmployeeRegistrationEmail;
+use App\Mail\SendRegistrationEmail;
+use App\Models\ActivityLog;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
 use App\Models\Country;
 use App\Models\Invitation;
-use App\Models\User;
 use App\Models\PlanTier;
+use App\Models\User;
 use ChargeBee\ChargeBee\Models\Estimate;
 use ChargeBee\ChargeBee\Models\ItemPrice;
 use Illuminate\Http\Request;
@@ -17,9 +21,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use App\Mail\SendRegistrationEmail;
-use App\Mail\SendEmployeeRegistrationEmail;
-use App\Mail\ForgotPasswordEmail;
 
 class HomeController extends Controller
 {
@@ -275,6 +276,7 @@ class HomeController extends Controller
             'email' => ['required', 'email', 'string'],
             'password' => ['required', 'string']
         ]);
+       
         $u = User::join('company_employees', 'users.id', 'company_employees.user_id')->withTrashed()->where('email', $request->email)->first();
         if ($u) {
             $c = User::join('companies', 'users.id', 'companies.user_id')->withTrashed()->where('companies.id', $u->company_id)->first();
@@ -295,13 +297,14 @@ class HomeController extends Controller
                     return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                 }
             } else {
+               
                 if ($u && $u->role == "COMPANY_EMP" && $c->deleted_at) {
                     return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
                 } else {
                     $accessToken = Auth::user()->createToken('authToken')->accessToken;
                     $user = User::where('email', $request->email)->first();
                     $c = null;
-
+                    
                     $welcome_note = $user->last_login ? 0 : 1;
 
                     if ($user->role == "COMPANY") {
@@ -319,6 +322,10 @@ class HomeController extends Controller
                     $user->save();
 
                     $user->profile_image = url('public/profile-images/' . $user->profile_image);
+                    //  addActivity("login",$user->id,[
+                    //    "login_at"=>\Carbon\Carbon::now(),
+                    //    "ip"=>$request->ip()
+                    // ]);
 
                     return response(['user' => $user, 'company' => $c, 'welcome_note' => $welcome_note, 'access_token' => $accessToken]);
                 }
@@ -332,6 +339,26 @@ class HomeController extends Controller
      */
     public function logout(Request $request)
     {
+
+         if (Auth::check()) {
+                $user = Auth::user();
+                $currentDate = now()->toDateString();
+
+                $lastActivity = ActivityLog::where('user_id', $user->id)
+                                        ->whereDate('created_at', $currentDate)
+                                        ->whereDate('log_type', "login")
+                                        ->orderBy('login_time', 'desc')
+                                        ->first();
+
+                if ($lastActivity) {
+                    $lastActivity->update([
+                        'logout_time' => now(),
+                    ]);
+                }
+
+        }
+
+
         $user = Auth::user()->token();
         $user->revoke();
         return response(["status" => "success", "message" => "User logout successfully"], 200);
@@ -369,6 +396,14 @@ class HomeController extends Controller
         $validator = Validator::make($request->all(), [
             'password' => 'required|max:255|min:8',
         ]);
+        
+        $user = User::where('email', $link->email)->first();
+        addActivity("reset_password",$user->id,[
+               "login_at"=>\Carbon\Carbon::now(),
+               "ip"=>$request->ip()
+        ]);
+
+
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
@@ -383,6 +418,8 @@ class HomeController extends Controller
             DB::table('password_resets')->where("email", $link->email)->delete();
             return response(["status" => "success", "message" => "Password Changed Successfully"], 200);
         }
+
+
     }
 
     /**

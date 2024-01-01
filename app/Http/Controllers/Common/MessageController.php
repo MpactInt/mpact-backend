@@ -273,25 +273,73 @@ class MessageController extends Controller
     public function get_company_chat_groups(Request $request)
     {
         $user = Auth::guard('api')->user();
+        $auth_id = \Auth::id();
         $company_employee = CompanyEmployee::where('user_id', $user->id)->first();
         $company_employee_id = $company_employee->id;
         if ($company_employee->role == "COMPANY_ADMIN") {
             $company_id = Company::where('user_id', $user->id)->first()->id;
+          
             $cg = CompanyChatGroup::with(['new_message' => function ($q) use ($company_employee_id) {
                 $q->where(['seen' => 0, 'rec_id' => $company_employee_id]);
-            }])->where('company_id', $company_id);
+            },"last_messages"=>function($q='')
+            {
+                $q->orderByDesc("created_at",'DESC');
+                $q->with('messages');
+            }])
+            ->where('company_chat_groups.company_id', $company_id);
+              //  ->select(
+              //       \DB::raw("lm.sender_id as last_sender_id"),
+              //       \DB::raw("lm.group_id as last_rec_id"),
+              //       \DB::raw("lm.message_type as last_message_type"),
+              //       \DB::raw("lm.content as last_content"),
+              //       \DB::raw("lm.created_at as last_created_at")
+              //   )
+              //  ->leftJoin('group_chat_messages as lm', function ($join) use ($auth_id) {
+              //       $join->on('lm.id', '=', \DB::raw("(SELECT id FROM group_chat_messages WHERE (group_chat_messages.sender_id = company_chat_groups.company_employee_id OR group_chat_messages.group_id = company_chat_groups.company_employee_id) ORDER BY created_at DESC LIMIT 1)"));
+              //   });
+
+              // $cg->orderByDesc('lm.created_at')
+              //           ->distinct();
+
+
+
             if ($request->keyword) {
-                $cg->where('name', 'like', "%$request->keyword%");
+                $cg->where('company_chat_groups.name', 'like', "%$request->keyword%");
             }
             $cg = $cg->paginate(10);
         } else {
             $cge = CompanyChatGroupEmployee::where("company_employee_id", $company_employee_id)->pluck('chat_group_id');
             $cg = CompanyChatGroup::with(['new_message' => function ($q) use ($company_employee_id) {
                 $q->where(['seen' => 0, 'rec_id' => $company_employee_id]);
-            }])->whereIn('id', $cge);
+            },"last_messages"=>function($q='')
+            {
+                $q->orderByDesc("created_at",'DESC');
+                $q->with('messages');
+            }])->whereIn('company_chat_groups.id', $cge);
+            // ->select(
+
+            //         \DB::raw("company_chat_groups.*"),
+            //         \DB::raw("lm.id as last_id"),
+            //         \DB::raw("lm.sender_id as last_sender_id"),
+            //         \DB::raw("lm.group_id as last_rec_id"),
+            //         \DB::raw("lm.message_type as last_message_type"),
+            //         \DB::raw("lm.content as last_content"),
+            //         \DB::raw("lm.created_at as last_created_at")
+              
+            //   )
+            //    ->leftJoin('group_chat_messages as lm', function ($join) use ($auth_id) {
+            //         $join->on('lm.id', '=', \DB::raw("(SELECT id FROM group_chat_messages WHERE (group_chat_messages.sender_id = company_chat_groups.company_employee_id OR group_chat_messages.group_id = company_chat_groups.company_employee_id) ORDER BY created_at DESC LIMIT 1)"));
+            //     });
+
             if ($request->keyword) {
-                $cg->where('name', 'like', "%$request->keyword%");
+                $cg->where('company_chat_groups.name', 'like', "%$request->keyword%");
             }
+             
+
+              // $cg->orderByDesc('lm.created_at')
+              //           ->distinct();
+
+
             $cg = $cg->paginate(10);
         }
 
@@ -440,13 +488,36 @@ class MessageController extends Controller
         $name = $request->name;
         $email = $request->email;
         $sort_by = $request->sortBy;
+        
+
         $res = CompanyEmployee::with(['new_message' => function ($q) use ($auth_id) {
             $q = $q->where(['seen' => 0, 'rec_id' => $auth_id]);
-        }])->select('users.last_login', 'users.email', 'company_employees.*', 'profile_types.profile_type')
-            ->join('users', 'company_employees.user_id', 'users.id')
-            ->join('profile_types', 'profile_types.id', 'company_employees.profile_type_id')
+        }])->select(
+              'users.last_login',
+             'users.email',
+              'company_employees.*',
+               'profile_types.profile_type',
+               "lm.sender_id as last_sender_id",
+               "lm.rec_id as last_rec_id",
+               "lm.message_type as last_message_type",
+               "lm.content as last_content",
+               \DB::raw('CONVERT_TZ(lm.created_at, "+00:00", "+05:30") as last_created_at',['America/New_York']),
+            //    "lm.created_at as last_created_at",
+          )
+        ->join('users', 'company_employees.user_id', 'users.id')
+        ->join('profile_types', 'profile_types.id', 'company_employees.profile_type_id')
+        // ->join('one_to_one_messages as lm', function ($join) use ($auth_id) {
+        //     $join->on('lm.sender_id', '=', 'company_employees.id')
+        //         ->orWhere('lm.rec_id', '=', 'company_employees.id');
+        // })
+         ->leftJoin('one_to_one_messages as lm', function ($join) use ($auth_id) {
+                $join->on('lm.id', '=', \DB::raw("(SELECT id FROM one_to_one_messages WHERE (sender_id = company_employees.id OR rec_id = company_employees.id) ORDER BY created_at DESC LIMIT 1)"));
+            })
+
             ->where('company_id', $id)
             ->where('company_employees.id', '!=', $auth_id);
+            // ->orderByDesc('lm.created_at')
+            // ->distinct();
         if ($name) {
             $res = $res->where('company_employees.first_name', 'like', "%$name%");
         }
@@ -454,7 +525,8 @@ class MessageController extends Controller
             $res = $res->where('email', 'like', "%$email%");
         }
         // $res = $res->orderby('seen', 'desc');
-
+        $res->orderByDesc('lm.created_at')
+            ->distinct();
         $res = $res->paginate(10);
 
         return response(["status" => "success", "res" => $res], 200);
