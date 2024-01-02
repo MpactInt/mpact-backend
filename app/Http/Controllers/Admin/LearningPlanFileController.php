@@ -55,7 +55,7 @@ class LearningPlanFileController extends Controller
             $t->description = $request->description;
             $t->image = $filename;
             $t->link = $request->link;
-            $t->video_path = 'videos/'.$videofilename;
+            $t->video_path = $videofilename;
             $t->save();
 
             return response(["status" => "success", "res" => $t], 200);
@@ -103,13 +103,14 @@ class LearningPlanFileController extends Controller
             {
                 $video = $request->file('video_path');
                 $videofilename = time() . '_' . $video->getClientOriginalName();
-                $request->video_path->move(public_path('videos'), $videofilename);        
+                $videofilename = str_replace(' ', '_', $videofilename);
+                $request->video_path->move(public_path('videos'), $videofilename); 
             }
             $t->title = $request->title;
             $t->description = $request->description;
             $t->link = $request->link;
             // $t->part = $request->part;
-            $t->video_path = 'videos/'.$videofilename;
+            $t->video_path = $videofilename;
             $t->save();
             return response(["status" => "success", "res" => $t], 200);
         }
@@ -137,11 +138,13 @@ class LearningPlanFileController extends Controller
         $sort_order = $request->sortOrder;
 
         $file = MyLearningPlanFile::where('id', '!=', '');
-        if ($keyword) {
+        if ($keyword) 
+        {
             $file = $file->where('title', 'like', "%$keyword%")
                 ->orWhere('description', 'like', "%$keyword%");
         }
-        if ($sort_by && $sort_order) {
+        if ($sort_by && $sort_order) 
+        {
             $file = $file->orderby($sort_by, $sort_order);
         }
         $file = $file->paginate(10);
@@ -150,7 +153,8 @@ class LearningPlanFileController extends Controller
         $files = $file;
 
         $path = url('/public/learning-plan-files/');
-        return response(["status" => "success", "res" => $files, 'path' => $path], 200);
+        $vdo_path = url('/public/videos/');
+        return response(["status" => "success", "res" => $files, 'path' => $path, 'vdo_path' => $vdo_path], 200);
     }
 
     /**
@@ -186,6 +190,7 @@ class LearningPlanFileController extends Controller
         $ca->files = $file;
 
         $path = url('/public/learning-plan-files/');
+       
         return response(["status" => "success", "res" => $ca, 'path' => $path], 200);
     }
     /**

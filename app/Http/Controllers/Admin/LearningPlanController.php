@@ -185,7 +185,8 @@ class LearningPlanController extends Controller
 
         $path = url('/public/learning-plan-files/');
         $ca->image = $path . '/' . $ca->image;
-        return response(["status" => "success", "res" => $ca, 'path' => $path], 200);
+        $vdo_path = url('/public/videos/');
+        return response(["status" => "success", "res" => $ca, 'path' => $path,'vdo_path' => $vdo_path], 200);
     }
 
     /**
