@@ -502,7 +502,7 @@ class MessageController extends Controller
                "lm.message_type as last_message_type",
                "lm.content as last_content",
                \DB::raw('CONVERT_TZ(lm.created_at, "+00:00", "+05:30") as last_created_at',['America/New_York']),
-            //    "lm.created_at as last_created_at",
+               "lm.created_at",
           )
         ->join('users', 'company_employees.user_id', 'users.id')
         ->join('profile_types', 'profile_types.id', 'company_employees.profile_type_id')
