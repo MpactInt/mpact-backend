@@ -14,7 +14,7 @@ class AddVideoPathToMyLearningPlanFiles extends Migration
     public function up()
     {
         Schema::table('my_learning_plan_files', function (Blueprint $table) {
-            $table->string('video_path')->after('link');
+            $table->string('video_path')->nullable()->after('link');
         });
     }
 
@@ -23,10 +23,10 @@ class AddVideoPathToMyLearningPlanFiles extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down()  
     {
         Schema::table('my_learning_plan_files', function (Blueprint $table) {
-            //
+            $table->dropColumn('video_path');
         });
     }
 }
