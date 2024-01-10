@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Consultinghours;
 
 class DashboardController extends Controller
 {
@@ -189,15 +190,23 @@ class DashboardController extends Controller
 
     //     return response(["status" => "success", "res" => $res], 200);
     // }
-
+ 
      public function getDailyVisitData(Request $request)
     {
+        $user = Auth::guard('api')->user();
+        $com = Company::where('user_id',$user->id)->first();
         $dailyVisits = ActivityLog::selectRaw('created_at, COUNT(*) as visit_count')
             ->groupBy('created_at')
-            ->orderBy('created_at')
+            ->orderBy('created_at') 
             ->get();
 
-        $dailyVisitorsUser = ActivityLog::whereMonth('login_time', now()->month)->whereDay('login_time', now()->day)->count();
+        $dailyVisitorsUser = ActivityLog::select('activity_logs.user_id')
+            ->join('company_employees', 'activity_logs.user_id', 'company_employees.user_id')
+            ->whereMonth('activity_logs.login_time', now()->month)
+            ->whereDay('activity_logs.login_time', now()->day)
+            ->where('company_employees.company_id', $com->id)
+            ->distinct()
+            ->count('activity_logs.user_id');
 
         $weeklyData = [];
         $daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -207,14 +216,15 @@ class DashboardController extends Controller
         {
             $weeklyData[$day] = 0;
         }
-
+  
         // Populate the visit count for each day of the week
         foreach ($dailyVisits as $visit) 
         {
             $dayOfWeek = \Carbon\Carbon::parse($visit->activity_date)->format('D');
             $weeklyData[$dayOfWeek] = $visit->visit_count;
         }
-
+       
+    
         $formattedData = [
             'categories' => array_values($daysOfWeek),
             'data' => array_values($weeklyData),
@@ -273,24 +283,32 @@ class DashboardController extends Controller
 
      public function getTotalVisitingHours(Request $request)
     {
-        // return $request->all();
+       
         $timePeriod = $request->input('time_period', 'monthly');
         $allmonth = ['Jan','Feb','Mar','Apr','May','Jun','July','Aug','Sep','Oct','Nov','Dec'];
        
 
-        $activityLogsQuery = ActivityLog::whereNotNull('login_time')->whereNotNull('logout_time');
+        // $activityLogsQuery = ActivityLog::whereNotNull('login_time')->whereNotNull('logout_time');
 
         if ($timePeriod === 'yearly') 
         {
-            $activityLogsQuery->whereYear('login_time', Carbon::now()->year);
+            $activityLogsQuery = ActivityLog::whereYear('login_time', Carbon::now()->year);
         }
         elseif (in_array($timePeriod,$allmonth)) 
         {
-            $activityLogsQuery->where(DB::raw('MONTH(login_time)'), '=', array_search($timePeriod,$allmonth) + 1);
-          
+            $activityLogsQuery = ActivityLog::where(DB::raw('MONTH(login_time)'), '=', array_search($timePeriod,$allmonth) + 1);
         } 
-        
+       
         $activityLogs = $activityLogsQuery->get();
+        foreach($activityLogs as $activityUser)
+        {
+            $loginTime = Carbon::parse($activityUser->login_time);
+            $logoutTime = Carbon::parse($activityUser->logout_time);
+        
+            // Calculate the difference between login and logout in seconds
+            $differenceInHours = $logoutTime->diffInHours($loginTime);
+        }
+     
 
         $totalVisitingSeconds = $activityLogs->sum(function ($log) 
         {
@@ -299,8 +317,9 @@ class DashboardController extends Controller
             return $logoutTime->diffInSeconds($loginTime);
         });
 
-        // Calculate total visiting hours
-        $totalVisitingHours = CarbonInterval::seconds($totalVisitingSeconds)->cascade()->hours()->forHumans();
+        // // Calculate total visiting hours
+        // $totalVisitingHours = $differenceInHours;
+        
 
         // Calculate total visiting hours for the previous week
         $previousWeekStart = Carbon::now()->subWeek()->startOfWeek();
@@ -328,7 +347,7 @@ class DashboardController extends Controller
         }
 
         return response()->json([
-            'total_visiting_hours' => $totalVisitingHours,
+            'total_visiting_hours' => $differenceInHours,
             'previous_week_visiting_hours' => $previousWeekVisitingHours,
             'increase_percentage' => $increasePercentage,
         ]);
@@ -449,45 +468,62 @@ class DashboardController extends Controller
                 ]);
         }
 
-      public function getAdminConsultingHours($id)
+      public function getAdminConsultingHours($month)
      {
-        $results = User::withTrashed()
-        ->join('companies', 'companies.user_id', 'users.id')
-        ->join('company_employees', 'companies.id', 'company_employees.company_id')
-        ->where('company_employees.role', 'COMPANY_ADMIN')
-        ->select(
-            DB::raw('SUM(companies.total_hours) as total_hours_sum'),
-            DB::raw('SUM(companies.remaining_hours) as remaining_hours_sum'))
-        ->first();
-
-        // Extract the total_hours_sum and remaining_hours_sum from the result
-        $totalHoursSum = $results->total_hours_sum;
-        $remainingHoursSum = $results->remaining_hours_sum;
-
-        // Calculate the difference
-        $th = $totalHoursSum - $remainingHoursSum;
-
-            if($id== 'Jan-Mar')
+        $user = Auth::guard('api')->user();
+        $c = Company::where('user_id', $user->id)->first();
+        $allmonth = ['Jan','Feb','Mar','Apr','May','Jun','July','Aug','Sep','Oct','Nov','Dec'];
+        $totalHours = 0;
+        if (in_array($month,$allmonth)) 
+        {
+            $activityLogsQuery = Consultinghours::where(DB::raw('MONTH(created_at)'), '=', array_search($month,$allmonth) + 1)
+                ->where('company_id', $c->id)
+                ->get();
+            foreach($activityLogsQuery as $ch)
             {
-                $chartData =[16, 96, 96, 30];
+                // Add the hours to the total
+                $totalHours += $ch->consulting_hour;
+                
+            }
+        } 
+    //    // $results = Consultinghours::where('user_id',Auth::user()->id)->where('consulting_hour',)
+    //     $results = User::withTrashed()
+    //     ->join('companies', 'companies.user_id', 'users.id')
+    //     ->join('company_employees', 'companies.id', 'company_employees.company_id')
+    //     ->where('company_employees.role', 'COMPANY_ADMIN')
+    //     ->select(
+    //         DB::raw('SUM(companies.total_hours) as total_hours_sum'),
+    //         DB::raw('SUM(companies.remaining_hours) as remaining_hours_sum'))
+    //     ->first();
+
+    //     // Extract the total_hours_sum and remaining_hours_sum from the result
+    //     $totalHoursSum = $results->total_hours_sum;
+    //     $remainingHoursSum = $results->remaining_hours_sum;
+
+    //     // Calculate the difference
+    //     $th = $totalHoursSum - $remainingHoursSum;
+
+    //     //     if($id== 'Jan-Mar')
+    //     //     {
+    //     //         $chartData =[16, 96, 96, 30];
                
-            }
-            if($id == 'Apr-Jun')
-            {
-                $chartData =[96, 16, 96, 30];
-            }
-            if($id == 'Jul-Sep')
-            {
-                $chartData =[26, 56, 16, 30];
-            }
-            if($id == 'Oct-Dec')
-            {
-                $chartData =[76, 16, 76, 30];
-            }
+    //     //     }
+    //     //     if($id == 'Apr-Jun')
+    //     //     {
+    //     //         $chartData =[96, 16, 96, 30];
+    //     //     }
+    //     //     if($id == 'Jul-Sep')
+    //     //     {
+    //     //         $chartData =[26, 56, 16, 30];
+    //     //     }
+    //     //     if($id == 'Oct-Dec')
+    //     //     {
+    //     //         $chartData =[76, 16, 76, 30];
+    //     //     }
         
         return response()->json([
-            'admin_consulting_hours' => $th,
-            'admin_consulting_data' => $chartData
+            'admin_consulting_hours' => $totalHours,
+            // 'admin_consulting_data' => $chartData
         ]);
      }
 

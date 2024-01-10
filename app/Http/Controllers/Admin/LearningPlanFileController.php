@@ -24,8 +24,7 @@ class LearningPlanFileController extends Controller
             'title' => 'required|max:255',
             'description' => 'required',
             'link' => 'nullable',//url
-            'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
-            'video_path' => 'required|mimes:mp4,mov,avi,wmv|max:102400', // Max size: 100MB
+            'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3'
         ]);
         if ($validator->fails()) 
         {
@@ -42,6 +41,7 @@ class LearningPlanFileController extends Controller
                 $destinationPath = public_path() . '/learning-plan-files';
                 $uploadedFile->move($destinationPath, $filename);
             }
+            $videofilename = '';
             if ($request->hasFile('video_path')) 
             {
                 $video = $request->file('video_path');
@@ -72,8 +72,7 @@ class LearningPlanFileController extends Controller
             'title' => 'required|max:255',
             'description' => 'required', 
             'link' => 'nullable',//url
-            'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3',
-            'video_path' => 'required|mimes:mp4,mov,avi,wmv', // Max size: 100MB
+            'image' => 'nullable|mimes:jpeg,jpg,png,pdf,ppt,pptx,xls,xlsx,doc,docx,csv,txt,mp4,mp3'
         ]);
         if ($validator->fails()) 
         {
@@ -105,12 +104,12 @@ class LearningPlanFileController extends Controller
                 $videofilename = time() . '_' . $video->getClientOriginalName();
                 $videofilename = str_replace(' ', '_', $videofilename);
                 $request->video_path->move(public_path('videos'), $videofilename); 
+                $t->video_path = $videofilename;
             }
             $t->title = $request->title;
             $t->description = $request->description;
             $t->link = $request->link;
             // $t->part = $request->part;
-            $t->video_path = $videofilename;
             $t->save();
             return response(["status" => "success", "res" => $t], 200);
         }
@@ -153,7 +152,7 @@ class LearningPlanFileController extends Controller
         $files = $file;
 
         $path = url('/public/learning-plan-files/');
-        $vdo_path = url('/public/videos/');
+        $vdo_path = url('/videos/');
         return response(["status" => "success", "res" => $files, 'path' => $path, 'vdo_path' => $vdo_path], 200);
     }
 

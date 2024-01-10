@@ -9,7 +9,8 @@ class LogUserActivity
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::check()) {
+        if (Auth::check())  
+        {
             
             $user = Auth::user();
             $currentDate = now()->toDateString();
@@ -19,18 +20,23 @@ class LogUserActivity
                                     ->orderBy('login_time', 'desc')
                                     ->first();
 
-            if ($lastActivity) {
+            if ($lastActivity) 
+            {
                 $lastActivity->update([
-                    'login_time' => now(),
+                    // 'login_time' => now(),
                     'logout_time' => null,
                 ]);
-            } else {
+            } 
+            else 
+            {
                 ActivityLog::create([
                     'log_type' => "login",
                     'user_id' => $user->id,
                     'login_time' => now(),
                 ]);
             }
+
+                
         }
 
         return $next($request);

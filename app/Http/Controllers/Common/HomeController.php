@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Models\ConsultingHours;
 
 class HomeController extends Controller
 {
@@ -129,6 +130,52 @@ class HomeController extends Controller
         }
     }
 
+    public function add_consulting_hours(Request $request)
+    {
+        $chs = new ConsultingHours();
+        $chs->company_id = $request->company_id;
+        $chs->consulting_hour = $request->consulting_hours;
+        $chs->save();
+        return response(["status" => "success", "res" => $chs], 200);
+    }
+
+    public function get_consulting_list(Request $request)
+    {
+        $keyword = $request->keyword;
+        $sort_by = $request->sortBy == "" ? "created_at" : $request->sortBy;
+        $sort_order = $request->sortOrder == "" ? "DESC" : $request->sortOrder;
+        
+        $conh = ConsultingHours::select('consulting_hours.*','companies.company_name')
+                ->join('companies','companies.id','consulting_hours.company_id');
+
+        if ($keyword) {
+            $conh = $conh->where('companies.company_name', 'like', "%$keyword%");
+        }
+        if ($sort_by && $sort_order) {
+            $conh = $conh->orderby($sort_by, $sort_order);
+        }
+
+        $conh = $conh->paginate(10);
+        return response(["status" => "success", "res" => $conh], 200);
+                
+    }
+    public function get_consulting_hours($id)
+    {
+        $conh = ConsultingHours::select('consulting_hours.*','companies.company_name')
+                ->join('companies','companies.id','consulting_hours.company_id')
+                ->where('consulting_hours.id',$id)
+                ->first();
+            return response(["status" => "success", "res" => $conh], 200);
+    }
+    public function update_consulting_hours(Request $request)
+    {
+        $conh = ConsultingHours::find($request->id);
+        $conh->company_id = $request->company;
+        $conh->consulting_hour = $request->consulting_hours;
+        $conh->update();
+        return response(["status" => "success", "res" => $conh], 200);
+
+    }
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -278,41 +325,67 @@ class HomeController extends Controller
         ]);
        
         $u = User::join('company_employees', 'users.id', 'company_employees.user_id')->withTrashed()->where('email', $request->email)->first();
-        if ($u) {
+        if ($u) 
+        {
             $c = User::join('companies', 'users.id', 'companies.user_id')->withTrashed()->where('companies.id', $u->company_id)->first();
         }
-        if ($validator->fails()) {
+        if ($validator->fails()) 
+        {
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
-        } else {
-            if (!Auth::attempt($data)) {
-                if ($u) {
-                    if ($u->role == "COMPANY_ADMIN" && $u->deleted_at) {
+        } 
+        else 
+        {
+            if (!Auth::attempt($data)) 
+            {
+                if ($u) 
+                {
+                    if ($u->role == "COMPANY_ADMIN" && $u->deleted_at) 
+                    {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
-                    } elseif ($u->role == "COMPANY_EMP" && $c->deleted_at) {
+                    } 
+                    elseif ($u->role == "COMPANY_EMP" && $c->deleted_at) 
+                    {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
-                    } else {
+                    } 
+                    else 
+                    {
                         return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                     }
-                } else {
+                } 
+                else 
+                {
                     return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                 }
-            } else {
+            } 
+            else 
+            {
                
-                if ($u && $u->role == "COMPANY_EMP" && $c->deleted_at) {
+                if ($u && $u->role == "COMPANY_EMP" && $c->deleted_at) 
+                {
                     return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
-                } else {
+                } 
+                else 
+                {
                     $accessToken = Auth::user()->createToken('authToken')->accessToken;
                     $user = User::where('email', $request->email)->first();
+                    ActivityLog::create([
+                                    'log_type' => "login",
+                                    'user_id' => $user->id, 
+                                    'login_time' => now(),
+                                    'lastactivity' => null
+                                ]);
                     $c = null;
                     
                     $welcome_note = $user->last_login ? 0 : 1;
 
-                    if ($user->role == "COMPANY") {
+                    if ($user->role == "COMPANY") 
+                    {
                         $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role', 'company_employees.profile_type_id', 'company_employees.profile_image')
                             ->join('company_employees', 'companies.id', 'company_employees.company_id')
                             ->where("company_employees.user_id", $user->id)
                             ->first();
-                        if ($c) {
+                        if ($c) 
+                        {
                             $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
                             $c->profile_image =  url('/') . '/public/profile-images/' . $c->profile_image;
                         }
@@ -339,8 +412,45 @@ class HomeController extends Controller
      */
     public function logout(Request $request)
     {
-
-         if (Auth::check()) {
+        // if (Auth::check())  
+        // {
+            
+        //     $user = Auth::user();
+        //     $currentDate = now()->toDateString();
+        //     $lastActivity = ActivityLog::where('user_id', $user->id)
+        //                             ->whereDate('created_at', $currentDate)
+        //                             ->whereDate('log_type', "login")
+        //                             ->orderBy('login_time', 'desc')
+        //                             ->first();
+                                    
+        //     $las = ActivityLog::find($lastActivity->id);
+        //    // return now()->diffInMinutes($las->lastactivity);
+        //     if ($las->lastactivity == null)
+        //     {
+        //         $las->lastactivity = now();
+        //         $las->logout_time = null;
+        //         $las->update(); 
+        //         return $las;
+        //     } 
+         
+        //     elseif(now()->diffInMinutes($las->lastactivity) >= 3)
+        //     {
+        //         $las = ActivityLog::find($las->id);
+        //                 $las->lastactivity = null;
+        //                 $las->update();
+        //        return now()->diffInMinutes($las->lastactivity);
+        //     }
+        //     elseif($las->lastactivity != null)
+        //     {
+        //         $las = ActivityLog::find($las->id);
+        //         $las->lastactivity = now();
+        //         $las->update();
+        //         return $las;
+                
+        //     }
+        // }
+         if (Auth::check()) 
+         {
                 $user = Auth::user();
                 $currentDate = now()->toDateString();
 
@@ -350,9 +460,11 @@ class HomeController extends Controller
                                         ->orderBy('login_time', 'desc')
                                         ->first();
 
-                if ($lastActivity) {
+                if ($lastActivity) 
+                {
                     $lastActivity->update([
                         'logout_time' => now(),
+                        'lastactivity' => null 
                     ]);
                 }
 

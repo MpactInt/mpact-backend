@@ -65,6 +65,10 @@ Route::group([
     Route::get('/update-payment-status/{link}', [ChargebeeController::class, 'update_payment_status']);
     Route::get('/get-countries', [HomeController::class, 'get_countries']);
     Route::post('/update-plan', [HomeController::class, 'update_plan']);
+    Route::post('/add-consulting-hours', [HomeController::class, 'add_consulting_hours']); 
+    Route::post('/get-consultinghours-list', [HomeController::class, 'get_consulting_list']);
+    Route::get('/get-consulting-hours/{id}', [HomeController::class, 'get_consulting_hours']); 
+    Route::post('/update-consulting-hours', [HomeController::class, 'update_consulting_hours']);
 
     ###################################################################
     /***************************Before Login Routes*******************/
@@ -95,7 +99,8 @@ Route::group([
     Route::get('/get-post-workshop-survey-questions/{id}', [PostWorkshopSurveyController::class, 'get_post_workshop_survey_questions']);
     Route::post('/submit-post-workshop-survey/{id}/{w_id}', [PostWorkshopSurveyController::class, 'submit_post_workshop_survey']);
 });
-Route::group(['middleware' => ['auth:api', 'cors','log.activity']], function () {
+Route::group(['middleware' => ['auth:api', 'cors','log.activity']], function () 
+{
 
     Route::post('/upload-logo', [EmployerController::class, 'upload_logo']);
     Route::post('/ask-question', [EmployerController::class, 'ask_question']);
@@ -321,7 +326,7 @@ Route::group(['middleware' => ['auth:api', 'cors','log.activity']], function () 
     Route::get('/register-for-workshop/{id}', [WorkshopController::class, 'register_for_workshop']);
     Route::get('/get-workshop-list-dashboard', [WorkshopController::class, 'get_workshop_list_dashboard']);
 
-    //Zoom Meeting routes
+    //Zoom Meeting routes 
 
     Route::post('/add-meeting', [ZoomMeetingController::class, 'store']);
     Route::get('/get-meeting-recording-list/{id}', [ZoomMeetingController::class, 'get_recordings']);
@@ -405,7 +410,7 @@ Route::group(['middleware' => ['auth:api', 'cors','log.activity']], function () 
     Route::post('/get_part_percentage', [Dashboardcontroller::class, 'getPartPercentage']);
     Route::get('/get_admin_part_percentage/{id}', [Dashboardcontroller::class, 'getAdminPartPercentage']);
     // Consulting Hours Api
-    Route::get('/get_admin_consulting_hours/{id}', [Dashboardcontroller::class, 'getAdminConsultingHours']);
+    Route::get('/get_admin_consulting_hours/{month}', [Dashboardcontroller::class, 'getAdminConsultingHours']);
 
 });
 
