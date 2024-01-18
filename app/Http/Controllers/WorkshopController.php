@@ -264,7 +264,9 @@ class WorkshopController extends Controller
             $workshops->users = WorkshopRegistration::select('workshop_registration.*', 'company_employees.first_name', 'company_employees.last_name', 'companies.company_name')
                 ->join('company_employees', 'company_employees.id', 'workshop_registration.company_Employee_id')
                 ->join('companies', 'company_employees.company_id', 'companies.id')
-                ->where('workshop_id', $id)->get();
+                ->where('company_employees.company_id', $companyEmp->company_id)
+                ->where('workshop_id', $id)
+                ->get();
             $registered = WorkshopRegistration::where(['workshop_id' => $id, 'company_employee_id' => $companyEmp->id])->first();
         }
         $workshops->date = date("Y-m-d H:i:s", $workshops->date);
