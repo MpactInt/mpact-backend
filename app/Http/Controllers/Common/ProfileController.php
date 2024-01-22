@@ -108,10 +108,20 @@ class ProfileController extends Controller
         } else {
 
             $user = Auth::guard('api')->user();
+
+            $uploadedFile = $request->file('profile_image');
+
+            // Get image dimensions
+            [$width, $height] = getimagesize($uploadedFile->getPathname());
+            
+            // Check if it's square
+            if ($width !== $height) {
+                return response()->json(["status" => "error", "message" => "Upload image with equal hight and width (Square Image)."], 400);
+            }
+
             if ($user->role != 'ADMIN') {
                 $company_employee = CompanyEmployee::where('user_id', $user->id)->first();
 
-                $uploadedFile = $request->file('profile_image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
                 $destinationPath = public_path() . '/profile-images';
@@ -130,7 +140,6 @@ class ProfileController extends Controller
                 $company_employee->profile_image = url('public/profile-images/' . $company_employee->profile_image);
                 return response(["status" => "success", 'res' => $company_employee], 200);
             } else {
-                $uploadedFile = $request->file('profile_image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
                 $destinationPath = public_path() . '/profile-images';

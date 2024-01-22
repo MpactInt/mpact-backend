@@ -194,43 +194,29 @@ class DashboardController extends Controller
      public function getDailyVisitData(Request $request)
     {
         $user = Auth::guard('api')->user();
-        $com = Company::where('user_id',$user->id)->first();
-        $dailyVisits = ActivityLog::selectRaw('created_at, COUNT(*) as visit_count')
-            ->groupBy('created_at')
-            ->orderBy('created_at') 
-            ->get();
+        $company = Company::where('user_id',$user->id)->first();
 
-        $dailyVisitorsUser = ActivityLog::select('activity_logs.user_id')
-            ->join('company_employees', 'activity_logs.user_id', 'company_employees.user_id')
-            ->whereMonth('activity_logs.login_time', now()->month)
-            ->whereDay('activity_logs.login_time', now()->day)
-            ->where('company_employees.company_id', $com->id)
-            ->distinct()
-            ->count('activity_logs.user_id');
+        $formattedData['daily_visitors_user'] = 0;
+        $formattedData['categories'] = [];
+        $formattedData['data'] = [];
+        $tick_position = 0;
 
-        $weeklyData = [];
-        $daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        $sql = "SELECT count(DISTINCT(activity_logs.user_id)) user_count, LEFT(DAYNAME(login_time), 3) visit_day FROM activity_logs JOIN company_employees ON activity_logs.user_id = company_employees.user_id WHERE company_employees.company_id = ".$company->id." and DATE(login_time) >= CURDATE() - INTERVAL 7 DAY group by visit_day ORDER BY activity_logs.login_time";
+        $daily_visit_results = DB::select($sql);
 
-        // Initialize an array with zero counts for each day of the week
-        foreach ($daysOfWeek as $day) 
-        {
-            $weeklyData[$day] = 0;
+        foreach ($daily_visit_results as $daily_visit_data) {
+            $formattedData['categories'][] = $daily_visit_data->visit_day;
+            $formattedData['data'][] = $daily_visit_data->user_count;
+            $formattedData['daily_visitors_user'] = $daily_visit_data->user_count;
+
+            if($tick_position < $daily_visit_data->user_count)
+            {
+                $tick_position = $daily_visit_data->user_count;
+            }
         }
-  
-        // Populate the visit count for each day of the week
-        foreach ($dailyVisits as $visit) 
-        {
-            $dayOfWeek = \Carbon\Carbon::parse($visit->activity_date)->format('D');
-            $weeklyData[$dayOfWeek] = $visit->visit_count;
-        }
-       
-    
-        $formattedData = [
-            'categories' => array_values($daysOfWeek),
-            'data' => array_values($weeklyData),
-            'daily_visitors_user' => $dailyVisitorsUser
-        ];
-
+        $tick_positions = ceil($tick_position / 5);
+        $formattedData['tick_positions'] = [0, $tick_positions, $tick_positions*2, $tick_positions*3, $tick_positions*4, $tick_positions*5];
+        
         return response()->json($formattedData);
     }
 
