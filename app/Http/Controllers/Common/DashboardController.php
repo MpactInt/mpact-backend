@@ -201,7 +201,7 @@ class DashboardController extends Controller
         $formattedData['data'] = [];
         $tick_position = 0;
 
-        $sql = "SELECT count(DISTINCT(activity_logs.user_id)) user_count, LEFT(DAYNAME(login_time), 3) visit_day FROM activity_logs JOIN company_employees ON activity_logs.user_id = company_employees.user_id WHERE company_employees.company_id = ".$company->id." and DATE(login_time) >= CURDATE() - INTERVAL 7 DAY group by visit_day ORDER BY activity_logs.login_time";
+        $sql = "SELECT count(DISTINCT(activity_logs.user_id)) user_count, LEFT(DAYNAME(login_time), 3) visit_day, count(activity_logs.login_time) FROM activity_logs JOIN company_employees ON activity_logs.user_id = company_employees.user_id WHERE company_employees.company_id = ".$company->id." and DATE(login_time) >= CURDATE() - INTERVAL 7 DAY group by visit_day ORDER BY activity_logs.login_time";
         $daily_visit_results = DB::select($sql);
 
         foreach ($daily_visit_results as $daily_visit_data) {
