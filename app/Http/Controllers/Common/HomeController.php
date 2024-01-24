@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ForgotPasswordEmail;
 use App\Mail\SendEmployeeRegistrationEmail;
 use App\Mail\SendRegistrationEmail;
+use App\Mail\SendEmployeePart1Email;
 use App\Models\ActivityLog;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
@@ -400,6 +401,15 @@ class HomeController extends Controller
                     //    "ip"=>$request->ip()
                     // ]);
 
+                    if ($welcome_note) {
+                        $maildata = array('name' => $c->first_name, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
+                        // Mail::to($email)->send(new ForgotPasswordEmail($maildata));
+
+                        //$maildata = ['name' => $firstname];
+                        Mail::to($request->email)->send(new SendEmployeePart1Email($maildata));
+                    }
+
+                    //return response()->json(['status' => 'error', 'user' => $user, 'company' => $c, 'welcome_note' => $welcome_note], 400);
                     return response(['user' => $user, 'company' => $c, 'welcome_note' => $welcome_note, 'access_token' => $accessToken]);
                 }
             }
