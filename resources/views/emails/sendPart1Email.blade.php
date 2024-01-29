@@ -187,6 +187,10 @@
                     <div class="customer-text mb-4">
                     You will begin your Mpact learning journey with a 4-part program, providing tools to help you contribute generously. Following Parts 1-4, you will be guided through new learning tools, personalized to your profile. Lessons will include micro-videos, as well as learning exercises to help you practice.
                     </div>
+                    <br> 
+                    <div class="mb-4" style="margin: 10px;">
+                        <a class=" btn btn-primary" href="{{$maildata['link']}}">Login Now</a>
+                    </div>
                 </div>
             </div>
         </div>

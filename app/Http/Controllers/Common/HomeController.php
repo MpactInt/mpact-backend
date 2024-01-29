@@ -590,7 +590,8 @@ class HomeController extends Controller
         //         ->subject('Welcome to Mpact International');
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
-        $maildata = array('name' => 'first name', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
+        $link = env('FRONT_URL') . '/login';
+        $maildata = array('name' => 'first name', 'text' => 'You can use below link to create your password', 'link' => $link);
 
         Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
 
