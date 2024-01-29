@@ -402,10 +402,9 @@ class HomeController extends Controller
                     // ]);
 
                     if ($welcome_note) {
-                        $maildata = array('name' => $c->first_name, 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
-                        // Mail::to($email)->send(new ForgotPasswordEmail($maildata));
+                        $link = env('FRONT_URL') . '/login';
+                        $maildata = array('name' => $c->first_name, 'link' => $link);
 
-                        //$maildata = ['name' => $firstname];
                         Mail::to($request->email)->send(new SendEmployeePart1Email($maildata));
                     }
 
@@ -591,7 +590,7 @@ class HomeController extends Controller
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
         $link = env('FRONT_URL') . '/login';
-        $maildata = array('name' => 'first name', 'text' => 'You can use below link to create your password', 'link' => $link);
+        $maildata = array('name' => 'first name', 'link' => $link);
 
         Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
 
