@@ -27,6 +27,7 @@ class ProfileController extends Controller
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
+                'address' => 'required|max:500',
                 'company_name' => 'required|max:255',
                 'company_domain' =>  'required|max:255|regex:' . $regex . '|unique:companies,company_domain,' . $c->id,
             ]);
@@ -34,6 +35,7 @@ class ProfileController extends Controller
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|max:255',
                 'last_name' => 'required|max:255',
+                'address' => 'required|max:500',
                 'title' => 'required|max:255'
             ]);
         }
@@ -60,6 +62,7 @@ class ProfileController extends Controller
             $e = CompanyEmployee::where('user_id', $user->id)->first();
             $e->first_name = $request->first_name;
             $e->last_name = $request->last_name;
+            $e->address = $request->address;
             $e->title = $request->title;
             $e->save();
             return response(["status" => "success", "res" => $e], 200);
