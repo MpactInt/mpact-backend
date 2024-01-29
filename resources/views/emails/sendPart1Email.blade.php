@@ -182,10 +182,10 @@
         <div class="email-body">
             <div class="container">
                 <div class="email-text">
-                    <h2 class="hd">Welcome!</h2>
+                    <h2 class="hd">What’s Next?</h2>
                     <div class="customer-name mb-4">Hi {{$maildata['name']}},</div>
                     <div class="customer-text mb-4">
-                    please complete part1 learning plan.
+                    You will begin your Mpact learning journey with a 4-part program, providing tools to help you contribute generously. Following Parts 1-4, you will be guided through new learning tools, personalized to your profile. Lessons will include micro-videos, as well as learning exercises to help you practice.
                     </div>
                 </div>
             </div>
