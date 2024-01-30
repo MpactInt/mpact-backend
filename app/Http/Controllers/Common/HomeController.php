@@ -599,7 +599,7 @@ class HomeController extends Controller
 
         $maildata = array('link' => 'this is link', 'name' => 'firstname', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
 
-        Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeeRegistrationEmail($maildata));
+        Mail::to("maisha@mpact-int.com")->send(new SendEmployeeRegistrationEmail($maildata));
                             
     }
 }
