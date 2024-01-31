@@ -219,16 +219,10 @@
                 <ul class="footer-socila-link mb-4 border-btm-list">
                     <li><a href="">LinkedIn</a></li>
                     <li><a href="">Twitter</a></li>
-                    <li><a href="">Intagram</a></li>
                 </ul>
-                <p class="mb-4">If you have questions or need help, don -t hesitate to contact our <a href="" class="bottom-link">support team!</a> </p>
+                <p class="mb-4">If you have questions or need help, don't hesitate to contact our support team! </p>
                 <p class="mb-4">Mpact International Inc.<br /> 5857 Owens Avenue, Suite 343, Carlsbad, CA 92008, USA</p>
-                <ul class="footer-socila-link mb-4">
-                    <li><a href="">Terms & conditions</a></li>
-                    <li><a href="">Privacy policy</a></li>
-                    <li><a href="">Contact us</a></li>
-                </ul>
-                <p class="mb-4">This message was sent to [Customer ernar I. tf you dons wart to receive these emails from Mpact International in the future, you can <a href="" class="bottom-link">edit your profile</a> or <a href="" class="bottom-link">unsubscribe</a> </p>
+                
             </div>
         </div>
     </div>
