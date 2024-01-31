@@ -196,8 +196,7 @@
                         Not sure? Feel free to cancel before your trial ends.
                     </div> -->
                     <div class="customer-text mb-4">
-                        the between time, reach out any time with question! For now, head
-                        into the platform, add in your employees and browse some of the
+                        For now, head into the platform, add in your employees and browse some of the
                         material we offer. Feel free to join one of our workshops and be
                         sure to explore our learning plans.
                         <div class="customer-text mb-4">Ready to start?</div>
@@ -206,7 +205,7 @@
                         <a class=" btn btn-primary" href="{{env('FRONT_URL')}}/login">HEAD TO THE PLATFORM</a>
                     </div>
                     <div class="bottom-fade-text">
-                        If you did not sign up for this account. you can Ignore this email
+                        If you did not sign up for this account. you can ignore this email
                         and the account will be deleted automatically after 10 days.
                     </div>
                 </div>
@@ -223,7 +222,7 @@
                     <li><a href="">Intagram</a></li>
                 </ul>
                 <p class="mb-4">If you have questions or need help, don -t hesitate to contact our <a href="" class="bottom-link">support team!</a> </p>
-                <p class="mb-4">Maxi International Inc.<br /> 7040 Avenida Encesas Suite 104 Carlsbad, California 92011, USA</p>
+                <p class="mb-4">Mpact International Inc.<br /> 5857 Owens Avenue, Suite 343, Carlsbad, CA 92008, USA</p>
                 <ul class="footer-socila-link mb-4">
                     <li><a href="">Terms & conditions</a></li>
                     <li><a href="">Privacy policy</a></li>

@@ -212,7 +212,7 @@
                     <li><a href="">Intagram</a></li>
                 </ul>
                 <p class="mb-4">If you have questions or need help, don -t hesitate to contact our <a href="" class="bottom-link">support team!</a> </p>
-                <p class="mb-4">Maxi International Inc.<br /> 7040 Avenida Encesas Suite 104 Carlsbad, California 92011, USA</p>
+                <p class="mb-4">Mpact International Inc.<br /> 5857 Owens Avenue, Suite 343, Carlsbad, CA 92008, USA</p>
                 <ul class="footer-socila-link mb-4">
                     <li><a href="">Terms & conditions</a></li>
                     <li><a href="">Privacy policy</a></li>

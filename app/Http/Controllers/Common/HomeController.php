@@ -597,9 +597,13 @@ class HomeController extends Controller
         //Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
 
 
-        $maildata = array('link' => 'this is link', 'name' => 'firstname', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
+        //$maildata = array('link' => 'this is link', 'name' => 'firstname', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
 
-        Mail::to("maisha@mpact-int.com")->send(new SendEmployeeRegistrationEmail($maildata));
+        //Mail::to("maisha@mpact-int.com")->send(new SendEmployeeRegistrationEmail($maildata));
+
+        $maildata = ['name' => 'test company'];
+
+        Mail::to("maisha@mpact-int.com")->send(new SendRegistrationEmail($maildata));
                             
     }
 }
