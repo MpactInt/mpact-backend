@@ -593,17 +593,17 @@ class HomeController extends Controller
 
         //$link = env('FRONT_URL') . '/login';
         //$maildata = array('name' => 'first name', 'link' => $link);
-
         //Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
 
 
         //$maildata = array('link' => 'this is link', 'name' => 'firstname', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
-
         //Mail::to("maisha@mpact-int.com")->send(new SendEmployeeRegistrationEmail($maildata));
 
-        $maildata = ['name' => 'test company'];
+        //$maildata = ['name' => 'test company'];
+        //Mail::to("maisha@mpact-int.com")->send(new SendRegistrationEmail($maildata));
 
-        Mail::to("maisha@mpact-int.com")->send(new SendRegistrationEmail($maildata));
+        $maildata = array('link' => "this is link", 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
+        Mail::to("maisha@mpact-int.com")->send(new ForgotPasswordEmail($maildata));
                             
     }
 }
