@@ -196,7 +196,7 @@
                         Not sure? Feel free to cancel before your trial ends.
                     </div> -->
                     <div class="customer-text mb-4">
-                        For now, head into the platform, add in your employees and browse some of the
+                        For now, head into the platform, add in your employees, and browse some of the
                         material we offer. Feel free to join one of our workshops and be
                         sure to explore our learning plans.
                         <div class="customer-text mb-4">Ready to start?</div>
@@ -216,10 +216,6 @@
                 <div class="footer-logo">
                     <a href=""><img src="{{asset('public/images/logo.png')}}"></a>
                 </div>
-                <ul class="footer-socila-link mb-4 border-btm-list">
-                    <li><a href="">LinkedIn</a></li>
-                    <li><a href="">Twitter</a></li>
-                </ul>
                 <p class="mb-4">If you have questions or need help, don't hesitate to contact our support team! </p>
                 <p class="mb-4">Mpact International Inc.<br /> 5857 Owens Avenue, Suite 343, Carlsbad, CA 92008, USA</p>
                 
