@@ -1,227 +1,936 @@
-<!DOCTYPE html>
-<html>
+<html xmlns:v="urn:schemas-microsoft-com:vml">
 
 <head>
-    <title>Email Template</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style type="text/css">
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            font-family: 'Avenir', Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
+    <title></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style id="aw-autoinject" type="text/css">
+        body,
+        a {
+            word-break: break-word;
         }
 
-        #app {
-            width: 100%;
-            min-height: 100vh;
+        .feed__title a {
+            text-decoration: underline;
         }
 
-        .email-head {
-            text-align: center;
-            padding-top: 25px;
-            background: #090446;
-            padding-bottom: 15%;
+        .text-element h1 {
+            color: inherit;
+            font-family: inherit;
+            font-size: 36px;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0.5em 0;
         }
 
-        .email-head a img {
-            height: 90px;
+        .text-element h2 {
+            color: inherit;
+            font-family: inherit;
+            font-size: 32px;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0.5em 0;
         }
 
-        .email-text .hd {
-            font-weight: 600;
-            font-size: 40px;
-            margin-bottom: 1.5rem;
+        .text-element h3 {
+            color: inherit;
+            font-family: inherit;
+            font-size: 28px;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0.5em 0;
         }
 
-        .email-body {
-            background-color: #fff;
-            min-height: 90vh;
-            color: #090446;
-            font-size: 1rem;
-            line-height: 1.5;
+        .text-element h4 {
+            color: inherit;
+            font-family: inherit;
+            font-size: 24px;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0.5em 0;
         }
 
-        .email-footer {
-            line-height: 1.5;
-        }
-
-        .email-text {
-            position: relative;
-            top: -100px;
-            background: #fff;
-            padding: 5%;
-            border-radius: 15px;
-            -webkit-box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
-            box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
-        }
-
-        .mb-4 {
-            margin-bottom: 1.5rem;
-        }
-
-        .btn:hover {
-            background: #feb95f !important;
-            background-color: #feb95f !important;
-            border-color: #feb95f !important;
-            text-decoration: none;
-        }
-
-        .btn {
-            font-style: normal;
-            font-weight: 500;
+        .text-element h5 {
+            color: inherit;
+            font-family: inherit;
             font-size: 20px;
-            line-height: 25px;
-            color: #FFFFFF;
-            padding: 12px 30px;
-            background: #C2095A;
-            border-radius: 10px;
-            border: 0;
-            text-decoration: none;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0.5em 0;
+        }
+
+        .text-element h6 {
+            color: inherit;
+            font-family: inherit;
+            font-size: 16px;
+            line-height: 1.15;
+            font-weight: 700;
+            margin: 0.5em 0;
+        }
+
+        .text-element p,
+        .paragraph p {
+            color: inherit;
+            font-family: inherit;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .text-element div {
+            color: inherit;
+            font-family: inherit;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .text-element pre {
+            color: inherit;
+            display: block;
+            font-family: monospace;
+            font-size: 16px;
+            line-height: 1;
+            margin: 1em auto;
+            white-space: pre;
+            max-width: 500px;
+            overflow: auto;
+            overflow-wrap: break-word;
+        }
+
+        .text-element address {
+            color: inherit;
+            font-family: inherit;
+            display: block;
+            font-size: 16px;
+            font-style: italic;
+            line-height: 1.15;
+            margin: 0.5em 0;
+        }
+
+        .text-element blockquote,
+        .headline blockquote,
+        .paragraph blockquote {
+            border-left: 5px solid #ccc;
+            font-style: normal;
+            margin-left: 0;
+            margin-right: 0;
+            overflow: hidden;
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+            box-sizing: border-box;
+        }
+
+        @media only screen and (max-width:599px) {
+            img {
+                max-width: 100% !important;
+                min-height: 1px !important;
+                height: auto !important;
+            }
+
+            .text-element pre {
+                max-width: 250px;
+            }
+
+            .aw-stack .container {
+                box-sizing: border-box;
+                display: block !important;
+                float: left;
+                max-width: 100% !important;
+                margin: auto;
+                width: 100% !important;
+            }
+
+            .video .video-content {
+                width: auto !important;
+            }
+
+            .feed__item--postcard-side,
+            .feed__item--postcard-main,
+            .feed__item--block {
+                box-sizing: border-box;
+                display: block !important;
+                max-width: 100% !important;
+                margin: auto;
+                width: 100% !important;
+            }
+
+            .feed__item--block>div {
+                margin: 0 0 16px 0 !important;
+            }
+
+            .feed__image {
+                width: 100% !important;
+            }
+
+            .feed__spacer {
+                display: none !important;
+            }
+        }
+    </style>
+    <style type="text/css">
+        v:* {
+            behavior: url(#default#VML);
             display: inline-block;
+        }
+
+        body,
+        #bodyTable,
+        #bodyCell {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            width: 100%
+        }
+
+        body {
+            background-color: #fefefe;
+            color: #333333;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            line-height: 1.5em;
+            font-weight: 400 !important;
+            height: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%
+        }
+
+        body,
+        table,
+        td {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%
+        }
+
+        table,
+        td {
+            color: #333333;
+            font-family: Helvetica, Arial,
+                sans-serif;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 0;
+            font-size: 18px;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            max-width: 100%;
+            outline: none;
+            text-decoration: none;
+            color: #333333;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 10px
+        }
+
+        .temp-header img {
+            border-radius: 0px
+        }
+
+        table {
+            border-collapse: collapse !important
+        }
+
+        strong {
+            font-weight: 700
         }
 
         .container {
-            padding: 0px 5%;
+            padding: 0
         }
 
-        .bottom-fade-text {
-            opacity: 0.7;
+        .floated-none td {
+            padding: 0
         }
 
-        .email-footer {
-            color: #090446;
-            opacity: 0.9;
+        .contained {
+            max-width: 600px;
+            width: 100%
         }
 
-        .footer-socila-link li a {
-            color: #666;
+        .contained img {
+            height: auto !important;
+            max-width: 100% !important
+        }
+
+        .paragraph div,
+        .paragraph p {
+            color: #333333;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            line-height: 125%;
+            font-weight: 400;
+            text-align: left
+        }
+
+        .text-element div,
+        .text-element p {
+            color: #333333;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 18px;
+            line-height: 125%;
+            font-weight: 400;
+            text-align: left
+        }
+
+        .text-element a,
+        .paragraph a {
+            color: #000000;
+            font-weight: bold
+        }
+
+        .headline {
+            color: #333333;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 36px;
+            line-height: 125%;
+            font-weight: 700;
+            text-align: left
+        }
+
+        .headline a {
+            color: #333333;
             text-decoration: none;
-            font-weight: 600;
-            color: #090446;
-            opacity: 0.9;
-            padding-right: 15px;
-            padding-left: 0;
-            border-right: 2px solid #ccc;
-            margin-right: 15px;
+            font-weight: bold
         }
 
-        .footer-socila-link li:last-child a {
-            border-right: none;
+        .temp-footer .paragraph div,
+        .temp-footer .paragraph p {
+            color: #7c7c7c;
+            font-size: 14px;
+            line-height: 125%
         }
 
-        .footer-socila-link {
-            list-style: none;
+        .temp-footer .text-element div,
+        .temp-footer .text-element p {
+            color: #7c7c7c;
+            font-size: 14px;
+            line-height: 125%
         }
 
-        .footer-socila-link li {
-            display: inline-block;
+        .temp-footer .headline {
+            color: #7c7c7c;
+            font-size: 16px
         }
 
-        .bottom-link {
-            color: #090446;
-            text-decoration: none;
-            font-weight: 600;
+        .temp-footer .text-element a,
+        .temp-footer .paragraph a {
+            color: #7c7c7c
         }
 
-        .footer-logo img {
-            height: 80px;
-            margin-bottom: 30px;
+        .temp-product .temp-padding {
+            padding: 10px
         }
 
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1140px;
+        .temp-product .image {
+            max-width: 100%;
+            height: auto;
+            padding-bottom: 0px
+        }
+
+        .temp-product .image img {
+            border-radius: 4px
+        }
+
+        .temp-product img a {
+            text-decoration: none !important
+        }
+
+        .temp-product .temp-headline {
+            color: #333333;
+            font-size: 18px;
+            line-height: 1.15em;
+            max-width: 100%;
+            text-align: left
+        }
+
+        .temp-product .temp-paragraph {
+            font-size: 18px;
+            line-height: 1.25em;
+            font-weight: 400;
+            max-width: 100%;
+            text-align: left;
+            padding-top: 2px
+        }
+
+        .temp-product .temp-price {
+            font-size: 20px;
+            line-height: 1.15em;
+            font-weight: 500;
+            max-width: 100%;
+            text-align: left;
+            padding-top: 2px
+        }
+
+        .temp-product a {
+            color: #333333;
+            font-weight: bold;
+            text-decoration: none !important
+        }
+
+        .temp-product .temp-button-padding table {
+            width: 100%
+        }
+
+        .coupon .headline {
+            font-size: 20px;
+            text-align: center
+        }
+
+        .coupon .paragraph {
+            text-align: center
+        }
+
+        .temp-article .headline {
+            font-size: 24px;
+            margin: 0;
+            text-align: left !important
+        }
+
+        .temp-article .paragraph {
+            text-align: left !important
+        }
+
+        .temp-article td {
+            padding: 0
+        }
+
+        .temp-article .padding {
+            padding-bottom: 10px
+        }
+
+        .temp-article .read-more {
+            text-align: left
+        }
+
+        .temp-article a {
+            color: #333333
+        }
+
+        .clear {
+            clear: both
+        }
+
+        .aw-image-link {
+            border: 0;
+            text-decoration: none
+        }
+
+        ol,
+        ul {
+            color: #333333
+        }
+
+        li {
+            color: #333333
+        }
+
+        a[x-apple-data-detectors] {
+            border-bottom: none !important;
+            color: inherit !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+            text-decoration: none !important
+        }
+
+        center>div {
+            box-sizing: border-box
+        }
+
+        @media screen and (max-width: 599px) {
+
+            body,
+            #bodyTable,
+            #bodyCell {
+                width: 100% !important;
                 margin: auto;
+                clear: both !important;
+                display: block
+            }
+
+            img {
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: 300%
+            }
+
+            .paragraph {
+                font-size: 18px !important
+            }
+
+            .headline {
+                font-size: 28px !important
+            }
+
+            .temp-footer .paragraph {
+                font-size: 14px !important
+            }
+
+            .temp-footer .headline {
+                font-size: 16px !important
+            }
+
+            .share img {
+                width: 20px !important;
+                height: auto !important;
+                display: inline-block
+            }
+
+            .temp-button-padding td {
+                padding: 10px 20px !important
+            }
+
+            .video td {
+                display: table-cell !important;
+                text-align: center !important
+            }
+
+            .temp-article div {
+                box-sizing: border-box !important;
+                display: block !important;
+                width: 100% !important
+            }
+
+            .floated-left {
+                display: inline-table !important;
+                width: 100% !important;
+                text-align: center !important
+            }
+
+            .floated-left td {
+                padding: 10px 0px !important
+            }
+
+            .floated-right {
+                display: inline-table !important;
+                width: 100% !important;
+                text-align: center !important
+            }
+
+            .floated-right td {
+                padding: 10px 0px !important
+            }
+
+            .signature_spacer {
+                display: none !important
+            }
+
+            .signature_content {
+                text-align: center !important
             }
         }
 
-        @media (max-width: 767px) {
-            .email-body {
-                font-size: 14px;
-            }
-
-            .btn {
-                font-size: 14px;
-            }
-
-            .email-head {
-                padding-bottom: 35%;
-            }
-
-            .footer-socila-link li a {
-                padding-right: 10px;
-                margin-right: 10px;
-                font-size: 11px;
-            }
-
-            .email-footer {
-                font-size: 12px;
-                line-height: 1.3;
-            }
-
-            .email-text {
-                padding: 8%;
+        @media only screen and (min-width: 10px) and (max-width: 599px) {
+            u~div img {
+                width: auto !important
             }
         }
     </style>
 </head>
 
 <body>
-    <div id="app" style="width: 100%;min-height: 100vh;">
-        <div class="email-section">
-            <div class="email-head" style=" text-align: center;
-            padding-top: 25px;
-            background: #090446;
-            padding-bottom: 15%;">
-                <a href=""><img style=" height: 90px;" src="{{asset('public/images/logo.png')}}" alt="Mpact"></a>
-            </div>
+
+    <center>
+        <div align="center">
+            <table border="0" cellspacing="0" cellpadding="0" width="100%" class="aw-bgc" align="center"
+                role="presentation"
+                style="background-color: rgb(248, 248, 248); font-weight: 400; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                <tbody>
+                    <tr>
+                        <td class="temp-wrapper"
+                            style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                            <div align="center">
+
+                                <!--[if (gte mso 9)]><table border="0" cellspacing="0" cellpadding="0" width="600" align="center" role="presentation"><tr><td class="temp-header"><![endif]-->
+                                <div class="temp-header" style="max-width: 600px; ">
+                                    <div class="temp-fullbleed contained" style="max-width: 600px; width: 100%;">
+                                        <div class="region">
+                                            <div>
+                                                <table class="row aw-stack"
+                                                    style="width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;"
+                                                    role="presentation">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="container" style="padding: 30px 20px; width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse;
+    border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;" width="100%" valign="top">
+                                                                <div class="definition-parent"><span>
+                                                                        <table align="center" width="100%"
+                                                                            class="floated-none"
+                                                                            style="float: none; text-align: center; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;"
+                                                                            role="presentation">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center"
+                                                                                        style="padding: 0px; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+
+                                                                                        <img class="model"
+                                                                                            src="https://i.ibb.co/pfJ6H9W/Mpact-Logo-Full-Color.png"
+                                                                                            style="display: block; width: 150px; height: 41px; border-width: 0px; border-style: none; line-height: 100%; max-width: 100%; outline-width: medium; outline-style: none; text-decoration: none; color: rgb(51, 51, 51); font-size: 20px; font-weight: 700; border-radius: 0px;"
+                                                                                            alt="Logo" width="150"
+                                                                                            height="41">
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </span></div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--[if (gte mso 9)]></td></tr></table><![endif]-->
+
+                                <!--[if (gte mso 9)]><table border="0" cellspacing="0" cellpadding="0" width="600" align="center" bgcolor="#ffffff" role="presentation"><tr><td class="temp-body"><![endif]-->
+                                <div class="temp-body"
+                                    style="background-color:#ffffff; border-radius:10px; max-width: 600px; ">
+                                    <div class="temp-fullbleed contained" style="max-width: 600px; width: 100%;">
+                                        <div class="region">
+                                            <div>
+                                                <table class="row aw-stack"
+                                                    style="width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;"
+                                                    role="presentation">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="container" style="padding: 0px; width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse;
+    border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;" width="100%" valign="top">
+                                                                <div class="definition-parent"><span>
+                                                                        <table align="center" width="100%"
+                                                                            class="floated-none"
+                                                                            style="float: none; text-align: center; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;"
+                                                                            role="presentation">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center"
+                                                                                        style="padding: 0px; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                                        <a class="aw-image-link"
+                                                                                            href="http://www.aweber.com"
+                                                                                            style="border-width: 0px; border-style: none; text-decoration: none;"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <img class="model"
+                                                                                                src="https://fullsphere.co.uk/misc/free-template/images/image-3.jpg"
+                                                                                                style="display: block; width: 600px; height: 283px; border-width: 0px; border-style: none; line-height: 100%; max-width: 100%; outline-width: medium; outline-style: none; text-decoration: none; color: rgb(51, 51, 51); font-size: 20px; font-weight: 700; border-radius: 10px;"
+                                                                                                alt="Image" width="600"
+                                                                                                height="283">
+                                                                                        </a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </span></div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table class="row aw-stack"
+                                                    style="width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;"
+                                                    role="presentation">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="container" style="padding: 30px; width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse:
+    collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;" width="100%" valign="top">
+                                                                <div class="definition-parent">
+                                                                    <div class="text-element paragraph">
+                                                                        <div
+                                                                            style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                            <h4>What is Lorem Ipsum?</h4>
+
+                                                                            <p
+                                                                                style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                                &nbsp;</p>
+
+                                                                            <p
+                                                                                style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="definition-parent">
+                                                                    <div class="divider">
+                                                                        <table cellpadding="0" cellspacing="0"
+                                                                            width="100%" role="presentation"
+                                                                            style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="divider-container"
+                                                                                        style="padding: 20px 0px; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                                        <table width="100%"
+                                                                                            role="presentation"
+                                                                                            style="border-width: 1px 0px 0px; border-style: solid none none; border-top-color: rgb(222, 224, 232); border-collapse: collapse; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-spacing: 0px; font-size: 18px;">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td width="100%"
+                                                                                                        style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                                                        <!--<hr style="border-top-style:none; border-left-style:none; border-right-style:none;"/>-->
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="definition-parent">
+                                                                    <div class="text-element paragraph">
+                                                                        <div
+                                                                            style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                            <p
+                                                                                style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                                Updates:</p>
+                                                                            <ul style="color: rgb(51, 51, 51);">
+                                                                                <li style="color: rgb(51, 51, 51);">
+                                                                                    In vitae ante egestas, blandit enim quis, feugiat metus.</li>
+                                                                                <li style="color: rgb(51,51, 51);">Nunc in elit non nisl ultrices imperdiet in vitae quam.</li>
+                                                                                <li style="color: rgb(51, 51, 51);">Donec rutrum ipsum id nibh auctor scelerisque.</li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="definition-parent">
+                                                                    <div class="divider">
+                                                                        <table cellpadding="0" cellspacing="0"
+                                                                            width="100%" role="presentation"
+                                                                            style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px; margin-bottom: 20px;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="divider-container"
+                                                                                        style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                                        <table width="100%"
+                                                                                            role="presentation"
+                                                                                            style="border-width: 1px 0px 0px; border-style: solid none none; border-top-color: rgb(222, 224, 232); border-collapse: collapse; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-spacing: 0px; font-size: 18px;">
+                                                                                            <tbody>
+                                                                                                <tr>
+                                                                                                    <td width="100%"
+                                                                                                        style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                                                        <!--<hr style="border-top-style:none; border-left-style:none; border-right-style:none;"/>-->
+                                                                                                    </td>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="definition-parent">
+                                                                    <div class="text-element paragraph">
+                                                                        <div
+                                                                            style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                            
+
+                                                                                <table cellpadding="0" cellspacing="0"
+                                                                            width="100%" role="presentation"
+                                                                            style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center"
+                                                                                        style="padding: 0.625rem 0px; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                                        
+                                                                                        <a href="https://www.facebook.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; text-decoration: none"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <button style="font-family:HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Regular',Arial,sans-serif;font-size:18px;text-transform:uppercase;line-height:24px;font-weight:bold;text-align:center;background:#090446;border-radius:5px;text-decoration:none;color:#ffffff;display:block;padding:4px 10px 4px 10px;border: 0;">Button 1</button>
+                                                                                        </a>
+                                                                                        
+                                                                                        <a href="https://twitter.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; text-decoration: none"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <button style="font-family:HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Regular',Arial,sans-serif;font-size:18px;text-transform:uppercase;line-height:24px;font-weight:bold;text-align:center;background:#090446;border-radius:5px;text-decoration:none;color:#ffffff;display:block;padding:4px 10px 4px 10px;border: 0;">Button 2</button>
+                                                                                        </a>
+                                                                                        
+                                                                                        <a href="https://www.instagram.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; text-decoration: none"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <button style="font-family:HelveticaNeue-Light,'Helvetica Neue Light','Helvetica Regular',Arial,sans-serif;font-size:18px;text-transform:uppercase;line-height:24px;font-weight:bold;text-align:center;background:#090446;border-radius:5px;text-decoration:none;color:#ffffff;display:block;padding:4px 10px 4px 10px;border: 0;">Button 3</button>
+                                                                                        </a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+
+                                                                        <p style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left; margin-top: 20px;">
+                                                                                Got writer’s block? Our&nbsp;<em
+                                                                                    data-stringify-type="italic"><a
+                                                                                        class="validating"
+                                                                                        href="https://cogdynamism.mpact-int.com"
+                                                                                        style="color: rgb(0, 0, 0); font-weight: bold;"
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer">What
+                                                                                        to Write Guide</a>&nbsp;</em>has
+                                                                                a ton of great
+                                                                                fill-in-the-blank&nbsp;templates!</p>
+
+                                                                            <p
+                                                                                style="color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; font-size: 18px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                                <br>
+                                                                                Good Luck &amp; have fun!</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--[if (gte mso 9)]></td></tr></table><![endif]-->
+
+                                <!--[if (gte mso 9)]><table border="0" cellspacing="0" cellpadding="0" width="600" align="center" role="presentation"><tr><td class="temp-footer"><![endif]-->
+                                <div class="temp-footer" style="max-width: 600px; ">
+                                    <div class="temp-fullbleed contained" style="max-width: 600px; width: 100%;">
+                                        <div class="region">
+                                            <div>
+                                                <table class="row aw-stack"
+                                                    style="width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;"
+                                                    role="presentation">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="container" style="padding: 30px 20px; width: 100%; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse;
+    border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;" width="100%" valign="top">
+                                                                <div class="definition-parent">
+                                                                    <div
+                                                                        class="social social--sm social--circle align-center">
+                                                                        <table cellpadding="0" cellspacing="0"
+                                                                            width="100%" role="presentation"
+                                                                            style="text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td align="center"
+                                                                                        style="padding: 0.625rem 0px; text-size-adjust: 100%; color: rgb(51, 51, 51); font-family: Helvetica, Arial, sans-serif; border-collapse: collapse; border-spacing: 0px; border-width: 0px; border-style: none; font-size: 18px;">
+                                                                                        
+                                                                                        <a href="https://www.facebook.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; margin: 0.25rem; height: 24px; width: 24px;"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <img style="height: 24px; width: 24px; border-width: 0px; border-style: none; line-height: 100%; max-width: 100%; outline-width: medium; outline-style: none; text-decoration: none; color: rgb(51, 51, 51); font-size: 20px; font-weight: 700; border-radius: 10px;"
+                                                                                                alt="Facebook Icon"
+                                                                                                src="https://awas.aweber-static.com/images/message-editor/social/black/circle/facebook.png"
+                                                                                                data-icon-name="Facebook"
+                                                                                                height="24" width="24">
+                                                                                        </a>
+                                                                                        
+                                                                                        <a href="https://twitter.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; margin: 0.25rem; height: 24px; width: 24px;"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <img style="height: 24px; width: 24px; border-width: 0px; border-style: none; line-height: 100%; max-width: 100%; outline-width: medium; outline-style: none; text-decoration: none; color: rgb(51, 51, 51); font-size: 20px; font-weight: 700; border-radius: 10px;"
+                                                                                                alt="Twitter Icon"
+                                                                                                src="https://awas.aweber-static.com/images/message-editor/social/black/circle/twitter.png"
+                                                                                                data-icon-name="Twitter"
+                                                                                                height="24" width="24">
+                                                                                        </a>
+                                                                                        
+                                                                                        <a href="https://www.instagram.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; margin: 0.25rem; height: 24px; width: 24px;"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <img style="height: 24px; width: 24px; border-width: 0px; border-style: none; line-height: 100%; max-width: 100%; outline-width: medium; outline-style: none; text-decoration: none; color: rgb(51, 51, 51); font-size: 20px; font-weight: 700; border-radius: 10px;"
+                                                                                                alt="Instagram Icon"
+                                                                                                src="https://awas.aweber-static.com/images/message-editor/social/black/circle/instagram.png"
+                                                                                                data-icon-name="Instagram"
+                                                                                                height="24" width="24">
+                                                                                        </a>
+                                                                                        
+                                                                                        <a href="https://www.youtube.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; margin: 0.25rem; height: 24px; width: 24px;"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <img style="height: 24px; width: 24px; border-width: 0px; border-style: none; line-height: 100%; max-width: 100%; outline-width: medium; outline-style: none; text-decoration: none; color: rgb(51, 51, 51); font-size: 20px; font-weight: 700; border-radius: 10px;"
+                                                                                                alt="YouTube Icon"
+                                                                                                src="https://awas.aweber-static.com/images/message-editor/social/black/circle/youtube.png"
+                                                                                                data-icon-name="YouTube"
+                                                                                                height="24" width="24">
+                                                                                        </a>
+                                                                                        
+                                                                                        <a href="https://www.linkedin.com/"
+                                                                                            style="display: inline-block; font-size: 0; vertical-align: top; margin: 0.25rem; height: 24px; width: 24px;"
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer">
+                                                                                            <img style="height: 24px; width: 24px; border-width: 0px; border-style: none; line-height: 100%; max-width: 100%; outline-width: medium; outline-style: none; text-decoration: none; color: rgb(51, 51, 51); font-size: 20px; font-weight: 700; border-radius: 10px;"
+                                                                                                alt="LinkedIn Icon"
+                                                                                                src="https://awas.aweber-static.com/images/message-editor/social/black/circle/linkedin.png"
+                                                                                                data-icon-name="LinkedIn"
+                                                                                                height="24" width="24">
+                                                                                        </a>
+                                                                                        
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="definition-parent">
+                                                                    <div class="text-element paragraph">
+                                                                        <div
+                                                                            style="color: rgb(124, 124, 124); font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 125%; font-weight: 400; text-align: left;">
+                                                                            <div
+                                                                                style="text-align: center; color: rgb(124, 124, 124); font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 125%; font-weight: 400;">
+                                                                                &nbsp;</div>
+
+                                                                            <div
+                                                                                style="text-align: center; color: rgb(124, 124, 124); font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 125%; font-weight: 400;">
+                                                                                1100 Manor Drive<br>
+                                                                                Chalfont PA 18914<br>
+                                                                                USA</div>
+
+                                                                            <div
+                                                                                style="text-align: center; color: rgb(124, 124, 124); font-family: Helvetica, Arial, sans-serif; font-size: 14px; line-height: 125%; font-weight: 400;">
+                                                                                <br>
+                                                                                <a class="validating" href="#"
+                                                                                    style="color: rgb(124, 124, 124); font-weight: bold;"
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer">Privacy
+                                                                                    Policy</a> | <a class="validating"
+                                                                                    href="https://www.aweber.com/z/r/?ThisIsATestEmail"
+                                                                                    style="color: rgb(124, 124, 124); font-weight: bold;"
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer">Unsubscribe</a> | <a class="validating"
+                                                                                    href="https://www.aweber.com/z/r/?ThisIsATestEmail"
+                                                                                    style="color: rgb(124, 124, 124); font-weight: bold;"
+                                                                                    target="_blank"
+                                                                                    rel="noopener noreferrer">Change Subscriber Options</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="email-body">
-            <div class="container">
-                <div class="email-text">
-                    <h2 class="hd">Welcome!</h2>
-                    <div class="customer-name mb-4">Hi {{$maildata['name']}},</div>
-                    <div class="customer-text mb-4">
-                    We would like to welcome you to Mpact International. Our Cognitive Dynamism platform is
-    transforming workplaces across the globe, fostering climates in which all ideas can flourish and where
-    employees feel safe and ready to contribute their knowledge and experience.
-                    </div>
-                    <div class="customer-text mb-4">
-                    We have created an experience to empower you to lead transformation, and one that empowers your
-    employees to be active participants in the change.                    </div>
-                    <!-- <div class="customer-text mb-4">
-                        Not sure? Feel free to cancel before your trial ends.
-                    </div> -->
-                    <div class="customer-text mb-4">
-                        For now, head into the platform, add in your employees, and browse some of the
-                        material we offer. Feel free to join one of our workshops and be
-                        sure to explore our learning plans.
-                        <div class="customer-text mb-4">Ready to start?</div>
-                    </div>
-                    <div class="mb-4">
-                        <a class=" btn btn-primary" href="{{env('FRONT_URL')}}/login">HEAD TO THE PLATFORM</a>
-                    </div>
-                    <div class="bottom-fade-text">
-                        If you did not sign up for this account. you can ignore this email
-                        and the account will be deleted automatically after 10 days.
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="email-footer">
-            <div class="container">
-                <div class="footer-logo">
-                    <a href=""><img src="{{asset('public/images/logo.png')}}"></a>
-                </div>
-                <p class="mb-4">If you have questions or need help, don't hesitate to contact our support team! </p>
-                <p class="mb-4">Mpact International Inc.<br /> 5857 Owens Avenue, Suite 343, Carlsbad, CA 92008, USA</p>
-                
-            </div>
-        </div>
-    </div>
+    </center>
 </body>
 
 </html>
