@@ -1,204 +1,485 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      style="
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+          'Segoe UI Symbol';
+        background-color: #ffffff;
+        color: #222;
+        height: 100%;
+        line-height: 1.4;
+        margin: 0;
+        padding: 0;
+        width: 100% !important;
+      "
+    >
+      <table
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+        style="
+          box-sizing: border-box;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+            'Segoe UI Symbol';
+          background-color: #090446;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+        "
+      >
+        <tbody>
+          <tr>
+            <td
+              align="center"
+              style="
+                box-sizing: border-box;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                  Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+                  'Segoe UI Emoji', 'Segoe UI Symbol';
+              "
+            >
+              <table
+                width="100%"
+                cellpadding="0"
+                cellspacing="0"
+                role="presentation"
+                style="
+                  box-sizing: border-box;
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                    Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+                    'Segoe UI Emoji', 'Segoe UI Symbol';
+                  margin: 0;
+                  padding: 0;
+                  width: 100%;
+                "
+              >
+                <tbody>
+                  <tr>
+                    <td>
+                      <div
+                        style="
+                          box-sizing: border-box;
+                          font-family: -apple-system, BlinkMacSystemFont,
+                            'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+                            'Apple Color Emoji', 'Segoe UI Emoji',
+                            'Segoe UI Symbol';
+                          width: 570px;
+                          margin: 0 auto;
+                          text-align: center;
+                          padding: 34px 0 15px;
+                          font-size: 14px;
+                          color: #7c8288;
+                        "
+                      >
+                        <span class="im">
+                          <p
+                            style="
+                              box-sizing: border-box;
+                              font-family: -apple-system, BlinkMacSystemFont,
+                                'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+                                'Apple Color Emoji', 'Segoe UI Emoji',
+                                'Segoe UI Symbol';
+                              margin-top: 0;
+                              color: #b5b9bd;
+                              font-size: 12px;
+                              line-height: 16px;
+                              text-align: center;
+                            "
+                          >
+                            -- Please do not reply to this --
+                          </p></span
+                        >
 
-<head>
-    <title>Email Template</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style type="text/css">
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            font-family: 'Avenir', Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
+                        This is an automated email by Mpact International.
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      width="100%"
+                      cellpadding="0"
+                      cellspacing="0"
+                      style="
+                        box-sizing: border-box;
+                        font-family: -apple-system, BlinkMacSystemFont,
+                          'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+                          'Apple Color Emoji', 'Segoe UI Emoji',
+                          'Segoe UI Symbol';
+                        background-color: #f1f3f4;
+                        border-bottom: 1px solid #edf2f7;
+                        border-top: 1px solid #edf2f7;
+                        margin: 0;
+                        padding: 0;
+                        width: 100%;
+                      "
+                    >
+                      <table
+                        align="center"
+                        width="570"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          box-sizing: border-box;
+                          font-family: -apple-system, BlinkMacSystemFont,
+                            'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+                            'Apple Color Emoji', 'Segoe UI Emoji',
+                            'Segoe UI Symbol';
+                          background-color: #ffffff;
+                          border-color: #e2e8ea;
+                          border-radius: 3px;
+                          border-width: 1px;
+                          border-style: solid;
+                          margin: 0 auto;
+                          padding: 0;
+                          width: 570px;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              style="
+                                box-sizing: border-box;
+                                font-family: -apple-system, BlinkMacSystemFont,
+                                  'Segoe UI', Roboto, Helvetica, Arial,
+                                  sans-serif, 'Apple Color Emoji',
+                                  'Segoe UI Emoji', 'Segoe UI Symbol';
+                                max-width: 100vw;
+                                padding: 32px;
+                              "
+                            >
+                              <table
+                                width="100%"
+                                style="
+                                  box-sizing: border-box;
+                                  font-family: -apple-system, BlinkMacSystemFont,
+                                    'Segoe UI', Roboto, Helvetica, Arial,
+                                    sans-serif, 'Apple Color Emoji',
+                                    'Segoe UI Emoji', 'Segoe UI Symbol';
+                                  padding: 25px;
+                                "
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                              >
+                                <tbody>
+                                  <tr>
+                                    <td style="width: 50%;">
+                                      <img
+                                        src="https://i.ibb.co/pfJ6H9W/Mpact-Logo-Full-Color.png"
+                                        alt="Mpact International"
+                                        style="width: 50%"
+                                      />
+                                    </td>
+                                    <td
+                                      style="
+                                        box-sizing: border-box;
+                                        font-family: -apple-system,
+                                          BlinkMacSystemFont, 'Segoe UI', Roboto,
+                                          Helvetica, Arial, sans-serif,
+                                          'Apple Color Emoji', 'Segoe UI Emoji',
+                                          'Segoe UI Symbol';
+                                        text-align: right;
+                                        color: #b5b9bd;
+                                      "
+                                    >
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <span class="im">
+                                <table
+                                  style="
+                                    box-sizing: border-box;
+                                    font-family: -apple-system,
+                                      BlinkMacSystemFont, 'Segoe UI', Roboto,
+                                      Helvetica, Arial, sans-serif,
+                                      'Apple Color Emoji', 'Segoe UI Emoji',
+                                      'Segoe UI Symbol';
+                                    border-top: 1px solid #e8e5ef;
+                                    padding-top: 25px;
+                                    padding: 25px;
+                                    margin-top: 0;
+                                  "
+                                  width="100%"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  role="presentation"
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td
+                                        style="
+                                          box-sizing: border-box;
+                                          font-family: -apple-system,
+                                            BlinkMacSystemFont, 'Segoe UI',
+                                            Roboto, Helvetica, Arial, sans-serif,
+                                            'Apple Color Emoji',
+                                            'Segoe UI Emoji', 'Segoe UI Symbol';
+                                          color: #b5b9bd;
+                                          font-weight: bold;
+                                          font-size: 14px;
+                                        "
+                                      ></td>
+                                      <td
+                                        style="
+                                          box-sizing: border-box;
+                                          font-family: -apple-system,
+                                            BlinkMacSystemFont, 'Segoe UI',
+                                            Roboto, Helvetica, Arial, sans-serif,
+                                            'Apple Color Emoji',
+                                            'Segoe UI Emoji', 'Segoe UI Symbol';
+                                          text-align: right;
+                                          color: #b5b9bd;
+                                        "
+                                      ></td>
+                                    </tr>
+                                    <tr>
+                                      <td
+                                        colspan="2"
+                                        style="
+                                          box-sizing: border-box;
+                                          font-family: -apple-system,
+                                            BlinkMacSystemFont, 'Segoe UI',
+                                            Roboto, Helvetica, Arial, sans-serif,
+                                            'Apple Color Emoji',
+                                            'Segoe UI Emoji', 'Segoe UI Symbol';
+                                        "
+                                      >
+                                        <div
+                                          style="
+                                            box-sizing: border-box;
+                                            font-family: -apple-system,
+                                              BlinkMacSystemFont, 'Segoe UI',
+                                              Roboto, Helvetica, Arial,
+                                              sans-serif, 'Apple Color Emoji',
+                                              'Segoe UI Emoji',
+                                              'Segoe UI Symbol';
+                                            margin-top: 15px;
+                                          "
+                                        >
+                                          <div
+                                            style="
+                                              box-sizing: border-box;
+                                              font-family: -apple-system,
+                                                BlinkMacSystemFont, 'Segoe UI',
+                                                Roboto, Helvetica, Arial,
+                                                sans-serif, 'Apple Color Emoji',
+                                                'Segoe UI Emoji',
+                                                'Segoe UI Symbol';
+                                            "
+                                          >
+                                            <p
+                                              style="
+                                                box-sizing: border-box;
+                                                font-family: -apple-system,
+                                                  BlinkMacSystemFont, 'Segoe UI',
+                                                  Roboto, Helvetica, Arial,
+                                                  sans-serif,
+                                                  'Apple Color Emoji',
+                                                  'Segoe UI Emoji',
+                                                  'Segoe UI Symbol';
+                                                line-height: 1.5em;
+                                                margin-top: 0;
+                                                text-align: left;
+                                                font-size: 14px;
+                                                
+                                                color: #000;
+                                              "
+                                            >
+                                              Reset your password, 
+                                              
+                                            </p>
+                                            <p
+                                              style="
+                                                box-sizing: border-box;
+                                                font-family: -apple-system,
+                                                  BlinkMacSystemFont, 'Segoe UI',
+                                                  Roboto, Helvetica, Arial,
+                                                  sans-serif,
+                                                  'Apple Color Emoji',
+                                                  'Segoe UI Emoji',
+                                                  'Segoe UI Symbol';
+                                                line-height: 1.5em;
+                                                margin-top: 0;
+                                                text-align: left;
+                                                font-size: 14px;
+                                              "
+                                            >
+                                              Thanks,<br /> 
+                                              Mpact Team
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                <table
+                                  style="
+                                    box-sizing: border-box;
+                                    font-family: -apple-system,
+                                      BlinkMacSystemFont, 'Segoe UI', Roboto,
+                                      Helvetica, Arial, sans-serif,
+                                      'Apple Color Emoji', 'Segoe UI Emoji',
+                                      'Segoe UI Symbol';
+                                    border-top: 1px solid #e8e5ef;
+                                    padding-top: 25px;
+                                    padding: 25px 0 0 0;
+                                    margin-top: 0;
+                                  "
+                                  width="100%"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  role="presentation"
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td
+                                        style="
+                                          text-align: center;
+                                          box-sizing: border-box;
+                                          font-family: -apple-system,
+                                            BlinkMacSystemFont, 'Segoe UI',
+                                            Roboto, Helvetica, Arial, sans-serif,
+                                            'Apple Color Emoji',
+                                            'Segoe UI Emoji', 'Segoe UI Symbol';
+                                          color: #6c757d;
+                                        "
+                                      >
+                                        Get started now
+                                        <br />
+                                        <br />
+                                        <a
+                                          href="{{$maildata['link']}}"
+                                          style="
+                                            box-sizing: border-box;
+                                            font-family: -apple-system,
+                                              BlinkMacSystemFont, 'Segoe UI',
+                                              Roboto, Helvetica, Arial,
+                                              sans-serif, 'Apple Color Emoji',
+                                              'Segoe UI Emoji',
+                                              'Segoe UI Symbol';
+                                            color: #ffffff;
+                                            text-decoration: none;
+                                            padding: 0.3rem 1rem 0.5rem 1rem;
+                                            border-radius: 8px;
+                                            background-color: #090446;
+                                            text-align: center;
+                                            vertical-align: middle;
+                                          "
+                                          target="_blank"
+                                          >Reset your password</a
+                                        >
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
 
-        #app {
-            width: 100%;
-            min-height: 100vh;
-        }
-
-        .email-head {
-            text-align: center;
-            padding-top: 25px;
-            background: #090446;
-            padding-bottom: 15%;
-        }
-
-        .email-head a img {
-            height: 90px;
-        }
-
-        .email-text .hd {
-            font-weight: 600;
-            font-size: 40px;
-            margin-bottom: 1.5rem;
-        }
-
-        .email-body {
-            background-color: #fff;
-            min-height: 90vh;
-            color: #090446;
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-
-        .email-footer {
-            line-height: 1.5;
-        }
-
-        .email-text {
-            position: relative;
-            top: -100px;
-            background: #fff;
-            padding: 5%;
-            border-radius: 15px;
-            -webkit-box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
-            box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
-        }
-
-        .mb-4 {
-            margin-bottom: 1.5rem;
-        }
-
-        .btn:hover {
-            background: #feb95f !important;
-            background-color: #feb95f !important;
-            border-color: #feb95f !important;
-            text-decoration: none;
-        }
-
-        .btn {
-            font-style: normal;
-            font-weight: 500;
-            font-size: 20px;
-            line-height: 25px;
-            color: #FFFFFF;
-            padding: 12px 30px;
-            background: #C2095A;
-            border-radius: 10px;
-            border: 0;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .container {
-            padding: 0px 5%;
-        }
-
-        .bottom-fade-text {
-            opacity: 0.7;
-        }
-
-        .email-footer {
-            color: #090446;
-            opacity: 0.9;
-        }
-
-        .footer-socila-link li a {
-            color: #666;
-            text-decoration: none;
-            font-weight: 600;
-            color: #090446;
-            opacity: 0.9;
-            padding-right: 15px;
-            padding-left: 0;
-            border-right: 2px solid #ccc;
-            margin-right: 15px;
-        }
-
-        .footer-socila-link li:last-child a {
-            border-right: none;
-        }
-
-        .footer-socila-link {
-            list-style: none;
-        }
-
-        .footer-socila-link li {
-            display: inline-block;
-        }
-
-        .bottom-link {
-            color: #090446;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .footer-logo img {
-            height: 80px;
-            margin-bottom: 30px;
-        }
-
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1140px;
-                margin: auto;
-            }
-        }
-
-        @media (max-width: 767px) {
-            .email-body {
-                font-size: 14px;
-            }
-
-            .btn {
-                font-size: 14px;
-            }
-
-            .email-head {
-                padding-bottom: 35%;
-            }
-
-            .footer-socila-link li a {
-                padding-right: 10px;
-                margin-right: 10px;
-                font-size: 11px;
-            }
-
-            .email-footer {
-                font-size: 12px;
-                line-height: 1.3;
-            }
-
-            .email-text {
-                padding: 8%;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div id="app" style="width: 100%;min-height: 100vh;">
-        <div class="email-section">
-            <div class="email-head" style=" text-align: center;
-            padding-top: 25px;
-            background: #090446;
-            padding-bottom: 15%;">
-                <a href=""><img style=" height: 90px;" src="{{asset('public/images/logo.png')}}" alt="Mpact"></a>
-            </div>
-        </div>
-        <div class="email-body">
-            <div class="container">
-                <div class="email-text">
-                    <h2 class="hd">Reset your password</h2>
-                    
-                    <div class="customer-text mb-4">
-                        Follow this link to reset your customer account password at Mpact
-                        International. If you didn't request a new password, you can safely delete this
-                        email.
-                    </div>
-                    <div class="mb-4">
-                        <a class=" btn btn-primary" href="{{$maildata['link']}}">RESET YOUR PASSWORD</a>
-                    </div>
-                    <div class="bottom-fade-text">
-                    If you have any questions, reply to this email or contact us at admin@mpact-int.com
-                    </div>
-                </div>
-            </div>
-        </div>
+                  <tr>
+                    <td
+                      style="
+                        box-sizing: border-box;
+                        font-family: -apple-system, BlinkMacSystemFont,
+                          'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+                          'Apple Color Emoji', 'Segoe UI Emoji',
+                          'Segoe UI Symbol';
+                      "
+                    >
+                      <table
+                        align="center"
+                        width="570"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="
+                          box-sizing: border-box;
+                          font-family: -apple-system, BlinkMacSystemFont,
+                            'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+                            'Apple Color Emoji', 'Segoe UI Emoji',
+                            'Segoe UI Symbol';
+                          margin: 0 auto;
+                          padding: 0;
+                          text-align: center;
+                          width: 570px;
+                        "
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              align="center"
+                              style="
+                                box-sizing: border-box;
+                                font-family: -apple-system, BlinkMacSystemFont,
+                                  'Segoe UI', Roboto, Helvetica, Arial,
+                                  sans-serif, 'Apple Color Emoji',
+                                  'Segoe UI Emoji', 'Segoe UI Symbol';
+                                max-width: 100vw;
+                                padding: 32px;
+                              "
+                            >
+                              <p
+                                style="
+                                  box-sizing: border-box;
+                                  font-family: -apple-system, BlinkMacSystemFont,
+                                    'Segoe UI', Roboto, Helvetica, Arial,
+                                    sans-serif, 'Apple Color Emoji',
+                                    'Segoe UI Emoji', 'Segoe UI Symbol';
+                                  line-height: 1.5em;
+                                  margin-top: 0;
+                                  color: #b0adc5;
+                                  font-size: 12px;
+                                  text-align: center;
+                                "
+                              >
+                                <a
+                                  href="https://app.thrivedesk.com/settings/user/notifications"
+                                  style="
+                                    box-sizing: border-box;
+                                    font-family: -apple-system,
+                                      BlinkMacSystemFont, 'Segoe UI', Roboto,
+                                      Helvetica, Arial, sans-serif,
+                                      'Apple Color Emoji', 'Segoe UI Emoji',
+                                      'Segoe UI Symbol';
+                                    color: #b0adc5;
+                                    text-decoration: underline;
+                                  "
+                                  target="_blank"
+                                  >Privacy Policy</a
+                                >
+                                <br />
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="yj6qo"></div>
+      <div class="adL"></div>
     </div>
-</body>
-
+  </body>
 </html>
