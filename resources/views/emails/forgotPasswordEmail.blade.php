@@ -176,7 +176,7 @@
                                   <tr>
                                     <td style="width: 50%;">
                                       <img
-                                        src="https://i.ibb.co/pfJ6H9W/Mpact-Logo-Full-Color.png"
+                                        src="{{asset('public/images/email_logo.png')}}"
                                         alt="Mpact International"
                                         style="width: 50%"
                                       />
@@ -193,17 +193,6 @@
                                         color: #b5b9bd;
                                       "
                                     >
-                                      <small
-                                        style="
-                                          box-sizing: border-box;
-                                          font-family: -apple-system,
-                                            BlinkMacSystemFont, 'Segoe UI',
-                                            Roboto, Helvetica, Arial, sans-serif,
-                                            'Apple Color Emoji',
-                                            'Segoe UI Emoji', 'Segoe UI Symbol';
-                                        "
-                                        >Jan 29, 05:01am</small
-                                      >
                                     </td>
                                   </tr>
                                 </tbody>
@@ -304,39 +293,15 @@
                                                 margin-top: 0;
                                                 text-align: left;
                                                 font-size: 14px;
-                                                text-align: justify;
+                                                
                                                 color: #000;
                                               "
                                             >
-                                              Hello there, <br />You will begin
-                                              your Mpact learning journey with a
-                                              4-part program, providing tools to
-                                              help you contribute generously.
-                                              Following Parts 1-4, you will be
-                                              guided through new learning tools,
-                                              personalized to your profile.
-                                              Lessons will include micro-videos,
-                                              as well as learning exercises to
-                                              help you practice.
+                                              Use this link to reset your customer account password at Mpact International. If you didn't request a new password, you can safely delete this email.
+ 
+                                              
                                             </p>
-                                            <p
-                                              style="
-                                                box-sizing: border-box;
-                                                font-family: -apple-system,
-                                                  BlinkMacSystemFont, 'Segoe UI',
-                                                  Roboto, Helvetica, Arial,
-                                                  sans-serif,
-                                                  'Apple Color Emoji',
-                                                  'Segoe UI Emoji',
-                                                  'Segoe UI Symbol';
-                                                line-height: 1.5em;
-                                                margin-top: 0;
-                                                text-align: left;
-                                                font-size: 14px;
-                                              "
-                                            >
-                                              Thanks
-                                            </p>
+                                            
                                           </div>
                                         </div>
                                       </td>
@@ -375,11 +340,9 @@
                                           color: #6c757d;
                                         "
                                       >
-                                        Login now to have a look on homepage
-                                        <br />
                                         <br />
                                         <a
-                                          href="#"
+                                          href="{{$maildata['link']}}"
                                           style="
                                             box-sizing: border-box;
                                             font-family: -apple-system,
@@ -388,16 +351,16 @@
                                               sans-serif, 'Apple Color Emoji',
                                               'Segoe UI Emoji',
                                               'Segoe UI Symbol';
-                                            color: #ffffff;
+                                            color: #ffffff !important;
                                             text-decoration: none;
                                             padding: 0.3rem 1rem 0.5rem 1rem;
                                             border-radius: 8px;
-                                            background-color: #090446;
+                                            background-color: #090446 !important;
                                             text-align: center;
                                             vertical-align: middle;
                                           "
                                           target="_blank"
-                                          >Login Now</a
+                                          >Reset your password</a
                                         >
                                       </td>
                                     </tr>
