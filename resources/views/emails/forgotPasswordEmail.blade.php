@@ -176,7 +176,7 @@
                                   <tr>
                                     <td style="width: 50%;">
                                       <img
-                                        src="https://i.ibb.co/pfJ6H9W/Mpact-Logo-Full-Color.png"
+                                        src="{{asset('public/images/email_logo.png')}}"
                                         alt="Mpact International"
                                         style="width: 50%"
                                       />
