@@ -297,28 +297,11 @@
                                                 color: #000;
                                               "
                                             >
-                                              Reset your password, 
+                                              Use this link to reset your customer account password at Mpact International. If you didn't request a new password, you can safely delete this email.
+ 
                                               
                                             </p>
-                                            <p
-                                              style="
-                                                box-sizing: border-box;
-                                                font-family: -apple-system,
-                                                  BlinkMacSystemFont, 'Segoe UI',
-                                                  Roboto, Helvetica, Arial,
-                                                  sans-serif,
-                                                  'Apple Color Emoji',
-                                                  'Segoe UI Emoji',
-                                                  'Segoe UI Symbol';
-                                                line-height: 1.5em;
-                                                margin-top: 0;
-                                                text-align: left;
-                                                font-size: 14px;
-                                              "
-                                            >
-                                              Thanks,<br /> 
-                                              Mpact Team
-                                            </p>
+                                            
                                           </div>
                                         </div>
                                       </td>
@@ -357,8 +340,6 @@
                                           color: #6c757d;
                                         "
                                       >
-                                        Get started now
-                                        <br />
                                         <br />
                                         <a
                                           href="{{$maildata['link']}}"

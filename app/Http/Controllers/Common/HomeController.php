@@ -592,8 +592,8 @@ class HomeController extends Controller
         // });
         
 
-        $link = env('FRONT_URL') . '/login';
-        $maildata = array('name' => 'first name', 'link' => $link);
+        //$link = env('FRONT_URL') . '/login';
+        //$maildata = array('name' => 'Maisha', 'link' => $link);
         //Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
         //Mail::to("maisha@mpact-int.com")->send(new SendEmployeePart1Email($maildata));
 
@@ -609,14 +609,15 @@ class HomeController extends Controller
         //$maildata = array('link' => "this is link", 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
         //Mail::to("maisha@mpact-int.com")->send(new ForgotPasswordEmail($maildata));
 
-        //$link = md5(uniqid());
-        //$link1 = env('FRONT_URL') . '/reset-password/' . $link;
-        //$maildata = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
-        //Mail::to("maisha@mpact-int.com")->send(new SendEmployeeRegistrationEmail($maildata));
+        $link = md5(uniqid());
+        $link1 = env('FRONT_URL') . '/reset-password/' . $link;
+        $maildata = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
+        Mail::to("maisha@mpact-int.com")->send(new ForgotPasswordEmail($maildata));
+        Mail::to("nchouksey@manifestinfotech.com")->send(new ForgotPasswordEmail($maildata));
 
 
         $maildata['maildata'] = $maildata;
-        return view('emails.sendPart1Email', $maildata);
+        return view('emails.forgotPasswordEmail', $maildata);
                             
     }
 }
