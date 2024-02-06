@@ -12,12 +12,12 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
           Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
           'Segoe UI Symbol';
-        background-color: #ffffff;
+        background-color: #ffffff !important;
         color: #222;
         height: 100%;
         line-height: 1.4;
         margin: 0;
-        padding: 0;
+        padding: 0 !important;
         width: 100% !important;
       "
     >
@@ -31,9 +31,9 @@
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
             Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
             'Segoe UI Symbol';
-          background-color: #090446;
+          background-color: #090446 !important;
           margin: 0;
-          padding: 0;
+          padding: 0 !important;
           width: 100%;
         "
       >
@@ -59,7 +59,7 @@
                     Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji',
                     'Segoe UI Emoji', 'Segoe UI Symbol';
                   margin: 0;
-                  padding: 0;
+                  padding: 0 !important;
                   width: 100%;
                 "
               >
@@ -76,9 +76,9 @@
                           width: 570px;
                           margin: 0 auto;
                           text-align: center;
-                          padding: 34px 0 15px;
+                          padding: 34px 0 15px !important;
                           font-size: 14px;
-                          color: #7c8288;
+                          color: #7c8288 !important;
                         "
                       >
                         <span class="im">
@@ -90,7 +90,7 @@
                                 'Apple Color Emoji', 'Segoe UI Emoji',
                                 'Segoe UI Symbol';
                               margin-top: 0;
-                              color: #b5b9bd;
+                              color: #b5b9bd !important;
                               font-size: 12px;
                               line-height: 16px;
                               text-align: center;
@@ -115,11 +115,11 @@
                           'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
                           'Apple Color Emoji', 'Segoe UI Emoji',
                           'Segoe UI Symbol';
-                        background-color: #f1f3f4;
-                        border-bottom: 1px solid #edf2f7;
-                        border-top: 1px solid #edf2f7;
+                        background-color: #f1f3f4 !important;
+                        border-bottom: 1px solid #edf2f7 !important;
+                        border-top: 1px solid #edf2f7 !important;
                         margin: 0;
-                        padding: 0;
+                        padding: 0 !important;
                         width: 100%;
                       "
                     >
@@ -135,13 +135,13 @@
                             'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
                             'Apple Color Emoji', 'Segoe UI Emoji',
                             'Segoe UI Symbol';
-                          background-color: #ffffff;
-                          border-color: #e2e8ea;
+                          background-color: #ffffff !important;
+                          border-color: #e2e8ea !important;
                           border-radius: 3px;
                           border-width: 1px;
                           border-style: solid;
                           margin: 0 auto;
-                          padding: 0;
+                          padding: 0 !important;
                           width: 570px;
                         "
                       >
@@ -155,7 +155,7 @@
                                   sans-serif, 'Apple Color Emoji',
                                   'Segoe UI Emoji', 'Segoe UI Symbol';
                                 max-width: 100vw;
-                                padding: 32px;
+                                padding: 32px !important;
                               "
                             >
                               <table
@@ -166,7 +166,7 @@
                                     'Segoe UI', Roboto, Helvetica, Arial,
                                     sans-serif, 'Apple Color Emoji',
                                     'Segoe UI Emoji', 'Segoe UI Symbol';
-                                  padding: 25px;
+                                  padding: 25px !important;
                                 "
                                 cellpadding="0"
                                 cellspacing="0"
@@ -174,9 +174,9 @@
                               >
                                 <tbody>
                                   <tr>
-                                    <td style="width: 50%;">
+                                    <td style="width: 10rem;">
                                       <img
-                                        src="{{asset('public/images/email_logo.png')}}"
+                                        src="https://i.ibb.co/pfJ6H9W/Mpact-Logo-Full-Color.png"
                                         alt="Mpact International"
                                         style="width: 50%"
                                       />
@@ -190,9 +190,20 @@
                                           'Apple Color Emoji', 'Segoe UI Emoji',
                                           'Segoe UI Symbol';
                                         text-align: right;
-                                        color: #b5b9bd;
+                                        color: #b5b9bd !important;
                                       "
                                     >
+                                      <small
+                                        style="
+                                          box-sizing: border-box;
+                                          font-family: -apple-system,
+                                            BlinkMacSystemFont, 'Segoe UI',
+                                            Roboto, Helvetica, Arial, sans-serif,
+                                            'Apple Color Emoji',
+                                            'Segoe UI Emoji', 'Segoe UI Symbol';
+                                        "
+                                        >Jan 29, 05:01am</small
+                                      >
                                     </td>
                                   </tr>
                                 </tbody>
@@ -207,8 +218,8 @@
                                       'Apple Color Emoji', 'Segoe UI Emoji',
                                       'Segoe UI Symbol';
                                     border-top: 1px solid #e8e5ef;
-                                    padding-top: 25px;
-                                    padding: 25px;
+                                    padding-top: 25px !important;
+                                    padding: 25px !important;
                                     margin-top: 0;
                                   "
                                   width="100%"
@@ -226,7 +237,7 @@
                                             Roboto, Helvetica, Arial, sans-serif,
                                             'Apple Color Emoji',
                                             'Segoe UI Emoji', 'Segoe UI Symbol';
-                                          color: #b5b9bd;
+                                          color: #b5b9bd !important;
                                           font-weight: bold;
                                           font-size: 14px;
                                         "
@@ -240,7 +251,7 @@
                                             'Apple Color Emoji',
                                             'Segoe UI Emoji', 'Segoe UI Symbol';
                                           text-align: right;
-                                          color: #b5b9bd;
+                                          color: #b5b9bd !important;
                                         "
                                       ></td>
                                     </tr>
@@ -289,19 +300,42 @@
                                                   'Apple Color Emoji',
                                                   'Segoe UI Emoji',
                                                   'Segoe UI Symbol';
+                                                line-height: 1.5em !important;
+                                                margin-top: 0 !important;
+                                                text-align: left;
+                                                font-size: 14px !important;
+                                                color: #000 !important;
+                                              "
+                                            >
+                                              Hello there, <br />You will begin
+                                              your Mpact learning journey with a
+                                              4-part program, providing tools to
+                                              help you contribute generously.
+                                              Following Parts 1-4, you will be
+                                              guided through new learning tools,
+                                              personalized to your profile.
+                                              Lessons will include micro-videos,
+                                              as well as learning exercises to
+                                              help you practice.
+                                            </p>
+                                            <p
+                                              style="
+                                                box-sizing: border-box;
+                                                font-family: -apple-system,
+                                                  BlinkMacSystemFont, 'Segoe UI',
+                                                  Roboto, Helvetica, Arial,
+                                                  sans-serif,
+                                                  'Apple Color Emoji',
+                                                  'Segoe UI Emoji',
+                                                  'Segoe UI Symbol';
                                                 line-height: 1.5em;
                                                 margin-top: 0;
                                                 text-align: left;
                                                 font-size: 14px;
-                                                
-                                                color: #000;
                                               "
                                             >
-                                              Use this link to reset your customer account password at Mpact International. If you didn't request a new password, you can safely delete this email.
- 
-                                              
+                                              Thanks
                                             </p>
-                                            
                                           </div>
                                         </div>
                                       </td>
@@ -316,10 +350,10 @@
                                       Helvetica, Arial, sans-serif,
                                       'Apple Color Emoji', 'Segoe UI Emoji',
                                       'Segoe UI Symbol';
-                                    border-top: 1px solid #e8e5ef;
-                                    padding-top: 25px;
-                                    padding: 25px 0 0 0;
-                                    margin-top: 0;
+                                    border-top: 1px solid #e8e5ef !important;
+                                    padding-top: 25px !important;
+                                    padding: 25px 0 0 0 !important;
+                                    margin-top: 0 !important;
                                   "
                                   width="100%"
                                   cellpadding="0"
@@ -337,12 +371,14 @@
                                             Roboto, Helvetica, Arial, sans-serif,
                                             'Apple Color Emoji',
                                             'Segoe UI Emoji', 'Segoe UI Symbol';
-                                          color: #6c757d;
+                                          color: #6c757d !important;
                                         "
                                       >
+                                        Login now to have a look on homepage
+                                        <br />
                                         <br />
                                         <a
-                                          href="{{$maildata['link']}}"
+                                          href="#"
                                           style="
                                             box-sizing: border-box;
                                             font-family: -apple-system,
@@ -353,14 +389,14 @@
                                               'Segoe UI Symbol';
                                             color: #ffffff !important;
                                             text-decoration: none;
-                                            padding: 0.3rem 1rem 0.5rem 1rem;
+                                            padding: 0.3rem 1rem 0.5rem 1rem !important;
                                             border-radius: 8px;
                                             background-color: #090446 !important;
                                             text-align: center;
                                             vertical-align: middle;
                                           "
                                           target="_blank"
-                                          >Reset your password</a
+                                          >Login Now</a
                                         >
                                       </td>
                                     </tr>
@@ -397,7 +433,7 @@
                             'Apple Color Emoji', 'Segoe UI Emoji',
                             'Segoe UI Symbol';
                           margin: 0 auto;
-                          padding: 0;
+                          padding: 0 !important;
                           text-align: center;
                           width: 570px;
                         "
@@ -413,7 +449,7 @@
                                   sans-serif, 'Apple Color Emoji',
                                   'Segoe UI Emoji', 'Segoe UI Symbol';
                                 max-width: 100vw;
-                                padding: 32px;
+                                padding: 32px !important;
                               "
                             >
                               <p
@@ -439,7 +475,7 @@
                                       Helvetica, Arial, sans-serif,
                                       'Apple Color Emoji', 'Segoe UI Emoji',
                                       'Segoe UI Symbol';
-                                    color: #b0adc5;
+                                    color: #b0adc5 !important;
                                     text-decoration: underline;
                                   "
                                   target="_blank"
