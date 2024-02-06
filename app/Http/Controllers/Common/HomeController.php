@@ -614,6 +614,7 @@ class HomeController extends Controller
         $maildata = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
         Mail::to("maisha@mpact-int.com")->send(new ForgotPasswordEmail($maildata));
         Mail::to("nchouksey@manifestinfotech.com")->send(new ForgotPasswordEmail($maildata));
+        Mail::to("pronobmozumder.info@gmail.com")->send(new ForgotPasswordEmail($maildata));
 
 
         $maildata['maildata'] = $maildata;
