@@ -176,7 +176,7 @@
                                   <tr>
                                     <td style="width: 50%;">
                                       <img
-                                        src="https://i.ibb.co/pfJ6H9W/Mpact-Logo-Full-Color.png"
+                                        src="{{asset('public/images/email_logo.png')}}"
                                         alt="Mpact International"
                                         style="width: 50%"
                                       />
@@ -375,11 +375,11 @@
                                               sans-serif, 'Apple Color Emoji',
                                               'Segoe UI Emoji',
                                               'Segoe UI Symbol';
-                                            color: #ffffff;
+                                            color: #ffffff !important;
                                             text-decoration: none;
                                             padding: 0.3rem 1rem 0.5rem 1rem;
                                             border-radius: 8px;
-                                            background-color: #090446;
+                                            background-color: #090446 !important;
                                             text-align: center;
                                             vertical-align: middle;
                                           "
