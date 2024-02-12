@@ -30,7 +30,7 @@ class SendEmployeePart1Email extends Mailable
     public function build()
     {
         return $this->markdown('emails.sendPart1Email')
-            ->subject('Complete part1 learning plan')
+            ->subject('Part 1 of Your Learning Journey')
             ->with('maildata', $this->maildata);
     }
 }
