@@ -408,7 +408,7 @@ class HomeController extends Controller
                         Mail::to($request->email)->send(new SendEmployeePart1Email($maildata));
                     }
 
-                    $welcome_note = 0;
+                    //$welcome_note = 0;
                     //return response()->json(['status' => 'error', 'user' => $user, 'company' => $c, 'welcome_note' => $welcome_note], 400);
                     return response(['user' => $user, 'company' => $c, 'welcome_note' => $welcome_note, 'access_token' => $accessToken]);
                 }
@@ -519,11 +519,11 @@ class HomeController extends Controller
             'password' => 'required|max:255|min:8',
         ]);
         
-        $user = User::where('email', $link->email)->first();
+        /*$user = User::where('email', $link->email)->first();
         addActivity("reset_password",$user->id,[
                "login_at"=>\Carbon\Carbon::now(),
                "ip"=>$request->ip()
-        ]);
+        ]);*/
 
 
         if ($validator->fails()) {
