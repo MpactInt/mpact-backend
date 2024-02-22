@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ForgotPasswordEmail;
 use App\Mail\SendEmployeeRegistrationEmail;
 use App\Mail\SendRegistrationEmail;
+use App\Mail\sendCompanyRegistrationEmail;
 use App\Mail\SendEmployeePart1Email;
 use App\Models\ActivityLog;
 use App\Models\Company;
@@ -40,8 +41,12 @@ class HomeController extends Controller
         $total_employees = $request->employees;
         $domain = $request->domain;
         $password = $request->password;
+        //$email_password_detail = $request->email_password_detail;
         $link = md5(uniqid());
         $hours = 0;
+
+        //return response()->json(["status" => "error", "message" => $error], 400);
+
         if ($planType == 'Package-3-Premier') {
             $hours = 96;
         } elseif ($planType == 'Package-2-Enhanced') {
@@ -116,16 +121,16 @@ class HomeController extends Controller
             $emp->profile_type_id = 1;
             $emp->save();
 
-            // $data = ['name' => $companyname];
-            // Mail::send('registration-email', $data, function ($message) use ($email) {
-            //     $message->to($email, 'MPACT INT')
-            //         ->subject('Welcome to Mpact International');
-            //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
-            // });
-
-            $maildata = ['name' => $companyname];
-
-            Mail::to($email)->send(new SendRegistrationEmail($maildata));
+            $maildata = array('name' => $companyname);
+            if ($email_password_detail) {
+                // code...
+            }
+            else
+            {
+                
+                Mail::to($email)->send(new SendRegistrationEmail($maildata));
+            }
+            
 
             return response()->json(['status' => 'success', 'res' => $cu], 200);
         }
@@ -592,31 +597,37 @@ class HomeController extends Controller
         // });
         
 
-        $link = env('FRONT_URL') . '/login';
-        $maildata = array('name' => 'Maisha', 'link' => $link);
-        Mail::to("maisha@mpact-int.com")->send(new SendEmployeePart1Email($maildata));
+        //$link = env('FRONT_URL') . '/login';
+        //$maildata = array('name' => 'Maisha', 'link' => $link);
+        //Mail::to("maisha@mpact-int.com")->send(new SendEmployeePart1Email($maildata));
         //Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
         //$maildata['maildata'] = $maildata;
         //return view('emails.sendPart1Email', $maildata);
 
-        $link = md5(uniqid());
-        $link1 = env('FRONT_URL') . '/create-password/' . $link;
-        $maildata = array('link' => $link1, 'name' => 'first name', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
-        Mail::to("maisha@mpact-int.com")->send(new SendEmployeeRegistrationEmail($maildata));
+        //$link = md5(uniqid());
+        //$link1 = env('FRONT_URL') . '/create-password/' . $link;
+        //$maildata = array('link' => $link1, 'name' => 'first name', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
+        //Mail::to("maisha@mpact-int.com")->send(new SendEmployeeRegistrationEmail($maildata));
         //Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
         //$maildata['maildata'] = $maildata;
         //return view('emails.sendEmployeeRegistrationEmail2', $maildata);
 
-        $maildata = ['name' => 'test company'];
-        Mail::to("maisha@mpact-int.com")->send(new SendRegistrationEmail($maildata));
+        //$maildata = array('name' => 'test company');
+        //Mail::to("maisha@mpact-int.com")->send(new SendRegistrationEmail($maildata));
         //Mail::to("nchouksey@manifestinfotech.com")->send(new SendRegistrationEmail($maildata));
-        $maildata['maildata'] = $maildata;
-        return view('emails.sendRegistrationEmail', $maildata);
+        //$maildata['maildata'] = $maildata;
+        //return view('emails.sendRegistrationEmail', $maildata);
 
-        $link = md5(uniqid());
-        $link1 = env('FRONT_URL') . '/reset-password/' . $link;
-        $maildata = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
-        Mail::to("maisha@mpact-int.com")->send(new ForgotPasswordEmail($maildata));
+        $maildata = array('name' => 'test company', 'first_name' => 'first', 'last_name' => 'last', 'email' => 'test@gmail.com', 'password' => '12345678');
+        Mail::to("maisha@mpact-int.com")->send(new sendCompanyRegistrationEmail($maildata));
+        Mail::to("nchouksey@manifestinfotech.com")->send(new sendCompanyRegistrationEmail($maildata));
+        $maildata['maildata'] = $maildata;
+        return view('emails.sendCompanyRegistrationEmail', $maildata);
+
+        //$link = md5(uniqid());
+        //$link1 = env('FRONT_URL') . '/reset-password/' . $link;
+        //$maildata = array('link' => $link1, 'text' => 'You can use below link to reset your password, this link will be expired in 10 min', 'link_text' => 'Click to reset your password');
+        //Mail::to("maisha@mpact-int.com")->send(new ForgotPasswordEmail($maildata));
         //Mail::to("nchouksey@manifestinfotech.com")->send(new ForgotPasswordEmail($maildata));
         //Mail::to("pronobmozumder.jan@outlook.com")->send(new ForgotPasswordEmail($maildata));
         //$maildata['maildata'] = $maildata;
