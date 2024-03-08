@@ -34,6 +34,8 @@ class HomeController extends Controller
     public function create_company(Request $request)
     {
         $companyname = $request->companyname;
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
         $email = $request->email;
         $plan = $request->plan;
         $periodUnit = $request->periodUnit;
@@ -41,7 +43,11 @@ class HomeController extends Controller
         $total_employees = $request->employees;
         $domain = $request->domain;
         $password = $request->password;
-        //$email_password_detail = $request->email_password_detail;
+        $email_password_detail = $request->email_password_detail;
+        $duration = $request->duration;
+        $learning_plan_start_date = $request->learning_plan_start_date;
+
+
         $link = md5(uniqid());
         $hours = 0;
 
@@ -60,6 +66,8 @@ class HomeController extends Controller
 
         $validator = Validator::make($request->all(), [
             'companyname' => 'required|max:255',
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|max:255|min:8',
             'domain' => 'required|max:255|regex:' . $regex . '|unique:companies,company_domain',
@@ -109,28 +117,33 @@ class HomeController extends Controller
             $cu->total_employees = $total_employees;
             $cu->max_employees = $max_employees;
             $cu->employee_registration_link = $link;
+            $cu->duration = $duration;
+            $cu->learning_plan_start_date = $learning_plan_start_date;
+
             $cu->company_logo = 'default.png';
             $cu->save();
 
             $emp = new CompanyEmployee();
             $emp->user_id = $u->id;
             $emp->company_id = $cu->id;
-            $emp->first_name = "Company";
-            $emp->last_name = "Admin";
+            $emp->first_name = $first_name;
+            $emp->last_name = $last_name;
             $emp->role = "COMPANY_ADMIN";
             $emp->profile_type_id = 1;
             $emp->save();
 
-            $maildata = array('name' => $companyname);
+            $maildata = array('name' => $companyname, 'first_name' => $first_name, 'last_name' => $last_name);
             if ($email_password_detail) {
-                // code...
+                $maildata['email'] = $email;
+                $maildata['password'] = $password;
+                Mail::to($email)->send(new sendCompanyRegistrationEmail($maildata));
             }
             else
             {
-                
+
                 Mail::to($email)->send(new SendRegistrationEmail($maildata));
             }
-            
+
 
             return response()->json(['status' => 'success', 'res' => $cu], 200);
         }
@@ -150,7 +163,7 @@ class HomeController extends Controller
         $keyword = $request->keyword;
         $sort_by = $request->sortBy == "" ? "created_at" : $request->sortBy;
         $sort_order = $request->sortOrder == "" ? "DESC" : $request->sortOrder;
-        
+
         $conh = ConsultingHours::select('consulting_hours.*','companies.company_name')
                 ->join('companies','companies.id','consulting_hours.company_id');
 
@@ -163,7 +176,7 @@ class HomeController extends Controller
 
         $conh = $conh->paginate(10);
         return response(["status" => "success", "res" => $conh], 200);
-                
+
     }
     public function get_consulting_hours($id)
     {
@@ -185,10 +198,10 @@ class HomeController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     */ 
+     */
 
     public function update_plan(Request $request)
-    { 
+    {
         //return response()->json(["status" => "error", "message" => $request->plan['id']], 400);
         $employee_registration_link = $request->link;
         $c = Company::where('employee_registration_link', $employee_registration_link)->first();
@@ -196,7 +209,7 @@ class HomeController extends Controller
             'plan' => 'required|max:255',
             'employees' => 'required|max:255'
         ]);
-       
+
         if ($validator->fails()) {
             $error = $validator->getMessageBag()->first();
             return response()->json(["status" => "error", "message" => $error], 400);
@@ -329,68 +342,68 @@ class HomeController extends Controller
             'email' => ['required', 'email', 'string'],
             'password' => ['required', 'string']
         ]);
-       
+
         $u = User::join('company_employees', 'users.id', 'company_employees.user_id')->withTrashed()->where('email', $request->email)->first();
-        if ($u) 
+        if ($u)
         {
             $c = User::join('companies', 'users.id', 'companies.user_id')->withTrashed()->where('companies.id', $u->company_id)->first();
         }
-        if ($validator->fails()) 
+        if ($validator->fails())
         {
             return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
-        } 
-        else 
+        }
+        else
         {
-            if (!Auth::attempt($data)) 
+            if (!Auth::attempt($data))
             {
-                if ($u) 
+                if ($u)
                 {
-                    if ($u->role == "COMPANY_ADMIN" && $u->deleted_at) 
+                    if ($u->role == "COMPANY_ADMIN" && $u->deleted_at)
                     {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
-                    } 
-                    elseif ($u->role == "COMPANY_EMP" && $c->deleted_at) 
+                    }
+                    elseif ($u->role == "COMPANY_EMP" && $c->deleted_at)
                     {
                         return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                     }
-                } 
-                else 
+                }
+                else
                 {
                     return response()->json(['status' => 'error', 'message' => 'Invalid Credentials', 'user' => $u], 400);
                 }
-            } 
-            else 
+            }
+            else
             {
-               
-                if ($u && $u->role == "COMPANY_EMP" && $c->deleted_at) 
+
+                if ($u && $u->role == "COMPANY_EMP" && $c->deleted_at)
                 {
                     return response()->json(['status' => 'error', 'message' => 'Access Error. Please contact Admin'], 400);
-                } 
-                else 
+                }
+                else
                 {
                     $accessToken = Auth::user()->createToken('authToken')->accessToken;
                     $user = User::where('email', $request->email)->first();
                     ActivityLog::create([
                                     'log_type' => "login",
-                                    'user_id' => $user->id, 
+                                    'user_id' => $user->id,
                                     'login_time' => now(),
                                     'lastactivity' => null
                                 ]);
                     $c = null;
-                    
+
                     $welcome_note = $user->last_login ? 0 : 1;
 
-                    if ($user->role == "COMPANY") 
+                    if ($user->role == "COMPANY")
                     {
                         $c = Company::select('companies.*', 'company_employees.first_name', 'company_employees.last_name', 'company_employees.role', 'company_employees.profile_type_id', 'company_employees.profile_image')
                             ->join('company_employees', 'companies.id', 'company_employees.company_id')
                             ->where("company_employees.user_id", $user->id)
                             ->first();
-                        if ($c) 
+                        if ($c)
                         {
                             $c->company_logo = url('/') . '/public/uploads/' . $c->company_logo;
                             $c->profile_image =  url('/') . '/public/profile-images/' . $c->profile_image;
@@ -427,9 +440,9 @@ class HomeController extends Controller
      */
     public function logout(Request $request)
     {
-        // if (Auth::check())  
+        // if (Auth::check())
         // {
-            
+
         //     $user = Auth::user();
         //     $currentDate = now()->toDateString();
         //     $lastActivity = ActivityLog::where('user_id', $user->id)
@@ -437,17 +450,17 @@ class HomeController extends Controller
         //                             ->whereDate('log_type', "login")
         //                             ->orderBy('login_time', 'desc')
         //                             ->first();
-                                    
+
         //     $las = ActivityLog::find($lastActivity->id);
         //    // return now()->diffInMinutes($las->lastactivity);
         //     if ($las->lastactivity == null)
         //     {
         //         $las->lastactivity = now();
         //         $las->logout_time = null;
-        //         $las->update(); 
+        //         $las->update();
         //         return $las;
-        //     } 
-         
+        //     }
+
         //     elseif(now()->diffInMinutes($las->lastactivity) >= 3)
         //     {
         //         $las = ActivityLog::find($las->id);
@@ -461,10 +474,10 @@ class HomeController extends Controller
         //         $las->lastactivity = now();
         //         $las->update();
         //         return $las;
-                
+
         //     }
         // }
-         if (Auth::check()) 
+         if (Auth::check())
          {
                 $user = Auth::user();
                 $currentDate = now()->toDateString();
@@ -475,11 +488,11 @@ class HomeController extends Controller
                                         ->orderBy('login_time', 'desc')
                                         ->first();
 
-                if ($lastActivity) 
+                if ($lastActivity)
                 {
                     $lastActivity->update([
                         'logout_time' => now(),
-                        'lastactivity' => null 
+                        'lastactivity' => null
                     ]);
                 }
 
@@ -523,7 +536,7 @@ class HomeController extends Controller
         $validator = Validator::make($request->all(), [
             'password' => 'required|max:255|min:8',
         ]);
-        
+
         /*$user = User::where('email', $link->email)->first();
         addActivity("reset_password",$user->id,[
                "login_at"=>\Carbon\Carbon::now(),
@@ -595,7 +608,7 @@ class HomeController extends Controller
         //         ->subject('Welcome to Mpact International');
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
-        
+
 
         //$link = env('FRONT_URL') . '/login';
         //$maildata = array('name' => 'Maisha', 'link' => $link);
@@ -632,6 +645,6 @@ class HomeController extends Controller
         //Mail::to("pronobmozumder.jan@outlook.com")->send(new ForgotPasswordEmail($maildata));
         //$maildata['maildata'] = $maildata;
         //return view('emails.forgotPasswordEmail', $maildata);
-                            
+
     }
 }

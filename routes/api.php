@@ -424,6 +424,10 @@ Route::post('/update-meeting/{id}', [ZoomMeetingController::class, 'update']);
 
 Route::get('/send-email1', [HomeController::class, 'send_email1']);
 
+Route::get('/general-part-learning-plan-crone', [LearningPlanController::class, 'general_part_learning_plan_crone']);
+
+Route::get('/general-part-learning-plan-email-crone', [LearningPlanController::class, 'general_part_learning_plan_email_crone']);
+
 // Route::get('/assesment-login', [AssementController::class, 'login']);
 Route::post('/mpact-login', [AssementController::class, 'mpact_login']);
 

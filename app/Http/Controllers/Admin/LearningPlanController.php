@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SendGeneralPartLearningPlanEmail;
 use App\Models\CompanyEmployee;
 use App\Models\MyLearningPlan;
 use App\Models\Company;
@@ -14,6 +15,7 @@ use App\Models\LearningPlanLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use DB;
 
 class LearningPlanController extends Controller
@@ -63,6 +65,8 @@ class LearningPlanController extends Controller
                     $lppt = new LearningPlanProfileType();
                     $lppt->profile_type_id = $p->id;
                     $lppt->learning_plan_id = $t->id;
+                    $lppt->order = $p->order;
+
                     $lppt->save();
                 }
             }
@@ -72,6 +76,7 @@ class LearningPlanController extends Controller
                     $lppt = new LearningPlanResource();
                     $lppt->resource_id = $p->id;
                     $lppt->learning_plan_id = $t->id;
+
                     $lppt->save();
                 }
             }
@@ -130,6 +135,8 @@ class LearningPlanController extends Controller
                 $lppt = new LearningPlanProfileType();
                 $lppt->profile_type_id = $p->id;
                 $lppt->learning_plan_id = $t->id;
+                $lppt->order = $p->order;
+
                 $lppt->save();
             }
         }
@@ -167,7 +174,7 @@ class LearningPlanController extends Controller
             ->get();
 
         $ca->profile_type = LearningPlanProfileType::join('profile_types', 'profile_types.id', 'learning_plan_profile_types.profile_type_id')
-            ->select('profile_types.id', 'profile_types.profile_type as name')
+            ->select('profile_types.id', 'profile_types.profile_type as name','order')
             ->where('learning_plan_id', $id)
             ->get();
 
@@ -249,11 +256,11 @@ class LearningPlanController extends Controller
 
             $user = Auth::guard('api')->user();
           $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
-     
+
             $parts = ['',"part1","part2","part3",'part4'];
             $get_part = ["part1",];
             $i = 1;
-           
+
             foreach ($parts as $key => $part) {
                     if ($part == "") {
                         continue;
@@ -269,7 +276,7 @@ class LearningPlanController extends Controller
 
                     $resource_id =   LearningPlanResource::whereIn("learning_plan_id", $total_learning_plan_id)->pluck("resource_id")->toArray();
                     $total_plan_file =   MyLearningPlanFile::whereIn("id", $resource_id)->count();
-           
+
                     $total_learning_view_count = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
                                                 ->where('company_id', $user_detail->company_id)
                                                 ->where('profile_id', $user_detail->id)
@@ -343,7 +350,7 @@ class LearningPlanController extends Controller
     //         ->select('my_learning_plans.*')
     //         ->limit(6)->get();
 
-      
+
     //     /*$ca = MyLearningPlan::with(['files', 'profileType' => function ($q) use ($company) {
     //         $q->join('profile_types', 'profile_types.id', 'learning_plan_profile_types.profile_type_id')
     //             ->where('profile_types.id', $company->profile_type_id)
@@ -364,20 +371,31 @@ public function get_learning_plan_list_dashboard(Request $request)
     $user = Auth::guard('api')->user();
     $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
 
-    $ca = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
-        ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
-        ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
-        ->where('learning_plan_companies.company_id', $user_detail->company_id)
-        ->where('my_learning_plans.part', $request->part)
-        ->select('my_learning_plans.*')
-        ->limit(6)
-        ->get();
+    if ($request->part == 'general') {
+        $learning_plans = MyLearningPlan::select('my_learning_plans.*')
+            ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
+            ->where('user_learning_plans.user_id', $user->id)
+            ->where('user_learning_plans.learning_plan_enable_date', '<=', now()->toDateString())
+            ->get();
+        
+    }else
+    {
+        $learning_plans = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
+            ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
+            ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
+            ->where('learning_plan_companies.company_id', $user_detail->company_id)
+            ->where('my_learning_plans.part', $request->part)
+            ->select('my_learning_plans.*')
+            ->limit(6)
+            ->get();
+    }
+    
 
     // $partCounts = [];
     // $partNames = ["part1", "part2", "part3", "part4", "general"]; // Add more parts if needed
 
     // foreach ($partNames as $part) {
-       
+
     //     $totalPartCount = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
     //         ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
     //         ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
@@ -386,7 +404,7 @@ public function get_learning_plan_list_dashboard(Request $request)
     //         ->select('my_learning_plans.*')
     //         ->count();
 
-       
+
     //    $totalPartCount = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
     //         ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
     //         ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
@@ -402,9 +420,77 @@ public function get_learning_plan_list_dashboard(Request $request)
     //     $partCounts["total_viewed_$part"] = $totalPartCount;
     // }
 
-    return response(["status" => "success", "res" => $ca, "path" => $path], 200);
+    return response(["status" => "success", "res" => $learning_plans, "path" => $path], 200);
 }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function general_part_learning_plan_crone(Request $request)
+    {
+        $currentDate = date("Y-m-d");
+        $users = Company::select('company_employees.user_id', 'companies.id as company_id', 'company_employees.profile_type_id', 'companies.duration', 'companies.learning_plan_start_date')
+                    ->join('company_employees', 'company_employees.company_id', '=', 'companies.id')
+                    ->get()
+                    ->toArray();
+        //echo '<pre>';print_r($users);
+        foreach($users as $user)
+        {
+            $existing_learning_plans = DB::table('user_learning_plans')
+                                        ->select('learning_plan_id')
+                                        ->where('user_id', $user['user_id']);
+                                        //->get()
+                                        //->toArray();
+            //echo '<pre>';print_r($existing_learning_plans);exit;
+
+            $new_learning_plans = LearningPlanProfileType::where('profile_type_id', $user['profile_type_id'])
+                ->whereNotIn('learning_plan_id', $existing_learning_plans)
+                ->get()
+                ->toArray();
+            //echo '<pre>';print_r($new_learning_plans);exit;
+            foreach ($new_learning_plans as $new_learning_plan) {
+                $temp_duration = $user['duration'] * ($new_learning_plan['order'] - 1);
+                $learning_plan_enable_date = date('Y-m-d', strtotime($user['learning_plan_start_date']. "+ $temp_duration days"));
+              
+                $data = [
+                    'learning_plan_id' => $new_learning_plan['learning_plan_id'],
+                    'user_id' => $user['user_id'],
+                    'learning_plan_enable_date' => $learning_plan_enable_date
+                ];
+
+                DB::table('user_learning_plans')->insert($data);
+            }
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function general_part_learning_plan_email_crone(Request $request)
+    {
+        $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
+            ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
+            ->join('users', 'users.id', 'user_learning_plans.user_id')
+            ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
+            ->where('my_learning_plans.part', 'general')
+            ->where('user_learning_plans.learning_plan_enable_date', now()->toDateString())
+            ->get();
+            //->toArray();
+            //echo '<pre>';print_r($learning_plans_today);exit;
+
+       
+       
+           
+        foreach ($learning_plans_today as $learning_plan) {
+            $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
+            $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date);
+            //Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
+            $maildata['maildata'] = $maildata;
+            return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
+        }
+    }
 
     public function shouldGoNextTab(Request $request)
     {
@@ -424,7 +510,7 @@ public function get_learning_plan_list_dashboard(Request $request)
         $resource_id =   LearningPlanResource::whereIn("learning_plan_id", $total_learning_plan_id)->pluck("resource_id")->toArray();
         $total_plan_file =   MyLearningPlanFile::whereIn("id", $resource_id)->count();
 
-       
+
         $total_learning_view_count = LearningPlanLog::where('profile_type_id', $user_detail->profile_type_id)
                                             ->where('company_id', $user_detail->company_id)
                                             ->where('profile_id', $user_detail->id)
@@ -434,7 +520,7 @@ public function get_learning_plan_list_dashboard(Request $request)
 
 
 
-    
+
 
             $sixtyPercent = 0.6 * $total_plan_file;
             if ($total_learning_view_count >= $sixtyPercent) {
@@ -454,7 +540,7 @@ public function get_learning_plan_list_dashboard(Request $request)
                 ];
             }
 
-        
+
     }
     /**
      * @param $id
@@ -468,7 +554,7 @@ public function get_learning_plan_list_dashboard(Request $request)
             unlink($destinationPath . '/' . $ca->image);
         }
         $ca->delete();
-        
+
         LearningPlanResource::where('learning_plan_id', $id)->delete();
         //$files = MyLearningPlanFile::where('my_learning_plan_id', $id);
         //foreach ($files as $f) {
@@ -498,9 +584,9 @@ public function get_learning_plan_list_dashboard(Request $request)
                 ->where($data)->first();
 
             if (!$existingRecord) {
-              
+
                 DB::table('learning_plan_logs')->insert($data);
-            } 
+            }
 
         return response(["status" => "success"], 200);
     }

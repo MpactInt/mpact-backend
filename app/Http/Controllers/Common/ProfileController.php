@@ -78,7 +78,7 @@ class ProfileController extends Controller
     {
         $user = Auth::guard('api')->user();
         //return response()->json(["status" => "error", "message" => $user], 400);
-        
+
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
@@ -90,7 +90,7 @@ class ProfileController extends Controller
         } else {
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            
+
             $user->save();
             return response(["status" => "success", "res" => $user], 200);
         }
@@ -116,7 +116,7 @@ class ProfileController extends Controller
 
             // Get image dimensions
             [$width, $height] = getimagesize($uploadedFile->getPathname());
-            
+
             // Check if it's square
             if ($width !== $height) {
                 return response()->json(["status" => "error", "message" => "Upload image with equal hight and width (Square Image)."], 400);
@@ -199,6 +199,10 @@ class ProfileController extends Controller
             $company->company_name = $request->company_name;
             $company->remaining_hours = $request->remaining_hours;
             $company->total_hours = $request->total_hours;
+            $company->duration = $request->duration;
+            $company->learning_plan_start_date = $request->learning_plan_start_date;
+
+
             $company->save();
 
             $company_employee->first_name = $request->first_name;
