@@ -476,12 +476,16 @@ public function get_learning_plan_list_dashboard(Request $request)
             ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
             ->where('my_learning_plans.part', 'general')
             ->where('user_learning_plans.learning_plan_enable_date', now()->toDateString())
-            ->get();
-            //->toArray();
+            ->get()
+            ->toArray();
             //echo '<pre>';print_r($learning_plans_today);exit;
 
-       
-       
+        $link = env('FRONT_URL') . '/employee/my-learning-plan/24';
+        $maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023');
+        Mail::to("maisha@mpact-int.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        $maildata['maildata'] = $maildata;
+        return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
            
         foreach ($learning_plans_today as $learning_plan) {
             $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;

@@ -298,11 +298,15 @@
                                             >
                                               Hi {{$maildata['name']}}, 
                                               <br /><br />
-                                              Learning Plan: {{$maildata['title']}} 
+                                              Learning Plan: <a 
+                                              href="{{$maildata['link']}}" target="_blank">{{$maildata['title']}} </a>
                                               <br />
                                               Date: {{$maildata['date']}} 
-                                              <br />
-                                              Link: {{$maildata['link']}} 
+                                              <br /><br />
+                                              Speaking Up is a 2-part series providing tips to help you consider ways to speak up so you share what you think and contribute to a productive team culture. Part 1 helps you understand the problem and learn ways to prepare for a discussion
+
+                                              <br /><br />
+                                              URL: {{$maildata['link']}} 
                                               <br />
 
                                             </p>
