@@ -37,7 +37,7 @@ class LearningPlanController extends Controller
             $filename = '';
             if ($request->hasFile('image')) {
                 $uploadedFile = $request->file('image');
-                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName(); 
                 $destinationPath = public_path() . '/learning-plan-files';
                 $uploadedFile->move($destinationPath, $filename);
             }
@@ -46,6 +46,8 @@ class LearningPlanController extends Controller
             $t->title = $request->title;
             $t->description = $request->description;
             $t->part = $request->part;
+            $t->email_subject = $request->email_subject;
+            $t->email_body = $request->email_body;
             $t->image = $filename;
             $t->save();
 
@@ -115,6 +117,8 @@ class LearningPlanController extends Controller
         $t->title = $request->title;
         $t->description = $request->description;
         $t->part = $request->part;
+        $t->email_subject = $request->email_subject;
+        $t->email_body = $request->email_body;
         $t->save();
 
         if ($request->company) {
@@ -482,8 +486,8 @@ public function get_learning_plan_list_dashboard(Request $request)
 
         $link = env('FRONT_URL') . '/employee/my-learning-plan/24';
         $maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023');
-        Mail::to("maisha@mpact-int.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
-        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        //Mail::to("maisha@mpact-int.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
         $maildata['maildata'] = $maildata;
         return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
            
