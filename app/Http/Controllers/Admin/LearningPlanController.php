@@ -474,29 +474,30 @@ public function get_learning_plan_list_dashboard(Request $request)
      */
     public function general_part_learning_plan_email_crone(Request $request)
     {
-        $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
+        $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
             ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
             ->join('users', 'users.id', 'user_learning_plans.user_id')
             ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
             ->where('my_learning_plans.part', 'general')
             ->where('user_learning_plans.learning_plan_enable_date', now()->toDateString())
-            ->get()
-            ->toArray();
-            //echo '<pre>';print_r($learning_plans_today);exit;
+            ->get();
+            //->toArray();
+            //echo '<pre>';print_r($learning_plans_today);//exit;
 
-        $link = env('FRONT_URL') . '/employee/my-learning-plan/24';
-        $maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023');
+        //$link = env('FRONT_URL') . '/employee/my-learning-plan/24';
+        //$maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023', 'email_subject' => 'This is email subject from Neel', 'email_body' => 'This is email body by Maisha');
         //Mail::to("maisha@mpact-int.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
         //Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
-        $maildata['maildata'] = $maildata;
-        return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
+        //$maildata['maildata'] = $maildata;
+        //return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
            
         foreach ($learning_plans_today as $learning_plan) {
+            //echo '<pre>';print_r($learning_plan->first_name);exit;
             $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
-            $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date);
-            //Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
-            $maildata['maildata'] = $maildata;
-            return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
+            $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
+            Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
+            //$maildata['maildata'] = $maildata;
+            //return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
         }
     }
 

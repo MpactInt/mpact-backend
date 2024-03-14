@@ -302,8 +302,7 @@
                                               href="{{$maildata['link']}}" target="_blank">{{$maildata['title']}} </a>
                                               
                                               <br /><br />
-                                              Speaking Up is a 2-part series providing tips to help you consider ways to speak up so you share what you think and contribute to a productive team culture. Part 1 helps you understand the problem and learn ways to prepare for a discussion
-
+                                              {{$maildata['email_body']}}
                                               <br />
 
                                             </p>
