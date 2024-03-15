@@ -152,7 +152,7 @@ class LearningPlanFileController extends Controller
         $files = $file;
 
         $path = url('/public/learning-plan-files/');
-        $vdo_path = url('/videos/');
+        $vdo_path = url('/public/videos/');
         return response(["status" => "success", "res" => $files, 'path' => $path, 'vdo_path' => $vdo_path], 200);
     }
 
