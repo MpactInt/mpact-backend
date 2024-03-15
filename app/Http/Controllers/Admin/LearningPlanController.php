@@ -484,10 +484,10 @@ public function get_learning_plan_list_dashboard(Request $request)
             //->toArray();
             //echo '<pre>';print_r($learning_plans_today);exit;
 
-        $link = env('FRONT_URL') . '/employee/my-learning-plan/24';
-        $maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023', 'email_subject' => 'This is email subject from Neel', 'email_body' => 'This is email body by Maisha');
+        //$link = env('FRONT_URL') . '/employee/my-learning-plan/24';
+        //$maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023', 'email_subject' => 'This is email subject from Neel', 'email_body' => 'This is email body by Maisha');
         //Mail::to("maisha@mpact-int.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
-        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
         //$maildata['maildata'] = $maildata;
         //return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
            
@@ -496,7 +496,7 @@ public function get_learning_plan_list_dashboard(Request $request)
             $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
             $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => 'This is email subject from Neel', 'email_body' => 'This is email body by Maisha');
             echo '<pre>';print_r($maildata);//exit;
-            Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));exit;
+            Mail::to("maisha@mpact-int.com")->send(new SendGeneralPartLearningPlanEmail($maildata));exit;
             //$maildata['maildata'] = $maildata;
             //return view('emails.SendGeneralPartLearningPlanEmail', $maildata);exit;
         }
