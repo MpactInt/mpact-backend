@@ -492,13 +492,13 @@ public function get_learning_plan_list_dashboard(Request $request)
         //return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
            
         foreach ($learning_plans_today as $learning_plan) {
-            echo '<pre>';print_r($learning_plan);//exit;
+            //echo '<pre>';print_r($learning_plan);//exit;
             $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
             $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
-            echo '<pre>';print_r($maildata);exit;
+            echo '<pre>';print_r($maildata);//exit;
             Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
-            //$maildata['maildata'] = $maildata;
-            //return view('emails.SendGeneralPartLearningPlanEmail', $maildata);
+            $maildata['maildata'] = $maildata;
+            return view('emails.SendGeneralPartLearningPlanEmail', $maildata);exit;
         }
     }
 
