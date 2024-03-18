@@ -24,7 +24,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('weekly:email')->everyMinute();
+        // $schedule->command('weekly:email')->everyMinute();
+        $schedule->command('command:part_learning_plan_cron')
+                    ->dailyAt('00:30')
+                    ->timezone('America/New_York'); 
+        $schedule->command('command:part_learning_plan_email_crone')
+                    ->dailyAt('01:00')
+                    ->timezone('America/New_York'); 
+
     }
 
     /**
