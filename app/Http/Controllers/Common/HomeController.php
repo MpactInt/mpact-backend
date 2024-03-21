@@ -15,6 +15,8 @@ use App\Models\Country;
 use App\Models\Invitation;
 use App\Models\PlanTier;
 use App\Models\User;
+use App\Models\ConsultingHours;
+use App\Models\UserPart;
 use ChargeBee\ChargeBee\Models\Estimate;
 use ChargeBee\ChargeBee\Models\ItemPrice;
 use Illuminate\Http\Request;
@@ -23,7 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use App\Models\ConsultingHours;
+
 
 class HomeController extends Controller
 {
@@ -420,6 +422,15 @@ class HomeController extends Controller
                     // ]);
 
                     if ($welcome_note) {
+
+                        $user_part_data = [
+                            ['user_id' => $user->id, 'part' => 'part1'],
+                            ['user_id' => $user->id, 'part' => 'part2'],
+                            ['user_id' => $user->id, 'part' => 'part3'],
+                            ['user_id' => $user->id, 'part' => 'part4'],
+                        ];
+                        UserPart::insert($user_part_data);
+
                         $link = env('FRONT_URL') . '/login';
                         $maildata = array('name' => $c->first_name, 'link' => $link);
 
@@ -617,6 +628,13 @@ class HomeController extends Controller
         //$maildata['maildata'] = $maildata;
         //return view('emails.sendPart1Email', $maildata);
 
+        $link = env('FRONT_URL') . '/login';
+        $maildata = array('name' => 'Maisha', 'link' => $link, 'part' => 2);
+        //Mail::to("maisha@mpact-int.com")->send(new sendPartActivationEmail($maildata));
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new sendPartActivationEmail($maildata));
+        $maildata['maildata'] = $maildata;
+        return view('emails.sendPartActivationEmail', $maildata);
+
         //$link = md5(uniqid());
         //$link1 = env('FRONT_URL') . '/create-password/' . $link;
         //$maildata = array('link' => $link1, 'name' => 'first name', 'text' => 'You can use below link to create your password', 'link_text' => 'Click to create your password');
@@ -631,11 +649,11 @@ class HomeController extends Controller
         //$maildata['maildata'] = $maildata;
         //return view('emails.sendRegistrationEmail', $maildata);
 
-        $maildata = array('name' => 'test company', 'first_name' => 'first', 'last_name' => 'last', 'email' => 'test@gmail.com', 'password' => '12345678');
-        Mail::to("maisha@mpact-int.com")->send(new sendCompanyRegistrationEmail($maildata));
-        Mail::to("nchouksey@manifestinfotech.com")->send(new sendCompanyRegistrationEmail($maildata));
-        $maildata['maildata'] = $maildata;
-        return view('emails.sendCompanyRegistrationEmail', $maildata);
+        //$maildata = array('name' => 'test company', 'first_name' => 'first', 'last_name' => 'last', 'email' => 'test@gmail.com', 'password' => '12345678');
+        //Mail::to("maisha@mpact-int.com")->send(new sendCompanyRegistrationEmail($maildata));
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new sendCompanyRegistrationEmail($maildata));
+        //$maildata['maildata'] = $maildata;
+        //return view('emails.sendCompanyRegistrationEmail', $maildata);
 
         //$link = md5(uniqid());
         //$link1 = env('FRONT_URL') . '/reset-password/' . $link;

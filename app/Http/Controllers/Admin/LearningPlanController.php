@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendGeneralPartLearningPlanEmail;
+use App\Mail\sendPartActivationEmail;
 use App\Models\CompanyEmployee;
 use App\Models\MyLearningPlan;
 use App\Models\Company;
@@ -11,6 +12,7 @@ use App\Models\LearningPlanCompany;
 use App\Models\LearningPlanProfileType;
 use App\Models\MyLearningPlanFile;
 use App\Models\LearningPlanResource;
+use App\Models\UserPart;
 use App\Models\LearningPlanLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -250,11 +252,6 @@ class LearningPlanController extends Controller
         // $ca = MyLearningPlan::with(['profileType' => function ($q) {
         //     $q->join('profile_types', 'profile_types.id', 'learning_plan_profile_types.profile_type_id')->pluck('profile_types.profile_type');
         // }])->select('*');
-
-
-
-
-
 
 
 
@@ -531,11 +528,14 @@ public function get_learning_plan_list_dashboard(Request $request)
                                              ->where('learning_plan_logs.part', $request->part)
                                             ->count();
 
-
-
-
-
             $sixtyPercent = 0.6 * $total_plan_file;
+
+            $viewPercentage = 0; // Default value
+
+            if ($total_plan_file > 0) {
+                $viewPercentage = ($total_learning_view_count / $total_plan_file) * 100;
+            }
+
             if ($total_learning_view_count >= $sixtyPercent) {
                 // echo "More than 60% of the videos have been viewed.";
                 return [
@@ -543,6 +543,7 @@ public function get_learning_plan_list_dashboard(Request $request)
                     "totalLearningCount"=>$total_plan_file,
                     "totalLearningViewCount"=>$total_learning_view_count,
                     "sixtyPercent"=>$sixtyPercent,
+                    "viewPercentage"=>round($viewPercentage),
                 ];
             } else {
                 return [
@@ -550,10 +551,9 @@ public function get_learning_plan_list_dashboard(Request $request)
                     "totalLearningCount"=>$total_plan_file,
                     "totalLearningViewCount"=>$total_learning_view_count,
                     "sixtyPercent"=>$sixtyPercent,
+                    "viewPercentage"=>round($viewPercentage),
                 ];
             }
-
-
     }
     /**
      * @param $id
@@ -577,30 +577,57 @@ public function get_learning_plan_list_dashboard(Request $request)
         return response(["status" => "success", "res" => $ca], 200);
     }
 
-      public function update_learning_plan_view(Request $request){
+    public function update_learning_plan_view(Request $request){
 
-            $data = $request->only(['company_id', 'part', 'type', 'profile_id','plan_id']);
-            $user = Auth::guard('api')->user();
-            $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+        //return $lastChar = substr($request->part, -1);
 
-            $data = [
-                    'plan_id' => $data['plan_id'],
-                    'company_id' => $user_detail->company_id,
-                    'type' => $data['type'],
-                    'profile_id' => $user_detail->id,
-                    'profile_type_id' => $user_detail->profile_type_id,
-                    'part' => $data['part'] ?? '',
-                ];
+        $data = $request->only(['company_id', 'part', 'type', 'profile_id','plan_id']);
+        $user = Auth::guard('api')->user();
+        $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
+        $part_no = substr($request->part, -1);
 
-            // Check if the combination of company_id, part, type, and profile_id already exists
-            $existingRecord = DB::table('learning_plan_logs')
-                ->where($data)->first();
+        $data = [
+                'plan_id' => $data['plan_id'],
+                'company_id' => $user_detail->company_id,
+                'type' => $data['type'],
+                'profile_id' => $user_detail->id,
+                'profile_type_id' => $user_detail->profile_type_id,
+                'part' => $data['part'] ?? '',
+            ];
 
-            if (!$existingRecord) {
+        // Check if the combination of company_id, part, type, and profile_id already exists
+        $existingRecord = DB::table('learning_plan_logs')
+            ->where($data)->first();
 
-                DB::table('learning_plan_logs')->insert($data);
+        $part_detail = array();
+        if (!$existingRecord) {
+
+            DB::table('learning_plan_logs')->insert($data);
+            $part_detail = $this->shouldGoNextTab($request);
+
+            $user_part = UserPart::where('user_id', $user->id)
+                ->where('part', $request->part)
+                ->first();
+            $user_part->percent = $part_detail['viewPercentage'];
+
+            if ($user_part->email_sent == 0 && $part_detail['viewPercentage'] >= 60) {
+                // sending welcome email for next part
+                $link = env('FRONT_URL') . '/login';
+                $maildata = array('name' => $user_detail->first_name.' '.$user_detail->last_name, 'link' => $link, 'part' => $part_no+1);
+                try {
+                    Mail::to($user->email)->send(new sendPartActivationEmail($maildata));
+                    $user_part->email_sent = 1;
+                } catch (\Exception $e) {
+                }
             }
 
-        return response(["status" => "success"], 200);
+            $user_part->save();
+        }
+
+        return response(["status" => "success", "result" => $part_detail], 200);
     }
+
+
+
+
 }
