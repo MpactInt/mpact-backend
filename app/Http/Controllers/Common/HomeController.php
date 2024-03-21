@@ -614,6 +614,31 @@ class HomeController extends Controller
 
     public function send_email1()
     {
+        $users = User::select('id')->get()->toArray();
+        echo '<pre>';print_r($users);exit;
+        foreach($users as $user_data){
+            $user_part = new UserPart();
+            $user_part->user_id = $user_data['id'];
+            $user_part->part = 'part1';
+            $user_part->save();
+
+            $user_part = new UserPart();
+            $user_part->user_id = $user_data['id'];
+            $user_part->part = 'part2';
+            $user_part->save();
+
+            $user_part = new UserPart();
+            $user_part->user_id = $user_data['id'];
+            $user_part->part = 'part3';
+            $user_part->save();
+
+            $user_part = new UserPart();
+            $user_part->user_id = $user_data['id'];
+            $user_part->part = 'part4';
+            $user_part->save();
+        }
+        
+
         // Mail::send('registration-email', $data, function ($message){
         //     $message->to("deepika.manifest@gmail.com", 'MPACT INT')
         //         ->subject('Welcome to Mpact International');
