@@ -372,7 +372,7 @@ public function get_learning_plan_list_dashboard(Request $request)
     $user = Auth::guard('api')->user();
     $user_detail = CompanyEmployee::where('user_id', $user->id)->first();
 
-    if ($request->part == 'general') {
+    /*if ($request->part == 'general') {
         $learning_plans = MyLearningPlan::select('my_learning_plans.*')
             ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
             ->where('user_learning_plans.user_id', $user->id)
@@ -380,7 +380,7 @@ public function get_learning_plan_list_dashboard(Request $request)
             ->get();
         
     }else
-    {
+    {*/
         $learning_plans = MyLearningPlan::join('learning_plan_profile_types', 'my_learning_plans.id', 'learning_plan_profile_types.learning_plan_id')
             ->join('learning_plan_companies', 'my_learning_plans.id', '=', 'learning_plan_companies.learning_plan_id')
             ->where('learning_plan_profile_types.profile_type_id', $user_detail->profile_type_id)
@@ -389,7 +389,7 @@ public function get_learning_plan_list_dashboard(Request $request)
             ->select('my_learning_plans.*')
             ->limit(6)
             ->get();
-    }
+    /*}*/
     
 
     // $partCounts = [];
@@ -603,25 +603,28 @@ public function get_learning_plan_list_dashboard(Request $request)
         if (!$existingRecord) {
 
             DB::table('learning_plan_logs')->insert($data);
-            $part_detail = $this->shouldGoNextTab($request);
 
-            $user_part = UserPart::where('user_id', $user->id)
-                ->where('part', $request->part)
-                ->first();
-            $user_part->percent = $part_detail['viewPercentage'];
+            if ($request->part != 'general') {
+                $part_detail = $this->shouldGoNextTab($request);
 
-            if ($user_part->email_sent == 0 && $part_detail['viewPercentage'] >= 60) {
-                // sending welcome email for next part
-                $link = env('FRONT_URL') . '/login';
-                $maildata = array('name' => $user_detail->first_name.' '.$user_detail->last_name, 'link' => $link, 'part' => $part_no+1);
-                try {
-                    Mail::to($user->email)->send(new sendPartActivationEmail($maildata));
-                    $user_part->email_sent = 1;
-                } catch (\Exception $e) {
+                $user_part = UserPart::where('user_id', $user->id)
+                    ->where('part', $request->part)
+                    ->first();
+                $user_part->percent = $part_detail['viewPercentage'];
+
+                if ($user_part->email_sent == 0 && $part_detail['viewPercentage'] >= 60) {
+                    // sending welcome email for next part
+                    $link = env('FRONT_URL') . '/login';
+                    $maildata = array('name' => $user_detail->first_name.' '.$user_detail->last_name, 'link' => $link, 'part' => $part_no+1);
+                    try {
+                        Mail::to($user->email)->send(new sendPartActivationEmail($maildata));
+                        $user_part->email_sent = 1;
+                    } catch (\Exception $e) {
+                    }
                 }
-            }
 
-            $user_part->save();
+                $user_part->save();
+            }
         }
 
         return response(["status" => "success", "result" => $part_detail], 200);
