@@ -615,7 +615,7 @@ class HomeController extends Controller
     public function send_email1()
     {
         $users = User::select('id')->get()->toArray();
-        echo '<pre>';print_r($users);exit;
+        //echo '<pre>';print_r($users);exit;
         foreach($users as $user_data){
             $user_part = new UserPart();
             $user_part->user_id = $user_data['id'];
@@ -637,7 +637,7 @@ class HomeController extends Controller
             $user_part->part = 'part4';
             $user_part->save();
         }
-        
+        echo '<pre>';print_r($users);exit;
 
         // Mail::send('registration-email', $data, function ($message){
         //     $message->to("deepika.manifest@gmail.com", 'MPACT INT')
