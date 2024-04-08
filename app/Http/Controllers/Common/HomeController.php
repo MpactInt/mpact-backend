@@ -620,6 +620,11 @@ class HomeController extends Controller
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
 
+        $link = env('FRONT_URL') . '/employee/my-learning-plan/';
+        $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
+
+        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+
 
         //$link = env('FRONT_URL') . '/login';
         //$maildata = array('name' => 'Maisha', 'link' => $link);
@@ -628,12 +633,12 @@ class HomeController extends Controller
         //$maildata['maildata'] = $maildata;
         //return view('emails.sendPart1Email', $maildata);
 
-        $link = env('FRONT_URL') . '/login';
-        $maildata = array('name' => 'Maisha', 'link' => $link, 'part' => 2);
+        //$link = env('FRONT_URL') . '/login';
+        //$maildata = array('name' => 'Maisha', 'link' => $link, 'part' => 2);
         //Mail::to("maisha@mpact-int.com")->send(new sendPartActivationEmail($maildata));
         //Mail::to("nchouksey@manifestinfotech.com")->send(new sendPartActivationEmail($maildata));
-        $maildata['maildata'] = $maildata;
-        return view('emails.sendPartActivationEmail', $maildata);
+        //$maildata['maildata'] = $maildata;
+        //return view('emails.sendPartActivationEmail', $maildata);
 
         //$link = md5(uniqid());
         //$link1 = env('FRONT_URL') . '/create-password/' . $link;
