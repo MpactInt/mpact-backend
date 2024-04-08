@@ -8,6 +8,7 @@ use App\Mail\SendEmployeeRegistrationEmail;
 use App\Mail\SendRegistrationEmail;
 use App\Mail\sendCompanyRegistrationEmail;
 use App\Mail\SendEmployeePart1Email;
+use App\Mail\SendGeneralPartLearningPlanEmail;
 use App\Models\ActivityLog;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
