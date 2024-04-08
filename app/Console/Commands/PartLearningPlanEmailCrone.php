@@ -54,20 +54,16 @@ class PartLearningPlanEmailCrone extends Command
       \Log::info("general plan cron");
       try {
           
-\Log::info("into try");
-           $to = 'nchouksey@manifestinfotech.com';
-                $subject = 'Test Email';
-                $message = 'This is a test email sent using PHP\'s mail() function.';
-                $headers = 'From: yourname@example.com' . "\r\n" .
-                           'Reply-To: aakashsingh624@gmail.com' . "\r\n" .
-                           'X-Mailer: PHP/' . phpversion();
+            \Log::info("into try");
+            $toEmail = 'nchouksey@manifestinfotech.com';
+              $subject = 'Test Email from Laravel';
+              $message = 'This is a test email sent from Laravel!';
 
-                // Send email
-                if (mail($to, $subject, $message, $headers)) {
-                    echo 'Email sent successfully!';
-                } else {
-                    echo 'Email sending failed.';
-                }
+              // Send email
+              Mail::raw($message, function ($mail) use ($toEmail, $subject) {
+                   $mail->to($toEmail)
+                        ->subject($subject);
+              });
       } catch (Exception $e) {
            \Log::info($e);
       }
