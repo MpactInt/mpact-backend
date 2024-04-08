@@ -51,7 +51,7 @@ class PartLearningPlanEmailCrone extends Command
     public function handle()
     {
         
-      
+      \Log::info("general plan cron");
       try {
           
 
