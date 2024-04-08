@@ -620,18 +620,18 @@ class HomeController extends Controller
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
 
-        //$link = env('FRONT_URL') . '/employee/my-learning-plan/';
-        //$maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
+        $link = env('FRONT_URL') . '/employee/my-learning-plan/';
+        $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
 
-        //Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
 
 
-        $link = env('FRONT_URL') . '/login';
-        $maildata = array('name' => 'Maisha', 'link' => $link);
+        //$link = env('FRONT_URL') . '/login';
+        //$maildata = array('name' => 'Maisha', 'link' => $link);
         //Mail::to("maisha@mpact-int.com")->send(new SendEmployeePart1Email($maildata));
-        Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
-        $maildata['maildata'] = $maildata;
-        return view('emails.sendPart1Email', $maildata);
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new SendEmployeePart1Email($maildata));
+        //$maildata['maildata'] = $maildata;
+        //return view('emails.sendPart1Email', $maildata);
 
         //$link = env('FRONT_URL') . '/login';
         //$maildata = array('name' => 'Maisha', 'link' => $link, 'part' => 2);
