@@ -50,25 +50,26 @@ class PartLearningPlanEmailCrone extends Command
      */
     public function handle()
     {
-        $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
-            ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
-            ->join('users', 'users.id', 'user_learning_plans.user_id')
-            ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
-            ->where('my_learning_plans.part', 'general')
-            ->where('user_learning_plans.learning_plan_enable_date', now()->toDateString())
-            ->get();
+         \Log::info("PartLearningPlanEmailCrone:done");
+        // $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
+        //     ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
+        //     ->join('users', 'users.id', 'user_learning_plans.user_id')
+        //     ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
+        //     ->where('my_learning_plans.part', 'general')
+        //     ->where('user_learning_plans.learning_plan_enable_date', now()->toDateString())
+        //     ->get();
            
            
-        foreach ($learning_plans_today as $learning_plan) {
-            //echo '<pre>';print_r($learning_plan->email);exit;
-            $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
-            $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
-            //echo '<pre>';print_r($maildata);//exit;
-            try {
-                Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
-            } catch (\Exception $e) {
-            }
+        // foreach ($learning_plans_today as $learning_plan) {
+        //     //echo '<pre>';print_r($learning_plan->email);exit;
+        //     $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
+        //     $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
+        //     //echo '<pre>';print_r($maildata);//exit;
+        //     try {
+        //         Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
+        //     } catch (\Exception $e) {
+        //     }
            
-        }
+        // }
     }
 }
