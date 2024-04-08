@@ -624,7 +624,7 @@ class HomeController extends Controller
         $link = env('FRONT_URL') . '/employee/my-learning-plan/';
         $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
 
-        Mail::to("aakashsingh624@gmail.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
 
 
         //$link = env('FRONT_URL') . '/login';
