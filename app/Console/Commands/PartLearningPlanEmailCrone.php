@@ -11,12 +11,14 @@ use App\Models\LearningPlanCompany;
 use App\Models\LearningPlanProfileType;
 use App\Models\MyLearningPlanFile;
 use App\Models\LearningPlanResource;
+use App\Models\UserPart;
 use App\Models\LearningPlanLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use DB;
+
 class PartLearningPlanEmailCrone extends Command
 {
     /**
@@ -52,18 +54,26 @@ class PartLearningPlanEmailCrone extends Command
     {
         
       \Log::info("general plan cron");
+
       try {
-          
 
         \Log::info("into try section");
+
         $link = '/employee/my-learning-plan/';
         $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
+        
+        \Log::info($maildata);
 
         //Mail::to("aakashsingh624@gmail.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
         Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+
       } catch (Exception $e) {
            \Log::info($e);
       }
+
+
+
+
         // $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
         //     ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
         //     ->join('users', 'users.id', 'user_learning_plans.user_id')
