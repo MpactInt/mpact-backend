@@ -5,6 +5,23 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+use Illuminate\Console\Command;
+use App\Mail\SendGeneralPartLearningPlanEmail;
+use App\Models\CompanyEmployee;
+use App\Models\MyLearningPlan;
+use App\Models\Company;
+use App\Models\LearningPlanCompany;
+use App\Models\LearningPlanProfileType;
+use App\Models\MyLearningPlanFile;
+use App\Models\LearningPlanResource;
+use App\Models\UserPart;
+use App\Models\LearningPlanLog;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use DB;
+
 class Kernel extends ConsoleKernel
 {
     /**
