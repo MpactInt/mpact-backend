@@ -478,9 +478,9 @@ public function get_learning_plan_list_dashboard(Request $request)
             ->where('my_learning_plans.part', 'general')
             ->where('user_learning_plans.learning_plan_enable_date', '<=', now()->toDateString())
             ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
-            ->get()
-            ->toArray();
-            echo '<pre>';print_r($learning_plans_today);exit;
+            ->get();
+            //->toArray();
+            //echo '<pre>';print_r($learning_plans_today);exit;
 
         //$link = env('FRONT_URL') . '/employee/my-learning-plan/24';
         //$maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023', 'email_subject' => 'This is email subject from Neel', 'email_body' => 'This is email body by Maisha');
