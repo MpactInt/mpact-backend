@@ -41,6 +41,9 @@ class PartLearningPlanEmailCrone2 extends Command
      */
     public function handle()
     {
+        \Log::info("into try section test email");
+
+
         $maildata = [
             'name' => 'John Doe',
             'email' => 'john@example.com',
