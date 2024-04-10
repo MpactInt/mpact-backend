@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\SendCheckinSurveyEmail::class
+        Commands\SendCheckinSurveyEmail::class,
+        Commands\PartLearningPlanEmailCrone2::class
     ];
 
     /**
@@ -24,6 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('app:sendgpl-command')->everyMinute();
+
         // $schedule->command('weekly:email')->everyMinute();
         $schedule->command('command:part_learning_plan_cron')
                     ->dailyAt('00:30')
