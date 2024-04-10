@@ -472,10 +472,6 @@ public function get_learning_plan_list_dashboard(Request $request)
      */
     public function general_part_learning_plan_email_crone(Request $request)
     {
-            $t = UserLearningPlan::find(1);
-            $t->email_sent = 1;
-            $t->save();
-
         $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date', 'user_learning_plans.email_sent', 'user_learning_plans.id as user_learning_plan_id')
             ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
             ->join('users', 'users.id', 'user_learning_plans.user_id')
@@ -485,9 +481,9 @@ public function get_learning_plan_list_dashboard(Request $request)
             ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
             ->where('user_learning_plans.email_sent', '0')
             ->limit(20)
-            ->get()
-            ->toArray();
-            echo '<pre>';print_r($learning_plans_today);exit;
+            ->get();
+            //->toArray();
+            //echo '<pre>';print_r($learning_plans_today);exit;
 
         //$link = env('FRONT_URL') . '/employee/my-learning-plan/24';
         //$maildata = array('name' => 'Neel Chouksey', 'link' => $link, 'title' => 'Speaking Up: Part 1', 'date' => '12-28-2023', 'email_subject' => 'This is email subject from Neel', 'email_body' => 'This is email body by Maisha');
@@ -502,7 +498,10 @@ public function get_learning_plan_list_dashboard(Request $request)
             $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
             //echo '<pre>';print_r($maildata);//exit;
             try {
-                Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
+                //Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
+                $t = UserLearningPlan::find($learning_plan->user_learning_plan_id);
+                $t->email_sent = 1;
+                $t->save();
             } catch (\Exception $e) {
             }
             //$maildata['maildata'] = $maildata;
