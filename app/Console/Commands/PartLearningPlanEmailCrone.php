@@ -62,7 +62,7 @@ class PartLearningPlanEmailCrone extends Command
         \Log::info($maildata);
 
         //Mail::to("aakashsingh624@gmail.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
-        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail());
+        Mail::to("ajaydyadav7898@gmail.com")->send(new SendGeneralPartLearningPlanEmail());
 
       } catch (Exception $e) {
            \Log::info($e);
