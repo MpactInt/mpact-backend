@@ -10,16 +10,16 @@ use Illuminate\Queue\SerializesModels;
 class SendGeneralPartLearningPlanEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $maildata;
+    //public $maildata;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($maildata)
+    public function __construct()
     {
-        $this->maildata = $maildata;
+        //$this->maildata = $maildata;
     }
 
     /**
@@ -30,8 +30,8 @@ class SendGeneralPartLearningPlanEmail extends Mailable
     public function build()
     {
         return $this->markdown('emails.SendGeneralPartLearningPlanEmail')
-            //->subject('New learning plan available in your Mpact Dashboard!!')
-            ->subject($this->maildata['email_subject']);
+            ->subject('New learning plan available in your Mpact Dashboard!!');
+            //->subject($this->maildata['email_subject']);
             //->with('maildata', $this->maildata);
     }
 }

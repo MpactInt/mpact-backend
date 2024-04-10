@@ -296,13 +296,13 @@
                                                 color: #000;
                                               "
                                             >
-                                              Hi {{$maildata['name']}}, 
+                                              Hi , 
                                               <br /><br />
                                               <a 
-                                              href="{{$maildata['link']}}" target="_blank">{{$maildata['title']}} </a>
+                                              href="" target="_blank"> </a>
                                               
                                               <br /><br />
-                                              {{$maildata['email_body']}}
+                                             
                                               <br />
 
                                             </p>
@@ -367,7 +367,7 @@
                                         <br />
                                         <br />
                                         <a
-                                          href="{{$maildata['link']}}"
+                                          href=""
                                           style="
                                             box-sizing: border-box;
                                             font-family: -apple-system,

@@ -54,15 +54,16 @@ class PartLearningPlanEmailCrone extends Command
       \Log::info("general plan cron");
       try {
           
-
         \Log::info("into try section");
+
         $link = env('FRONT_URL') . '/employee/my-learning-plan/';
         $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
-        
+
         \Log::info($maildata);
 
         //Mail::to("aakashsingh624@gmail.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
-        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+        Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail());
+
       } catch (Exception $e) {
            \Log::info($e);
       }
