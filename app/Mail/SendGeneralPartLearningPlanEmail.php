@@ -31,7 +31,7 @@ class SendGeneralPartLearningPlanEmail extends Mailable
     {
         return $this->markdown('emails.SendGeneralPartLearningPlanEmail')
             //->subject('New learning plan available in your Mpact Dashboard!!')
-            ->subject($this->maildata['email_subject'])
-            ->with('maildata', $this->maildata);
+            ->subject($this->maildata['email_subject']);
+            //->with('maildata', $this->maildata);
     }
 }
