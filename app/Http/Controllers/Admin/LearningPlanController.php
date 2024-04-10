@@ -476,7 +476,7 @@ public function get_learning_plan_list_dashboard(Request $request)
             ->join('users', 'users.id', 'user_learning_plans.user_id')
             ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
             ->where('my_learning_plans.part', 'general')
-            ->where('user_learning_plans.learning_plan_enable_date', '<', now()->toDateString())
+            ->where('user_learning_plans.learning_plan_enable_date', '<=', now()->toDateString())
             ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
             ->get()
             ->toArray();
