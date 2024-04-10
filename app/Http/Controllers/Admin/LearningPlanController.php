@@ -476,7 +476,7 @@ public function get_learning_plan_list_dashboard(Request $request)
             $t->email_sent = 1;
             $t->save();
 
-        $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date', 'user_learning_plans.email_sent')
+        $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date', 'user_learning_plans.email_sent', 'user_learning_plans.id as user_learning_plan_id')
             ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
             ->join('users', 'users.id', 'user_learning_plans.user_id')
             ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
