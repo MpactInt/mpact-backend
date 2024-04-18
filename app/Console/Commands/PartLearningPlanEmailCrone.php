@@ -63,7 +63,7 @@ $headers .= "Content-Type: text/plain; charset=utf-8\r\n";
 // Send the email using mail() function
 if (mail($to, $subject, $message, $headers)) {
     //echo "Email sent successfully.";
-    \Log::info("Email sent successfully");
+    \Log::info("Email sent successfully to $to");
 } else {
     //echo "Email delivery failed.";
     \Log::info("Email delivery failed");
