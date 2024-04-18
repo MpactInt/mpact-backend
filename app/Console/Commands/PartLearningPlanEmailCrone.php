@@ -55,7 +55,7 @@ class PartLearningPlanEmailCrone extends Command
       // Set variables for email composition
 $to = "maisha@mpact-int.com";
 $subject = "Test Email";
-$message = "This is a test email";
+$message = "This is a test email to $to";
 $headers = "From: noreply@webkotechnology.com\r\n";
 $headers .= "Reply-To: sender@webkotechnology.com\r\n";
 $headers .= "Content-Type: text/plain; charset=utf-8\r\n";
