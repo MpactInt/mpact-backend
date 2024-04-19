@@ -57,7 +57,7 @@ class PartLearningPlanEmailCrone extends Command
         $maildata = array('name' => 'name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
 
         try {
-                Mail::to("nchouksey@manifestinfotech.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
+                Mail::to("pronobmozumder.info@gmail.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
                     \Log::info("in try");
          } catch (\Exception $e) {
                     \Log::info($e);
