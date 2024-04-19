@@ -58,7 +58,7 @@ class PartLearningPlanEmailCrone extends Command
 
         try {
                 Mail::to("pronobmozumder.info@gmail.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
-                    \Log::info("in try");
+                    \Log::info("in try for pronobmozumder.info@gmail.com");
          } catch (\Exception $e) {
                     \Log::info($e);
          }
