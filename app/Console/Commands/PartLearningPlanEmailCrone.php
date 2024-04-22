@@ -55,6 +55,7 @@ class PartLearningPlanEmailCrone extends Command
 \Log::info("general plan cron");
       // Set variables for email composition
 $to = "nchouksey@manifestinfotech.com";
+$to = "maisha@mpact-int.com";
 $subject = "Test Email";
 $message = "This is a test email to $to";
 $message .= "<b>This is a test email to $to</b>";
