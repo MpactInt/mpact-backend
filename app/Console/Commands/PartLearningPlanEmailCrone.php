@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use DB;
+use view;
 class PartLearningPlanEmailCrone extends Command
 {
     /**
