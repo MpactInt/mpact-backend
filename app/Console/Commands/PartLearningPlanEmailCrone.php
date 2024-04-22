@@ -69,18 +69,15 @@ $link = env('FRONT_URL') . '/employee/my-learning-plan/';
         $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
 $maildata['maildata'] = $maildata;
 
-$view = View::make('emails.SendGeneralPartLearningPlanEmail');
-foreach ($maildata as $key => $value) {
-    $view->with($key, $value);
-}
-$contents = $view->render();
+$htmlContent = view('emails.SendGeneralPartLearningPlanEmail', $maildata)->render();
+
 
 
 
 
 
 // Send the email using mail() function
-if (mail($to, $subject, $contents, $headers)) {
+if (mail($to, $subject, $htmlContent, $headers)) {
     //echo "Email sent successfully.";
     \Log::info("Email sent successfully to $to");
 } else {
