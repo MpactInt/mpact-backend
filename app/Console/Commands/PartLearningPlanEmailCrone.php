@@ -51,17 +51,25 @@ class PartLearningPlanEmailCrone extends Command
     public function handle()
     {
 
-        \Log::info("general plan cron");
+\Log::info("general plan cron");
+      // Set variables for email composition
+$to = "maisha@mpact-int.com";
+$subject = "Test Email";
+$message = "This is a test email to $to";
+$message .= "<b>This is a test email to $to</b>";
+$message .= "<i><u>this is next html line fro underline and italic</u></i>";
+$headers = "From: noreply@webkotechnology.com\r\n";
+$headers .= "Reply-To: sender@webkotechnology.com\r\n";
+$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
 
-        $link = '/employee/my-learning-plan/';
-        $maildata = array('name' => 'name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
-
-        try {
-                Mail::to("pronobmozumder.info@gmail.com")->send(new SendGeneralPartLearningPlanEmail($maildata));
-                    \Log::info("in try for pronobmozumder.info@gmail.com");
-         } catch (\Exception $e) {
-                    \Log::info($e);
-         }
+// Send the email using mail() function
+if (mail($to, $subject, $message, $headers)) {
+    //echo "Email sent successfully.";
+    \Log::info("Email sent successfully to $to");
+} else {
+    //echo "Email delivery failed.";
+    \Log::info("Email delivery failed");
+}
         
       
         // $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
