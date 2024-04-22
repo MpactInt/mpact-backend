@@ -62,8 +62,24 @@ $headers = "From: noreply@manifestinfotech.com\r\n";
 $headers .= "Reply-To: sender@manifestinfotech.com\r\n";
 $headers .= "Content-Type: text/html; charset=utf-8\r\n";
 
+
+
+$link = env('FRONT_URL') . '/employee/my-learning-plan/';
+        $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
+$maildata['maildata'] = $maildata;
+
+$view = View::make('emails.SendGeneralPartLearningPlanEmail');
+foreach ($maildata as $key => $value) {
+    $view->with($key, $value);
+}
+$contents = $view->render();
+
+
+
+
+
 // Send the email using mail() function
-if (mail($to, $subject, $message, $headers)) {
+if (mail($to, $subject, $contents, $headers)) {
     //echo "Email sent successfully.";
     \Log::info("Email sent successfully to $to");
 } else {
