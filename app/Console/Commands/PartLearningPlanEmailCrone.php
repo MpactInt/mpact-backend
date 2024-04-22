@@ -60,7 +60,7 @@ $message .= "<b>This is a test email to $to</b>";
 $message .= "<i><u>this is next html line fro underline and italic</u></i>";
 $headers = "From: noreply@manifestinfotech.com\r\n";
 $headers .= "Reply-To: sender@manifestinfotech.com\r\n";
-$headers .= "Content-Type: text/plain; charset=utf-8\r\n";
+$headers .= "Content-Type: text/html; charset=utf-8\r\n";
 
 // Send the email using mail() function
 if (mail($to, $subject, $message, $headers)) {
