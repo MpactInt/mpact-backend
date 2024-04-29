@@ -60,8 +60,8 @@ class PartLearningPlanEmailCrone extends Command
             ->join('users', 'users.id', 'user_learning_plans.user_id')
             ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
             ->where('my_learning_plans.part', 'general')
-            ->where('user_learning_plans.learning_plan_enable_date', '<=', now()->toDateString())
-            ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
+            ->where('user_learning_plans.learning_plan_enable_date', now()->toDateString())
+            //->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
             ->where('user_learning_plans.email_sent', '0')
             //->limit(20)
             ->get();

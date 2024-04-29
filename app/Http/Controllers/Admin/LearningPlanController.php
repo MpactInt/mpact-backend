@@ -483,6 +483,7 @@ public function get_learning_plan_list_dashboard(Request $request)
             ->limit(20)
             ->get();
             //->toArray();
+            //->toSql();
             //echo '<pre>';print_r($learning_plans_today);exit;
 
         //$link = env('FRONT_URL') . '/employee/my-learning-plan/24';
