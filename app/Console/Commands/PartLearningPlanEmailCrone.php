@@ -64,9 +64,10 @@ class PartLearningPlanEmailCrone extends Command
             ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
             ->where('user_learning_plans.email_sent', '0')
             ->limit(20)
-            ->get();
+            ->get()
+            ->toSql();
 
-        \Log::info($learning_plans_today->toSql());exit;
+        \Log::info($learning_plans_today);exit;
            
         foreach ($learning_plans_today as $learning_plan) {
             \Log::info($learning_plan);
