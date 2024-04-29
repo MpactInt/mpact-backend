@@ -65,7 +65,8 @@ class PartLearningPlanEmailCrone extends Command
             ->where('user_learning_plans.email_sent', '0')
             ->limit(20)
             ->get();
-           
+
+        \Log::info($learning_plans_today->toSql());exit;
            
         foreach ($learning_plans_today as $learning_plan) {
             \Log::info($learning_plan);
