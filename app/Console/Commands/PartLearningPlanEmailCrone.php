@@ -63,6 +63,7 @@ class PartLearningPlanEmailCrone extends Command
             ->where('user_learning_plans.learning_plan_enable_date', '<=', now()->toDateString())
             ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
             ->where('user_learning_plans.email_sent', '0')
+            ->limit(20)
             ->get();
            
            
@@ -89,13 +90,13 @@ class PartLearningPlanEmailCrone extends Command
                 $htmlContent = view('emails.SendGeneralPartLearningPlanEmail', $maildata)->render();
 
                 // Send the email using mail() function
-                if (mail($to, $subject, $htmlContent, $headers)) {
+                //if (mail($to, $subject, $htmlContent, $headers)) {
                     //echo "Email sent successfully.";
                     //\Log::info("Email sent successfully to $to");
-                } else {
+                //} else {
                     //echo "Email delivery failed.";
-                    \Log::info("Email delivery failed");
-                }
+                    //\Log::info("Email delivery failed");
+                //}
                 // email end
 
 
