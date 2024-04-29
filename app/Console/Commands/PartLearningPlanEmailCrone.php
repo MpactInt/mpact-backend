@@ -72,7 +72,7 @@ class PartLearningPlanEmailCrone extends Command
            
         foreach ($learning_plans_today as $learning_plan) {
             \Log::info($learning_plan);
-exit;
+
             $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
             $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
             $maildata['maildata'] = $maildata;
