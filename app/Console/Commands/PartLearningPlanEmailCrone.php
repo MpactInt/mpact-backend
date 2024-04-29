@@ -12,6 +12,7 @@ use App\Models\LearningPlanProfileType;
 use App\Models\MyLearningPlanFile;
 use App\Models\LearningPlanResource;
 use App\Models\LearningPlanLog;
+use App\Models\UserLearningPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -52,60 +53,60 @@ class PartLearningPlanEmailCrone extends Command
     public function handle()
     {
 
-\Log::info("general plan cron");
-      // Set variables for email composition
-$to = "nchouksey@manifestinfotech.com";
-$to = "maisha@mpact-int.com";
-$subject = "Test Email";
-$message = "This is a test email to $to";
-$message .= "<b>This is a test email to $to</b>";
-$message .= "<i><u>this is next html line fro underline and italic</u></i>";
-$headers = "From: noreply@manifestinfotech.com\r\n";
-$headers .= "Reply-To: sender@manifestinfotech.com\r\n";
-$headers .= "Content-Type: text/html; charset=utf-8\r\n";
+        \Log::info("general plan cron");
 
-
-
-$link = env('FRONT_URL') . '/employee/my-learning-plan/';
-        $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
-$maildata['maildata'] = $maildata;
-
-$htmlContent = view('emails.SendGeneralPartLearningPlanEmail', $maildata)->render();
-
-
-
-
-
-
-// Send the email using mail() function
-if (mail($to, $subject, $htmlContent, $headers)) {
-    //echo "Email sent successfully.";
-    \Log::info("Email sent successfully to $to");
-} else {
-    //echo "Email delivery failed.";
-    \Log::info("Email delivery failed");
-}
-        
-      
-        // $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
-        //     ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
-        //     ->join('users', 'users.id', 'user_learning_plans.user_id')
-        //     ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
-        //     ->where('my_learning_plans.part', 'general')
-        //     ->where('user_learning_plans.learning_plan_enable_date', now()->toDateString())
-        //     ->get();
+        $learning_plans_today = MyLearningPlan::select('my_learning_plans.id', 'my_learning_plans.title', 'my_learning_plans.email_subject', 'my_learning_plans.email_body', 'users.email','company_employees.first_name','company_employees.last_name', 'user_learning_plans.learning_plan_enable_date',)
+            ->join('user_learning_plans', 'my_learning_plans.id', 'user_learning_plans.learning_plan_id')
+            ->join('users', 'users.id', 'user_learning_plans.user_id')
+            ->join('company_employees', 'user_learning_plans.user_id', 'company_employees.user_id')
+            ->where('my_learning_plans.part', 'general')
+            ->where('user_learning_plans.learning_plan_enable_date', '<=', now()->toDateString())
+            ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
+            ->where('user_learning_plans.email_sent', '0')
+            ->get();
            
            
-        // foreach ($learning_plans_today as $learning_plan) {
-        //     //echo '<pre>';print_r($learning_plan->email);exit;
-        //     $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
-        //     $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
-        //     //echo '<pre>';print_r($maildata);//exit;
-        //     try {
-        //         Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
-        //     } catch (\Exception $e) {
-        //     }
+        foreach ($learning_plans_today as $learning_plan) {
+            //echo '<pre>';print_r($learning_plan->email);exit;
+
+            $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
+            $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
+            $maildata['maildata'] = $maildata;
+            //echo '<pre>';print_r($maildata);//exit;
+
+            try {
+                //Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
+
+
+                // email start
+                // Set variables for email composition
+                $to = $learning_plan->email;
+                $subject = $learning_plan->email_subject;
+                $headers = "From: no-reply@cogdynamism.mpact-int.com\r\n";
+                $headers .= "Reply-To: no-reply@cogdynamism.mpact-int.com\r\n";
+                $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+                $htmlContent = view('emails.SendGeneralPartLearningPlanEmail', $maildata)->render();
+
+                // Send the email using mail() function
+                if (mail($to, $subject, $htmlContent, $headers)) {
+                    //echo "Email sent successfully.";
+                    //\Log::info("Email sent successfully to $to");
+                } else {
+                    //echo "Email delivery failed.";
+                    \Log::info("Email delivery failed");
+                }
+                // email end
+
+
+
+                sleep(3);
+                $t = UserLearningPlan::find($learning_plan->user_learning_plan_id);
+                $t->email_sent = 1;
+                $t->save();
+            } catch (\Exception $e) {
+            }
            
-        // }
+        }
     }
 }

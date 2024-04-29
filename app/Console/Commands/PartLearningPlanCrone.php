@@ -50,7 +50,7 @@ class PartLearningPlanCrone extends Command
      */
     public function handle()
     {
-          $currentDate = date("Y-m-d");
+        $currentDate = date("Y-m-d");
         $users = Company::select('company_employees.user_id', 'companies.id as company_id', 'company_employees.profile_type_id', 'companies.duration', 'companies.learning_plan_start_date')
                     ->join('company_employees', 'company_employees.company_id', '=', 'companies.id')
                     ->get()
