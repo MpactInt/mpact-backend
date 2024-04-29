@@ -64,15 +64,15 @@ class PartLearningPlanEmailCrone extends Command
             ->where('user_learning_plans.learning_plan_enable_date', '>', '2024-01-01')
             ->where('user_learning_plans.email_sent', '0')
             ->limit(20)
-            ->get()
-            ->toArray();
+            ->get();
+            //->toArray();
             //->toSql();
 
-        \Log::info($learning_plans_today);exit;
+        //\Log::info($learning_plans_today);exit;
            
         foreach ($learning_plans_today as $learning_plan) {
             \Log::info($learning_plan);
-
+exit;
             $link = env('FRONT_URL') . '/employee/my-learning-plan/'.$learning_plan->id;
             $maildata = array('name' => $learning_plan->first_name.' '.$learning_plan->last_name, 'link' => $link, 'title' => $learning_plan->title, 'date' => $learning_plan->learning_plan_enable_date, 'email_subject' => $learning_plan->email_subject, 'email_body' => $learning_plan->email_body);
             $maildata['maildata'] = $maildata;
