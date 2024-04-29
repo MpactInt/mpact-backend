@@ -101,11 +101,15 @@ class PartLearningPlanEmailCrone extends Command
 
 
 
-                sleep(3);
+                //sleep(3);
                 $t = UserLearningPlan::find($learning_plan->user_learning_plan_id);
+                \Log::info("teslearning");
+                \Log::info($t);
+                exit;
                 $t->email_sent = 1;
                 $t->save();
             } catch (\Exception $e) {
+                \Log::info($e);
             }
            
         }
