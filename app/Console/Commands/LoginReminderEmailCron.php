@@ -55,8 +55,9 @@ class LoginReminderEmailCron extends Command
             $link = env('FRONT_URL') . '/login';
             $maildata = array('name' => $user_data->first_name.' '.$user_data->last_name, 'link' => $link);
             //Mail::to($user_data->email)->send(new LoginReminderEmail($maildata));
-            Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
-            sleep(3);
+            //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
+            //sleep(3);
         }
+        Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
     }
 }
