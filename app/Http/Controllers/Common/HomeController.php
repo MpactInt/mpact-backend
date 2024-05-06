@@ -632,13 +632,11 @@ class HomeController extends Controller
         //         ->subject('Welcome to Mpact International');
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
-        $sevenDaysAgo = Carbon::now()->subDays(7);
-
         
 
         $link = env('FRONT_URL') . '/login';
         $maildata = array('name' => 'test name', 'link' => $link);
-        Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
         //Mail::to("maisha@mpact-int.com")->send(new LoginReminderEmail($maildata));
         $maildata['maildata'] = $maildata;
         return view('emails.loginReminderEmail', $maildata);

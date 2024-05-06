@@ -63,7 +63,39 @@ class LoginReminderEmailCron extends Command
         
         $link = env('FRONT_URL') . '/login';
         $maildata = array('name' => 'test name', 'link' => $link);
-        Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
+        $maildata['maildata'] = $maildata;
+
+            try {
+                //Mail::to($learning_plan->email)->send(new SendGeneralPartLearningPlanEmail($maildata));
+
+
+                // email start
+                // Set variables for email composition
+                $to = "nchouksey@manifestinfotech.com";
+                $subject = "nchouksey@manifestinfotech.com";
+                $headers = "From: no-reply@cogdynamism.mpact-int.com\r\n";
+                $headers .= "Reply-To: no-reply@cogdynamism.mpact-int.com\r\n";
+                $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+
+                $htmlContent = view('emails.loginReminderEmail', $maildata)->render();
+
+                // Send the email using mail() function
+                if (mail($to, $subject, $htmlContent, $headers)) {
+                    //echo "Email sent successfully.";
+                    //\Log::info("Email sent successfully to $to");
+                } else {
+                    //echo "Email delivery failed.";
+                    \Log::info("Email delivery failed");
+                }
+                // email end
+
+                sleep(3);
+                
+            } catch (\Exception $e) {
+                \Log::info($e);
+            }
+
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
         //Mail::to("maisha@mpact-int.com")->send(new LoginReminderEmail($maildata));
     }
 }
