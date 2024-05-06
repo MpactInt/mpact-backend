@@ -51,13 +51,19 @@ class LoginReminderEmailCron extends Command
             ->get();
             //->toArray();
 
-        foreach ($users as $user_data) { \Log::info($user_data->first_name.' '.$user_data->last_name);
-            $link = env('FRONT_URL') . '/login';
-            $maildata = array('name' => $user_data->first_name.' '.$user_data->last_name, 'link' => $link);
+        foreach ($users as $user_data) { 
+            //\Log::info($user_data->first_name.' '.$user_data->last_name);
+
+            //$link = env('FRONT_URL') . '/login';
+            //$maildata = array('name' => $user_data->first_name.' '.$user_data->last_name, 'link' => $link);
             //Mail::to($user_data->email)->send(new LoginReminderEmail($maildata));
             //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
             //sleep(3);
         }
+        
+        $link = env('FRONT_URL') . '/login';
+        $maildata = array('name' => 'test name', 'link' => $link);
         Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
+        //Mail::to("maisha@mpact-int.com")->send(new LoginReminderEmail($maildata));
     }
 }
