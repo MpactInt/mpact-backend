@@ -633,11 +633,7 @@ class HomeController extends Controller
         // });
         $sevenDaysAgo = Carbon::now()->subDays(7);
 
-        $users = User::select('users.email','company_employees.first_name', 'company_employees.last_name')
-            ->join('company_employees', 'users.id', 'company_employees.user_id')
-            ->where('users.last_login','<',$sevenDaysAgo)
-            ->get()->toArray();
-            dd($users);
+        
 
         $link = env('FRONT_URL') . '/login';
         $maildata = array('name' => 'test name', 'link' => $link);
