@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SendCheckinSurveyEmail::class,
-        Commands\PartLearningPlanEmailCrone2::class
+        Commands\PartLearningPlanEmailCrone2::class,
+        Commands\LoginReminderEmail::class
     ];
 
     /**
@@ -34,6 +35,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:part_learning_plan_email_crone')->everyMinute();
                     //->dailyAt('01:00')
                     //->timezone('America/New_York'); 
+        $schedule->command('command:login_reminder_email_cron')
+                    ->dailyAt('00:5');
 
     }
 

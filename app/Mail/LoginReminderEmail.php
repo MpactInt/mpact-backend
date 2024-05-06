@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MarkdownEmail extends Mailable
+class LoginReminderEmail extends Mailable
 {
     use Queueable, SerializesModels;
     public $maildata;
@@ -29,7 +29,8 @@ class MarkdownEmail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.markdown_email')
-                ->subject('Your Email Subject');
+        return $this->markdown('emails.loginReminderEmail')
+                ->subject('We missed you - Mpact International')
+                ->with('maildata', $this->maildata);
     }
 }

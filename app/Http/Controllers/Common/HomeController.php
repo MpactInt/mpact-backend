@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 
 class HomeController extends Controller
@@ -339,7 +340,7 @@ class HomeController extends Controller
     {
         $data = [
             'email' => $request->email,
-            'password' => $request->password
+            'password' => $request->password 
         ];
         $validator = Validator::make($data, [
             'email' => ['required', 'email', 'string'],
@@ -444,6 +445,16 @@ class HomeController extends Controller
                 }
             }
         }
+    }
+
+    public function set_dashboard_status_update(Request $request) 
+    {
+        $data = $request->email;
+        $user = User::where('email',$data)->first();
+        $user->dashboard_tutorial_status = 1;
+        $user->save();
+        return $user;
+        
     }
 
     /**
@@ -620,6 +631,21 @@ class HomeController extends Controller
         //         ->subject('Welcome to Mpact International');
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
+        $sevenDaysAgo = Carbon::now()->subDays(7);
+
+        $users = User::select('users.email','company_employees.first_name', 'company_employees.last_name')
+            ->join('company_employees', 'users.id', 'company_employees.user_id')
+            ->where('users.last_login','<',$sevenDaysAgo)
+            ->get()->toArray();
+            dd($users);
+
+        $link = env('FRONT_URL') . '/login';
+        $maildata = array('name' => 'test name', 'link' => $link);
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
+        //Mail::to("maisha@mpact-int.com")->send(new LoginReminderEmail($maildata));
+        $maildata['maildata'] = $maildata;
+        return view('emails.LoginReminderEmail', $maildata);
+
 
         $link = env('FRONT_URL') . '/employee/my-learning-plan/';
         $maildata = array('name' => 'test name', 'link' => $link, 'title' => 'title', 'date' => 'date', 'email_subject' => 'email_subject', 'email_body' => 'email_body');
