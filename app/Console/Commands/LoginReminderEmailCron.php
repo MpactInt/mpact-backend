@@ -41,6 +41,8 @@ class LoginReminderEmailCron extends Command
      */
     public function handle()
     {
+        \Log::info("login reminder email cron");
+
         $sevenDaysAgo = Carbon::now()->subDays(7);
 
         $users = User::select('users.email','company_employees.first_name', 'company_employees.last_name')
@@ -52,8 +54,8 @@ class LoginReminderEmailCron extends Command
         foreach ($users as $user_data) {
             $link = env('FRONT_URL') . '/login';
             $maildata = array('name' => $user_data->first_name.' '.$user_data->last_name, 'link' => $link);
-            Mail::to($user_data->email)->send(new LoginReminderEmail($maildata));
-            //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
+            //Mail::to($user_data->email)->send(new LoginReminderEmail($maildata));
+            Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
             sleep(3);
         }
     }
