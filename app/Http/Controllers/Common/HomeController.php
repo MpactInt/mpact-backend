@@ -640,7 +640,7 @@ class HomeController extends Controller
         //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
         //Mail::to("maisha@mpact-int.com")->send(new LoginReminderEmail($maildata));
         $maildata['maildata'] = $maildata;
-        return view('emails.LoginReminderEmail', $maildata);
+        return view('emails.loginReminderEmail', $maildata);
 
 
         $link = env('FRONT_URL') . '/employee/my-learning-plan/';
