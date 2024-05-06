@@ -51,7 +51,7 @@ class LoginReminderEmailCron extends Command
             ->get();
             //->toArray();
 
-        foreach ($users as $user_data) {
+        foreach ($users as $user_data) { \Log::info($user_data);
             $link = env('FRONT_URL') . '/login';
             $maildata = array('name' => $user_data->first_name.' '.$user_data->last_name, 'link' => $link);
             //Mail::to($user_data->email)->send(new LoginReminderEmail($maildata));
