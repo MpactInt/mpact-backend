@@ -9,6 +9,7 @@ use App\Mail\SendRegistrationEmail;
 use App\Mail\sendCompanyRegistrationEmail;
 use App\Mail\SendEmployeePart1Email;
 use App\Mail\SendGeneralPartLearningPlanEmail;
+use App\Mail\LoginReminderEmail;
 use App\Models\ActivityLog;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
@@ -637,7 +638,7 @@ class HomeController extends Controller
 
         $link = env('FRONT_URL') . '/login';
         $maildata = array('name' => 'test name', 'link' => $link);
-        //Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
+        Mail::to("nchouksey@manifestinfotech.com")->send(new LoginReminderEmail($maildata));
         //Mail::to("maisha@mpact-int.com")->send(new LoginReminderEmail($maildata));
         $maildata['maildata'] = $maildata;
         return view('emails.loginReminderEmail', $maildata);
