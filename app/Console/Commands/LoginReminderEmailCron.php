@@ -63,7 +63,7 @@ class LoginReminderEmailCron extends Command
                 // email start
                 // Set variables for email composition
                 $to = $user_data->email;
-                $subject = "We missed you - Mpact International";
+                $subject = "We've Missed You - Return to Learning with Mpact";
                 $headers = "From: no-reply@cogdynamism.mpact-int.com\r\n";
                 $headers .= "Reply-To: no-reply@cogdynamism.mpact-int.com\r\n";
                 $headers .= "Content-Type: text/html; charset=utf-8\r\n";
