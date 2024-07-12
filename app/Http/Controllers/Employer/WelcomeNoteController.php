@@ -21,8 +21,8 @@ class WelcomeNoteController extends Controller
     public function add_welcome_note(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
-            'description' => 'required',
+            //'title' => 'required|max:255',
+            //'description' => 'required',
             //'image' => 'required|image'
         ]);
         if ($validator->fails()) {
@@ -44,7 +44,7 @@ class WelcomeNoteController extends Controller
                 $uploadedFile = $request->file('image');
                 $filename = time() . '_' . $uploadedFile->getClientOriginalName();
 
-                if(file_exists($destinationPath . '/' . $note->image)){
+                if($note->image != "" && file_exists($destinationPath . '/' . $note->image)){
                     unlink($destinationPath . '/' . $note->image);
                 }
 
@@ -53,8 +53,8 @@ class WelcomeNoteController extends Controller
             }
 
             $note->company_id = $company->id;
-            $note->title = $request->title;
-            $note->description = $request->description;
+            $note->title = $request->title ? $request->title : '';
+            $note->description = $request->description ? $request->description : '';
             
             $note->save();
             return response(["status" => "success", 'res' => $note], 200);
@@ -167,6 +167,10 @@ class WelcomeNoteController extends Controller
         $note = CompanyEmployeeWelcomeNote::where('company_id', $company->company_id)->first();
         if($note && $note->image){
             $note->image = url('/public/welcome-notes/') . '/' . $note->image;
+        }
+        else
+        {
+            $note->image = '';
         }
         return response(["status" => "success", 'res' => $note], 200);
     }
