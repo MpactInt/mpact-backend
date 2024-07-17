@@ -43,7 +43,7 @@ class LoginReminderEmailCron extends Command
     {
         //\Log::info("login reminder email cron");
 
-        $sevenDaysAgo = Carbon::now()->subDays(7);
+        $sevenDaysAgo = Carbon::now()->subDays(21);
 
         $users = User::select('users.email','company_employees.first_name', 'company_employees.last_name')
             ->join('company_employees', 'users.id', 'company_employees.user_id')
