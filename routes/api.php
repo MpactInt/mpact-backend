@@ -169,6 +169,7 @@ Route::group(['middleware' => ['auth:api', 'cors','log.activity']], function ()
     Route::get('/get-employee-registration-link', [TeamController::class, 'get_employee_registration_link']);
     Route::post('/send-link-to-email', [TeamController::class, 'send_link_to_email']);
     Route::post('/get-invitations-list/{id}', [TeamController::class, 'get_invitations_list']);
+    Route::post('/send-survey-invite-link-to-email', [TeamController::class, 'send_survey_invite_link_to_email']);
 
     //Welcome Note Routes
 
