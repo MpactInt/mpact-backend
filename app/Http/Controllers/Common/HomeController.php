@@ -632,6 +632,16 @@ class HomeController extends Controller
         //         ->subject('Welcome to Mpact International');
         //     $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
         // });
+
+        $survey_invite_link = md5(uniqid());
+        $link = env('FRONT_URL') . '/survey-consent/' . $survey_invite_link;
+        $company_name = "Company Name";
+        $maildata = array('link' => $link, 'company_name' => $company_name, 'text' => 'You can use below link to complete your survey', 'link_text' => 'Click to complete your survey');
+        //Mail::to("maisha@mpact-int.com")->send(new ForgotPasswordEmail($maildata));
+        //Mail::to("nchouksey@manifestinfotech.com")->send(new ForgotPasswordEmail($maildata));
+        //Mail::to("pronobmozumder.jan@outlook.com")->send(new ForgotPasswordEmail($maildata));
+        $maildata['maildata'] = $maildata;
+        return view('emails.surveyInviteEmail', $maildata);
         
 
         $link = env('FRONT_URL') . '/login';

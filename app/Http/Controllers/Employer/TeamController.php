@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employer;
 
 use App\Exports\CompanyEmployeeExport;
 use App\Http\Controllers\Controller;
+use App\Mail\SurveyInviteEmail;
 use App\Models\Company;
 use App\Models\CompanyEmployee;
 use App\Models\Invitation;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class TeamController extends Controller
 {
@@ -73,6 +75,33 @@ class TeamController extends Controller
                        return response()->json(['status' => 'error', 'message' => 'Employee email is not valid, it does not belongs to company','emp_do'=>$employee_email_domain,'comp_do'=>$company_domain], 400);
 
                 }
+        }
+    }
+
+    public function send_survey_invite_link_to_email(Request $request)
+    {
+        $data = $request->all();
+        $validator = Validator::make($data, [
+                'email' => ['required', 'email', 'string'],
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => $validator->getMessageBag()->first()], 400);
+            } else {
+                $survey_invite_link = md5(uniqid());
+                $link = env('FRONT_URL') . '/consent-page/' . $survey_invite_link;
+                $email = $request->email;
+               
+                $user = Auth::guard('api')->user();
+                $employer = Company::where('user_id', $user->id)->first();
+                $company_id = $employer->id;
+                $company_name = $employer->company_name;
+                
+                DB::table('non_employee_surveys')->insert(['company_id' => $company_id, 'email' => $email, 'survey_invite_link' => $survey_invite_link]);
+
+                $maildata = array('link' => $link, 'company_name' => $company_name, 'text' => 'You can use below link to complete your survey.', 'link_text' => 'Click to complete your survey');
+                Mail::to($email)->send(new SurveyInviteEmail($maildata));
+
+                return response()->json(['status' => 'success'], 200);
         }
     }
 
